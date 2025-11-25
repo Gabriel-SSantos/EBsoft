@@ -1,0 +1,111 @@
+.placar_container{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+}
+@media(orientation: portrait){
+    .placar_container{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 54em;
+        /* height: 10em; */
+    }
+    .placar_banda{
+        padding-left: 2em;
+        padding-right: 2em;
+    }
+}
+.placar_numero{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    /* justify-content: space-around; */
+}
+.placar_numero p{
+    font-size: 140px;
+    text-align: center;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+}
+.placar_numero input{
+    height: 100%;
+    font-size: 100px;
+    font-family: 'Courier New', Courier, monospace;
+    color: white;
+    border: none;
+    background-color: transparent;
+}
+.placar_banda{
+    display: flex;
+    width: 50%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+}
+.placar_config_conteiner{
+    display: flex;
+    width: 100%;
+    padding: 2em;
+    flex-direction: column;
+    align-items: center;
+}
+
+.placar_config_conteiner input{
+    border-radius: 15px;
+    font-size: 19px;
+    padding: 0.2em;
+    padding-left: 7px;
+    margin: 5px;
+}
+.placar_config_conteiner button{
+    font-size: 20px;
+    padding: 0.2em;
+    border-radius: 10px;
+    background-color: white;
+    color: #000000;
+    text-decoration: none;
+    transition: 0.5s;
+    border: solid;
+    border-color: #0050D8;
+}
+
+.placar_config_conteiner p {
+    font-size: 20px;
+    text-align: center;
+}
+
+.placar_config_conteiner li{
+    font-size: 20px;
+    margin: 5px;
+    margin-top: 10px;
+}
+
+.placar_config_conteiner h2 {
+    margin-bottom: 10px;
+}
+.vencedor_container{
+    display: flex;
+    width: 100%;
+    padding: 1em;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.vencedor_container p{
+    font-size: 20px;
+}
+.vencedor_container li{
+    display: inline;
+    margin-left: 10px;
+    font-size: 20px;
+}
+.vencedor_container span{
+    font-weight: bold;
+    font-size: 20px;
+}
