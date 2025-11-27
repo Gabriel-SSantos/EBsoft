@@ -1,5 +1,5 @@
-import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { FaVolleyball } from 'react-icons/fa6'
+import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BiBookOpen } from 'react-icons/bi';
 import Home from './components/pages/Home/Home'
 import Cadastrar from './components/pages/Cadastro/Cadastrar';
 import Navbar from './components/layout/Navbar'
@@ -11,6 +11,7 @@ import Vencedor from './components/pages/Placar/Vencedor';
 import Padrao from './components/pages/Padrao';
 import Times from './components/pages/MontarTimes/MontarTimes';
 import Embaralhamento from './components/pages/MontarTimes/Embaralhamento';
+import Turmas from './components/pages/Turmas/Turmas';
 
 function App() {
 
@@ -19,20 +20,20 @@ function App() {
       <div style={
         {
           padding: 10,
-          backgroundColor:"#FFDD00", 
+          backgroundColor:"#7488DA", 
           display:"flex",
-          alignItems:"center", 
+          alignItems:"center",
           justifyContent:"center",
           position: "fixed",
           top: 0,
           left: 0,
           width: "100%",
         }}>
-          <h1>
-          <FaVolleyball size={50}
+          <BiBookOpen size={50}
             style={{marginRight:"10px"}}
           />
-          Voleando</h1>
+          <h1> 
+          EBD Sistema</h1>
         </div>
     )
   }
@@ -47,11 +48,12 @@ function App() {
           <Routes>
             <Route exact path='/' Component={Home}></Route>
             <Route path='/placar' Component={Placar}></Route>
+            <Route path='/turmas' Component={Turmas}></Route>
             <Route path='/placarconfig' Component={PlacarConfig}></Route>
             <Route path='/placarvencedor' Component={Vencedor}></Route>
             <Route path='/cadastros' Component={Cadastrar}></Route>
             <Route path='/times' Component={Times}></Route>
-
+            <Route path='/padrao' Component={Padrao}></Route>
             <Route path='/embaralhamento' Component={Embaralhamento}></Route>
             <Route exact path='/classificacoes' Component={Ranking}></Route>
 

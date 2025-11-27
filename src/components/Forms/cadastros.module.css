@@ -1,0 +1,101 @@
+.cad_container{
+    padding-top: 2em;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    flex-direction: column;
+}
+
+.cad_container p{
+    font-size: 19px;
+}
+.card{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: solid;   
+    width: 90%;
+    margin-top: 7px;
+    margin-bottom: 2px;
+    border-radius: 20px;
+    padding: 5px;
+    text-decoration: none;
+    background-color: #fffce2;
+    border-color: #0050D8;
+    box-shadow: 2px 2px #004fd88f;
+}
+
+.Info_Icon{
+    display: flex;
+    flex-direction: row;
+}
+.card p{
+    font-size: 19px; 
+    margin-bottom: 5px; 
+    width: 12em;
+}
+.botao{
+    text-align: center;
+    background-color: #64A2FF;
+    color: #FFFF;
+    padding: 0.5em;
+    text-decoration: none;
+    transition: 0.5s;
+    margin: 1em;
+    border: solid;
+    border-color: #64A2FF;
+    box-shadow: 4px 4px #3b3b385e;
+    border-radius: 15px;
+}
+
+.cad_box{
+    top:30%;
+    position: fixed;
+    width: 85%;
+    height: 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1em;
+    border: 1px solid;
+    background-color: white;
+    box-shadow: 4px 4px #5e5e5e85;
+    border-radius: 15px;
+}
+
+.card_box p{
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.cad_box div{
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.cad_box input{
+    border: 1px solid;
+    border-color: #000000;
+    text-align: center;
+    border-radius: 5px;
+    height: 30px; 
+    font-size: 15px;
+    padding: 1px;
+    background-color: rgba(255, 255, 255, 0.534);
+    width: 100%;
+}
+.cad_box button{
+    width: 40%;
+    height: 30px;
+    font-size: 20px;
+    color: white;
+    background-color: #3C5CDD;
+    border-radius: 15px;
+}
+
+.formSection{
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+    justify-content: space-between;
+}

@@ -5,37 +5,11 @@ import { FaFemale } from 'react-icons/fa';
 import { FaMale } from 'react-icons/fa';
 import { BiTrash } from 'react-icons/bi'
 import { PiPencil } from 'react-icons/pi'
-
+import Ficha,{FichaAluno} from '../../layout/Fichas';
 import AddCadastro from './AddCadastro'
 import { BotaoCadastro } from './AddCadastro';
 
 import EditCadastro from './EditCadastro';
-
-const Ficha = ({nome, nivel, genero,id,edit,apagar})=>{
-    return(
-        <div className={`${style.card}`}>
-                <div>
-                    {genero==="M"? <FaMale size={40}/>:<FaFemale size={40}/>}
-                </div>
-                <div>
-                    <p>Nome: {nome}</p>
-                    <p>Nível: {nivel}</p>
-                </div>
-            <div>
-                <PiPencil 
-                size={27} 
-                style={{marginRight:"5px"}}
-                onClick={()=>edit(id)}
-
-                />
-                <BiTrash size={27}
-                onClick={()=>apagar(id)}
-                />
-            </div>
-        </div>
-    )
-}
-
 
 export default function Cadastrar(){
     const [cadastros,setCadastros] = useState()
@@ -64,33 +38,32 @@ export default function Cadastrar(){
                 NovoVetor.push(intem)
             }
         })
-        localStorage.setItem('jogadores',JSON.stringify(NovoVetor))
+        localStorage.setItem('alunos',JSON.stringify(NovoVetor))
         setCadastros(NovoVetor)
     }
 
     useEffect(()=>{
-        const Lista = JSON.parse(localStorage.getItem('jogadores'))
+        const Lista = JSON.parse(localStorage.getItem('alunos'))
         setCadastros(Lista)
     },[cadastrar,editavel])
 
     return(
         <section className={`${style.cad_container}`}>
-            {cadastros? <p>Aqui estão seus cadastros</p>:<p>Nenhum cadastro encontrado, adicione seus jogadores</p>}
+            {cadastros? <p>Aqui estão seus cadastros</p>:<p>Nenhuma matrícula encontrada, matricule seus alunos</p>}
             <BotaoCadastro 
                 cadastramento={ativarCadastramento}/>
-            {editavel && <EditCadastro i={editIndex} editavel={desativarEdicao}/>}
             {cadastrar && <AddCadastro
-            cadastramento={desativarCadastramento}/>}
+            cadastramento={desativarCadastramento}/>}{editavel && <EditCadastro i={editIndex} editavel={desativarEdicao}/>}
             {cadastros && 
-                cadastros.map((jogador,index)=>
-                    (<Ficha 
+                cadastros.map((alunos,index)=>
+                    (<FichaAluno
                         key={index}
                         id = {index}
-                        nome={jogador.nome}
-                        nivel={jogador.nivel}
-                        genero={jogador.genero}
-                        edit={indiceEdit}
-                        apagar={Apagar}
+                        nome={alunos.nome}
+                        turma={alunos.turma}
+                        // genero={alunos.genero}
+                        // edit={indiceEdit}
+                        // apagar={Apagar}
                         />))}
             <div
                 style={{

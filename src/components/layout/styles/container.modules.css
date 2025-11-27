@@ -6,7 +6,9 @@
 }
 
 .min-height{
-    padding-top: 4em;  
+    padding-top: 4em; 
+    padding-left: 0.4em;
+    padding-right: 0.4em; 
     height: 89%;
 }
 
