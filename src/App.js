@@ -12,9 +12,28 @@ import Padrao from './components/pages/Padrao';
 import Times from './components/pages/MontarTimes/MontarTimes';
 import Embaralhamento from './components/pages/MontarTimes/Embaralhamento';
 import Turmas from './components/pages/Turmas/Turmas';
+import { getAuth, onAuthStateChanged, signInAnonymously } from 'firebase/auth';
+import { useEffect, useState } from 'react';
 
 function App() {
 
+  const [user,setUser] = useState(null)
+  useEffect(()=>{
+    const auth = getAuth()
+    const naoInscrito = onAuthStateChanged(auth,(usuarioFirebase)=>{
+      if(usuarioFirebase){
+        console.log("Usuário logado: ",usuarioFirebase.uid);
+        setUser(usuarioFirebase);
+      } else {
+        console.log("Iniciando login anonimo ")
+        signInAnonymously(auth).catch((erro)=>{
+          console.error("Erro no login: ", erro)
+        })
+      }
+    })
+    return ()=> naoInscrito()
+  },[])
+  
   const AppHeader = ()=>{
     return(
       <div style={

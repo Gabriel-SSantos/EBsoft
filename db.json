@@ -1,55 +1,34 @@
 {
-  "projects": [
+  "turmas":[
     {
-      "id": "21f5",
-      "name": "Projeto 1",
-      "orcamento": "50000",
-      "category": {
-        "id": "1",
-        "name": "Infra"
-      },
-      "cost": 0,
-      "services": []
+        "id": "rMcgNvMxYAaS9mrabv1r",
+        "createdAt": {
+            "type": "firestore/timestamp/1.0",
+            "seconds": 1764268875,
+            "nanoseconds": 350000000
+        },
+        "nome": "Adolescentes",
+        "descricao": "Turma de Adolescentes"
     },
     {
-      "id": "d929",
-      "name": "Projeto 2",
-      "orcamento": "20000",
-      "category": {
-        "id": "2",
-        "name": "Desenvolvimento"
-      },
-      "cost": 0,
-      "services": []
+        "id": "mgZZq8mUBS1IazYONC8k",
+        "nome": "Rosas de Sarom",
+        "descricao": "Turma de Senhoras",
+        "createdAt": {
+            "type": "firestore/timestamp/1.0",
+            "seconds": 1764267632,
+            "nanoseconds": 203000000
+        }
     },
     {
-      "id": "4136",
-      "name": "Projeto 3",
-      "orcamento": "150000",
-      "category": {
-        "id": "2",
-        "name": "Desenvolvimento"
-      },
-      "cost": 0,
-      "services": []
-    }
-  ],
-  "categories": [
-    {
-      "id": "1",
-      "name": "Infra"
-    },
-    {
-      "id": "2",
-      "name": "Desenvolvimento"
-    },
-    {
-      "id": "3",
-      "name": "Design"
-    },
-    {
-      "id": "4",
-      "name": "Planejamento"
+        "id": "pdUvNEdyYx57xFF6jYvN",
+        "descricao": "Turma de jovens",
+        "nome": "Força Jovem",
+        "createdAt": {
+            "type": "firestore/timestamp/1.0",
+            "seconds": 1764266071,
+            "nanoseconds": 509000000
+        }
     }
   ]
 }

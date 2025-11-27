@@ -1,11 +1,15 @@
 import style from './cadastros.module.css'
 import { useState } from 'react'
 import { BiX } from 'react-icons/bi'
+import {addItem } from "../../firebase/CRUD"
+import { getItens } from '../../firebase/CRUD'
 
 const salvar=({localstore,item})=>{
-    const salve = JSON.parse(localStorage.getItem(`${localstore}`)) || []
-    salve.push(item)
-    localStorage.setItem(`${localstore}`,JSON.stringify(salve))
+    // let lista = ""
+    // const salve = JSON.parse(localStorage.getItem(`${localstore}`)) || []
+    // salve.push(item)
+    // localStorage.setItem(`${localstore}`,JSON.stringify(salve))
+    addItem(localstore,item)
 }
 
 export const FormAluno=({cadastramento})=>{
@@ -170,6 +174,7 @@ export const FormProfessor=({cadastramento})=>{
             className={`${style.button}`}
             
             onClick={()=>{
+               
                 cadastramento()
                 const professor = {
                     nome:nome,
@@ -198,7 +203,6 @@ export default function FormTurma({cadastramento}){
     const mudancaEstadoNome = (e)=>{
         setNome(e.target.value)
     }
-
     return(
     <div className={`${style.cad_box}`}>
         <div>
@@ -238,10 +242,12 @@ export default function FormTurma({cadastramento}){
                         }
                         const turma = {nome:nome,descricao:descricao}
                         cadastramento()
+                        // addItem("turmas",turma)
                         salvar({
                             localstore:"turmas",
                             item:turma,
-                        })}}
+                        })
+                    }}
                 >Salvar</button>
             </div>
         </div>
