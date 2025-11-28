@@ -1,6 +1,4 @@
 .navbar{
-    display: flex;
-    justify-content: space-between;
     background-color: #dde3fa;
     padding: 0.2em;
     position: fixed;
@@ -11,6 +9,9 @@
 
 .list{
     display: flex;
+    padding-left: 2px;
+    padding-right: 2px;
+    justify-content: space-between;
     list-style: none;
     align-items: center;
 }

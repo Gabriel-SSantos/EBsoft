@@ -14,7 +14,7 @@ import {
 
 import {db} from "./firebase"
 
-export const addItem = async(collectionName, data)=>{
+export async function addItem(collectionName, data){
     try{
         const docRef = await addDoc(collection(db,collectionName),{
             ...data,
@@ -30,7 +30,7 @@ export const addItem = async(collectionName, data)=>{
 
 //Busca pela colecao e atualiza sempre que ela mudar, ideal para dados que são atualizados por outros usuários
 
-export const getItens = (collectionName, callback)=>{
+export function getItens(collectionName, callback){
     const q = query(collection(db,collectionName),orderBy("createdAt","desc"))
 
     const unsubscribe = onSnapshot(q,(snapshot)=>{
@@ -48,7 +48,7 @@ export const getItens = (collectionName, callback)=>{
  * Busca todos os documentos de uma coleção uma única vez.
  * Ideal para dados de consulta ou lista, dados que não precisam de respostas imediatas 
  */
-export const getDocCollection = async (collectionName) => {
+export async function getDocCollection(collectionName){
     const q = query(collection(db, collectionName));
     const querySnapshot = await getDocs(q);
     
@@ -64,7 +64,7 @@ export const getDocCollection = async (collectionName) => {
  * @param {string} docId - ID do documento a ser atualizado.
  * @param {object} data - Objeto contendo APENAS os campos a alterar.
  */
-export const updateItem = async (collectionName, docId, data) => {
+export async function updateItem(collectionName, docId, data){
     try {
       // Cria a referência para o documento específico
       const docRef = doc(db, collectionName, docId);
@@ -86,7 +86,7 @@ export const updateItem = async (collectionName, docId, data) => {
  * @param {string} collectionName - Nome da coleção.
  * @param {string} docId - ID do documento a ser removido.
  */
-export const deleteItem = async (collectionName, docId) => {
+export async function deleteItem(collectionName, docId){
     try {
       const docRef = doc(db, collectionName, docId);
       await deleteDoc(docRef);

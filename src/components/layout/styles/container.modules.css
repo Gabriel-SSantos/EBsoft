@@ -1,15 +1,15 @@
 .container{
-    display: flex;
-    justify-content: space-between;
+    flex: 1;
+    overflow-y: auto;
+    width: 100%;
     margin: 0 auto;
-    flex-wrap: wrap;
 }
 
 .min-height{
-    padding-top: 4em; 
+    padding-top: 4.5em; 
     padding-left: 0.4em;
     padding-right: 0.4em; 
-    height: 89%;
+    padding-bottom: 85px;
 }
 
 .start{

@@ -9,10 +9,11 @@ export const FichaAluno = ({nome, turma})=>{
     )
 }
 
-export const FichaTurma = ({nomeTurma})=>{
+export const FichaTurma = ({nomeTurma,descricaoTurma})=>{
     return(
-        <div className='card'>
+        <div className='cardTurma'>
             <p>Nome: {nomeTurma}</p>
+            <p className='cardTurmaDescricao'>Descrição: {descricaoTurma}</p>
         </div>
     )
 }

@@ -61,25 +61,26 @@ function App() {
     const rotasFull = ['/placar']
     const verificarRotas = rotasFull.includes(location.pathname)
     return (
-      <>
+      <div style={{
+        display:"flex",
+        flexDirection:"column",
+        width:"100%",
+        height:"100vh",
+        overflow: "hidden"
+      }}>
         {!verificarRotas && <AppHeader/>}
         <Container customClass='min-height'>
           <Routes>
             <Route exact path='/' Component={Home}></Route>
-            <Route path='/placar' Component={Placar}></Route>
             <Route path='/turmas' Component={Turmas}></Route>
-            <Route path='/placarconfig' Component={PlacarConfig}></Route>
-            <Route path='/placarvencedor' Component={Vencedor}></Route>
             <Route path='/cadastros' Component={Cadastrar}></Route>
-            <Route path='/times' Component={Times}></Route>
             <Route path='/padrao' Component={Padrao}></Route>
-            <Route path='/embaralhamento' Component={Embaralhamento}></Route>
             <Route exact path='/classificacoes' Component={Ranking}></Route>
 
           </Routes>
         </Container>
         {!verificarRotas && <Navbar/>}
-      </>
+      </div>
     )
   }
 

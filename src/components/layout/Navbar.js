@@ -1,14 +1,12 @@
 import {Link} from 'react-router-dom'
 import style from './styles/navbar.modules.css'
-import Container from './Container';
 import { MdHome, MdPeople, } from "react-icons/md";
 import { MdSchool } from 'react-icons/md';
 import { GiTeacher } from 'react-icons/gi';
 import { TbPresentationAnalytics } from 'react-icons/tb';
 function Navbar(){
     return(
-        <nav className={`navbar${""}`}>
-           <Container>
+        <nav className={`navbar`}>
                 <ul className='list'>
                     <li className='item'> <Link to="/"> 
                     <MdHome size={30}/>
@@ -26,7 +24,6 @@ function Navbar(){
                     <TbPresentationAnalytics size={30}/>
                     Geral</Link></li>
                 </ul> 
-           </Container>
         </nav>
     )
 }

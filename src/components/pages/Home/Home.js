@@ -10,22 +10,22 @@ function Home(){
         <section className={`${style.home_container}`}>
             <h3>Bem vindo ao seu app de registro de EBD</h3>
             <div id={`${style.buttons}`}>
-                <div>
+                {/* <div>
                     <LinkButton to="/placarconfig" text="Usar o placar">
                         <MdScoreboard size={50} color='#252a30'/>
                     </LinkButton>
                     <LinkButton to="/times" text="Montar times">
                         <FaPeopleGroup size={50} color='#252a30'/>
                     </LinkButton>
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                     <LinkButton to="/cadastros" text="Cadastrar Jogadores">
                         <BiPlus size={50} color='#252a30'/>
                     </LinkButton>
                     <LinkButton to="/classificacoes" text="Ver os melhores">
                         <TbTrophy size={50} color='#252a30'/>
                     </LinkButton>
-                </div>
+                </div> */}
                 <div>
                     <LinkButton to="/padrao" text="Começar Novo Jogo">
                         <TbPlayVolleyball size={50} color='#252a30'/>
