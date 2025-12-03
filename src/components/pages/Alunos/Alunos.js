@@ -1,18 +1,18 @@
 import { BiPlus } from "react-icons/bi"
 import BotaoCadastro from "../../Forms/BotaoCadastro"
-import style from "./turmas.module.css"
+import style from "./alunos.module.css"
 import { useEffect, useState } from "react"
-import FormTurma from "../../Forms/Cadastro"
+import { FormAluno } from "../../Forms/Cadastro"
 import { getDocCollection, getItens } from "../../../firebase/CRUD"
-import { FichaTurma } from "../../layout/Fichas"
+import { FichaAluno } from "../../layout/Fichas"
 
-export default function Turmas(){
+export default function Alunos(){
 
-    const [turmas,setTurmas] = useState([])
+    const [Alunos,setAlunos] = useState([])
     const [cadastramento,setCadastramento] = useState(false)
 
     useEffect(()=>{
-        return getItens("turmas",setTurmas)
+        return getItens("alunos",setAlunos)
     },[])
 
     const ativarCadastramento = ()=>{
@@ -25,26 +25,27 @@ export default function Turmas(){
     return(
         <div className={`${style.container}`}>
             <div style={{width: "100%"}}>
-                <h2>Turmas</h2>
+                <h2>Alunos</h2>
             </div>
             <div>
                 <BotaoCadastro 
                     cadastramento={ativarCadastramento}
-                    texto={"Cadastrar Nova Turma"}
+                    texto={"Cadastrar Nova Alunos"}
                 />
             </div>
-            {cadastramento && <FormTurma cadastramento={desativarCadastramento}/>}
+            {cadastramento && <FormAluno cadastramento={desativarCadastramento}/>}
             {
-                turmas.length == 0 
-                && <p>Carregando turmas...</p>
+                // console.log(Alunos.length)
+                Alunos.length == 0 
+                && <p>Carregando Alunos...</p>
             }
-            {turmas.length > 0 && 
-                turmas.map((item,id)=>
-                    <FichaTurma 
+            {Alunos.length > 0 && 
+                Alunos.map((item,id)=>
+                    <FichaAluno
                         key={id}
                         id={item.id}   
-                        nomeTurma={item.nome}
-                        descricaoTurma={item.descricao}
+                        nome={item.nome}
+                        turma={item.turmaNome}
                     />
                 )
             }

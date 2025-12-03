@@ -2,16 +2,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: solid;   
+    border: solid 1px;   
     width: 90%;
     margin-top: 7px;
     margin-bottom: 2px;
     border-radius: 20px;
-    padding: 5px;
-    text-decoration: none;
-    background-color: #fffce2;
-    border-color: #0050D8;
-    box-shadow: 2px 2px #004fd88f;
+    padding: 15px;
+    color: black;
+    border-color: #a1a1a185;
+    box-shadow: 2px 2px #99bfff8f;
 }
 
 .cardTurma{

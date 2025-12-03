@@ -5,13 +5,11 @@ import Cadastrar from './components/pages/Cadastro/Cadastrar';
 import Navbar from './components/layout/Navbar'
 import Container from './components/layout/Container'
 import Ranking from './components/pages/Ranking/Ranking';
-import Placar from './components/pages/Placar/Placar'
-import PlacarConfig from './components/pages/Placar/PlacarConfig';
-import Vencedor from './components/pages/Placar/Vencedor';
 import Padrao from './components/pages/Padrao';
-import Times from './components/pages/MontarTimes/MontarTimes';
-import Embaralhamento from './components/pages/MontarTimes/Embaralhamento';
 import Turmas from './components/pages/Turmas/Turmas';
+import TurmasView from './components/pages/Turmas/TurmasView';
+import Alunos from './components/pages/Alunos/Alunos';
+import AlunosView from './components/pages/Alunos/AlunosView';
 import { getAuth, onAuthStateChanged, signInAnonymously } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 
@@ -73,6 +71,9 @@ function App() {
           <Routes>
             <Route exact path='/' Component={Home}></Route>
             <Route path='/turmas' Component={Turmas}></Route>
+            <Route path='/turmas/:id' Component={TurmasView}></Route>
+            <Route path='/alunos' Component={Alunos}></Route>
+            <Route path='/alunos/:id' Component={AlunosView}></Route>
             <Route path='/cadastros' Component={Cadastrar}></Route>
             <Route path='/padrao' Component={Padrao}></Route>
             <Route exact path='/classificacoes' Component={Ranking}></Route>

@@ -3,6 +3,7 @@ import {
     doc, 
     addDoc, 
     getDocs, 
+    getDoc,
     onSnapshot, 
     updateDoc, 
     deleteDoc, 
@@ -38,7 +39,7 @@ export function getItens(collectionName, callback){
             id:doc.id,
             ...doc.data()
         }));
-        console.log(items)
+        // console.log(items)
         callback(items); //Envia os dados para o componente React
     })
     return unsubscribe; //Retorna função de limpeza 
@@ -48,15 +49,36 @@ export function getItens(collectionName, callback){
  * Busca todos os documentos de uma coleção uma única vez.
  * Ideal para dados de consulta ou lista, dados que não precisam de respostas imediatas 
  */
-export async function getDocCollection(collectionName){
+export async function getDocCollection(collectionName,callback){
     const q = query(collection(db, collectionName));
     const querySnapshot = await getDocs(q);
-    
-    return querySnapshot.docs.map(doc => ({
+    const dados = querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-    }));
+    }))
+    callback(dados)
+    return;
 };
+
+export async function getDocumentoUnico(collectionName,id,callback){
+  try{
+    const docRef = doc(db,collectionName,id)
+    const docSnap = await getDoc(docRef)
+
+    if(docSnap.exists()){
+      callback({id: docSnap.id, 
+        ...docSnap.data()})
+      return 
+    } else {
+        console.log("Documento não encontrado!");
+        return null
+      }
+      // console.log()
+    } catch (error){
+      console.error("Erro ao buscar elemento", error)
+      throw error;
+    }
+}
 
 /**
  * Atualiza campos específicos de um documento existente.
@@ -97,3 +119,19 @@ export async function deleteItem(collectionName, docId){
     }
   };
 
+export async function filtro(collectionName,campo,parametros,callback){
+  try{
+    const q = query(collection(db,collectionName), where(campo,"==",parametros))
+    const querySnapshot = await getDocs(q)
+    const dados = querySnapshot.docs.map(doc=>({
+      id:doc.id,
+      ...doc.data()
+    }))
+    console.log(dados)
+    callback(dados)
+    return;
+  }catch(error){
+    console.error("Erro ao buscar: ", error);
+      throw error;
+  }
+}

@@ -1,4 +1,11 @@
 import style from './styles/card.modules.css'
+import { useNavigate } from 'react-router-dom'
+
+
+// function navegar(rota,id){
+//     const navigate = useNavigate()
+//     navigate(`${rota}/${id}`)
+// }
 
 export const FichaAluno = ({nome, turma})=>{
     return(
@@ -9,9 +16,14 @@ export const FichaAluno = ({nome, turma})=>{
     )
 }
 
-export const FichaTurma = ({nomeTurma,descricaoTurma})=>{
+export const FichaTurma = ({nomeTurma,descricaoTurma,id})=>{
+    const navigate = useNavigate()
     return(
-        <div className='cardTurma'>
+        <div className='cardTurma'
+            onClick={()=>{
+                navigate(`/turmas/${id}`)
+            }}>
+
             <p>Nome: {nomeTurma}</p>
             <p className='cardTurmaDescricao'>Descrição: {descricaoTurma}</p>
         </div>

@@ -1,28 +1,62 @@
 import style from './cadastros.module.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BiX } from 'react-icons/bi'
 import {addItem } from "../../firebase/CRUD"
-import { getItens } from '../../firebase/CRUD'
+import { getItens, getDocCollection } from '../../firebase/CRUD'
 
 const salvar=({localstore,item})=>{
-    // let lista = ""
-    // const salve = JSON.parse(localStorage.getItem(`${localstore}`)) || []
-    // salve.push(item)
-    // localStorage.setItem(`${localstore}`,JSON.stringify(salve))
     addItem(localstore,item)
 }
 
-export const FormAluno=({cadastramento})=>{
+function Selection({text,name,options,handleOnChange,value}){
+    return(
+        <div>
+            <label>{text}  </label>
+            <select
+                name={name}
+                id={name}
+                onChange={handleOnChange}
+                value={value}
+            >
+                <options value={"Escolha uma turma"}>Selecione uma opção</options>
+                
+                {
+                    options.map((option)=>(
+                        <option value={option.id} key={option.id}> 
+                            {option.nome}
+                        </option>
+                    ))
+                }
+            </select>
+        </div>
+    )
+}
+
+export function FormAluno({cadastramento}){
+
     const [nome,setNome] = useState("")
     const [genero,setGenero] = useState("")
     const [dataNascimento, setDataNascimento] = useState(Date)
     const [turma,setTurma] = useState("")
+    const [turmaNome, setTurmaNome] = useState("")
+    const [turmas, setTurmas] = useState([])
     
+    const buscar = (key,lista)=>{
+        const tam = lista.length
+        console.log(lista)
+        for(let i = 0; i < tam; i++){
+            if(key == lista[i].id){
+                console.log("Aqui")
+                return lista[i].nome
+            }
+        }
+    }
     const mudancaEstadoNome = (e)=>{
         setNome(e.target.value)
     }
     const mudancaEstadoTurma = (e)=>{
         setTurma(e.target.value)
+        setTurmaNome(buscar(e.target.value,turmas))
     }
     const mudancaEstadoNascimento = (e)=>{
         setDataNascimento(e.target.value)
@@ -30,6 +64,9 @@ export const FormAluno=({cadastramento})=>{
     const mudancaEstadoGenero = (e)=>{
         setGenero(e.target.value)
     }
+    useEffect(()=>{
+        getDocCollection("turmas",setTurmas)
+    },[])
 
     return(
     <div className={`${style.cad_box}`}>
@@ -61,11 +98,18 @@ export const FormAluno=({cadastramento})=>{
                 onChange={mudancaEstadoNascimento}
             />
         </div>
-        <div><p>Turma: </p><input 
-            type='text'
-            value={turma}
-            onChange={mudancaEstadoTurma}
-            /></div>
+
+        <div>
+            {
+                Selection(
+                    {
+                        name:"turmas",
+                        text:"turmas",handleOnChange:mudancaEstadoTurma,
+                        options:turmas,
+                        value:turma
+                    })
+            }
+            </div>
         <div
             style={{display:"flex",alignItems:"center",width:"50%"}}
         ></div>
@@ -78,7 +122,13 @@ export const FormAluno=({cadastramento})=>{
                     nome:nome,
                     genero:genero,
                     nascimento: dataNascimento,
-                    turma: turma
+                    turma: turma,
+                    turmaNome: turmaNome,
+                    oferta: false,
+                    biblia: false,
+                    revista: false,
+                    presencas: 0,
+                    pontos: 0,
                 }
                 salvar({
                     item:aluno,
@@ -240,9 +290,13 @@ export default function FormTurma({cadastramento}){
                             alert("Preencha o nome")
                             return
                         }
-                        const turma = {nome:nome,descricao:descricao}
+                        const turma = {
+                            nome:nome,
+                            descricao:descricao,
+                            professor: "",
+                            alunos: [],
+                        }
                         cadastramento()
-                        // addItem("turmas",turma)
                         salvar({
                             localstore:"turmas",
                             item:turma,
