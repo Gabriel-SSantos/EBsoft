@@ -1,4 +1,5 @@
 import { BiPlus } from "react-icons/bi"
+import { BiPencil } from "react-icons/bi"
 import BotaoCadastro from "../../Forms/BotaoCadastro"
 import style from "./turmas.module.css"
 import { useEffect, useState } from "react"
@@ -30,7 +31,18 @@ export default function TurmasView(){
     return(
         <div className={`${style.container}`}>
             <div className={`${style.cabecalho}`}>
-                {!turmaInfo.nome 
+                <div style={{
+                    display:"flex",
+                    width:"90%",
+                    justifyContent:"flex-end"
+                }}>
+                    <BiPencil
+                    onClick={
+                       ativarCadastramento
+                    }
+                    size={30}
+                /></div>
+               {!turmaInfo.nome 
                     && <h3>Carregando turma...</h3>
                 }
                 {turmaInfo.nome  
@@ -43,11 +55,10 @@ export default function TurmasView(){
                         <p>Professores: {turmaInfo.professor}</p>
                         <p>Matriculados: {turmaInfo.alunos.length}</p>
                         <p>Descrição: {turmaInfo.descricao}</p>
-                        {console.log(alunos[0])}
                     </div>
                 }
             </div>
-            
+            {cadastramento && <FormTurma cadastramento={desativarCadastramento} edit={turmaInfo}/>}
             <div>
             {alunos.length > 0 && 
                 alunos.map((item,id)=>
@@ -56,7 +67,7 @@ export default function TurmasView(){
                         key={id}
                         id={item.id}   
                         nome={item.nome}
-                        turma={turmaInfo.nome}
+                        turma={item.turmaNome}
                     />
                 )
             }

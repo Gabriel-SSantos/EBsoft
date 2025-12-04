@@ -2,7 +2,7 @@ import style from './cadastros.module.css'
 import { useEffect, useState } from 'react'
 import { BiX } from 'react-icons/bi'
 import {addItem } from "../../firebase/CRUD"
-import { getItens, getDocCollection } from '../../firebase/CRUD'
+import { getItens, getDocCollection,updateItem } from '../../firebase/CRUD'
 
 const salvar=({localstore,item})=>{
     addItem(localstore,item)
@@ -32,7 +32,7 @@ function Selection({text,name,options,handleOnChange,value}){
     )
 }
 
-export function FormAluno({cadastramento}){
+export function FormAluno({cadastramento,edit}){
 
     const [nome,setNome] = useState("")
     const [genero,setGenero] = useState("")
@@ -243,16 +243,30 @@ export const FormProfessor=({cadastramento})=>{
     )
 }
 
-export default function FormTurma({cadastramento}){
+export default function FormTurma({cadastramento,edit}){
     const [nome,setNome] = useState("")
     const [descricao,setDescricao] = useState("")
-
     const mudancaEstadoDescricao = (e)=>{
         setDescricao(e.target.value)
     }
     const mudancaEstadoNome = (e)=>{
         setNome(e.target.value)
     }
+    let attTurma = {
+        nome: "",
+        descricao: "",
+        professor: "",
+        alunos: [],
+    }
+    useEffect(()=>{
+        if(edit){
+            setNome(edit.nome)
+            setDescricao(edit.descricao)
+            attTurma.alunos = edit.alunos
+            attTurma.professor = edit.professor  
+        }
+    },[])
+    
     return(
     <div className={`${style.cad_box}`}>
         <div>
@@ -283,6 +297,7 @@ export default function FormTurma({cadastramento}){
             </div>
 
             <div style={{display:"flex",justifyContent:"center"}}>
+               {!edit &&
                 <button type='button'
                     
                     onClick={()=>{
@@ -302,7 +317,21 @@ export default function FormTurma({cadastramento}){
                             item:turma,
                         })
                     }}
-                >Salvar</button>
+                >Salvar</button>}
+                {edit &&
+                <button type='button'
+                    onClick={()=>{
+                        if(nome.length < 1){
+                            alert("Preencha o nome")
+                            return
+                        }
+                        
+                        attTurma.nome = nome
+                        attTurma.descricao = descricao
+                        updateItem("turmas",edit.id,attTurma)
+                        cadastramento()
+                    }}
+                >Atualizar</button>}
             </div>
         </div>
     </div>

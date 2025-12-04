@@ -12,7 +12,9 @@
     height: 15%;
     border-radius: 20px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    padding-top: 5px;
+    /* justify-content: center; */
     align-items: center;
 }
 .descricao{

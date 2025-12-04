@@ -96,7 +96,7 @@ export async function updateItem(collectionName, docId, data){
         ...data,
         updatedAt: serverTimestamp() // Boa prática: marcar quando foi editado
       });
-      console.log("Documento atualizado com sucesso");
+      alert("Documento atualizado com sucesso");
     } catch (error) {
       console.error("Erro ao atualizar:", error);
       throw error;
