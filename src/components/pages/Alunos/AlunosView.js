@@ -1,4 +1,4 @@
-import { BiPlus } from "react-icons/bi"
+import { BiPencil } from "react-icons/bi"
 import BotaoCadastro from "../../Forms/BotaoCadastro"
 import style from "./alunos.module.css"
 import { useEffect, useState } from "react"
@@ -14,7 +14,7 @@ export default function AlunosView(){
     const {id} = useParams()
 
     useEffect(()=>{
-        getDocumentoUnico("Alunos",id,setAlunoInfo)
+        getDocumentoUnico("alunos",id,setAlunoInfo)
     },[])
 
     console.log(AlunoInfo)
@@ -28,6 +28,16 @@ export default function AlunosView(){
     return(
         <div className={`${style.container}`}>
             <div className={`${style.cabecalho}`}>
+                <div style={{
+                        display:"flex",
+                        width:"90%",
+                        justifyContent:"flex-end"
+                    }}>
+                        <BiPencil
+                        onClick={
+                            ativarCadastramento
+                        }
+                        size={30}/></div>
                 {!AlunoInfo.nome 
                     && <h3>Carregando Aluno...</h3>
                 }
@@ -36,11 +46,21 @@ export default function AlunosView(){
                 }
             </div>
             <div className={`${style.descricao}`}>
-                {AlunoInfo.descricao && 
+                {AlunoInfo.nome && 
                     <div>
-                        <p>Professores: {AlunoInfo.professor}</p>
-                        <p>Matriculados: {AlunoInfo.alunos.length}</p>
-                        <p>Descrição: {AlunoInfo.descricao}</p>
+                        <h3>Dados cadastrais</h3>
+                        <p>Nome: {AlunoInfo.nome}</p>
+                        <p>Data de nascimento: {AlunoInfo.nascimento}</p>
+                        <p>Gênero: {AlunoInfo.genero}</p>
+
+                        <h3>Dados da EBD</h3>
+
+                        <p>Turma: {AlunoInfo.turmaNome}</p>
+                        <p>Dias presentes: {AlunoInfo.presencas}</p>
+                        <p>Pontos acumulados: {AlunoInfo.pontos}</p>
+                        <p>Frequência: {AlunoInfo.presencas}</p>
+                        <p>Status: {AlunoInfo.presencas}</p>
+                        
                     </div>
                 }
             </div>

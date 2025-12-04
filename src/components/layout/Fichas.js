@@ -7,11 +7,17 @@ import { useNavigate } from 'react-router-dom'
 //     navigate(`${rota}/${id}`)
 // }
 
-export const FichaAluno = ({nome, turma})=>{
+export const FichaAluno = ({nome, turma,id})=>{
+    const navigate = useNavigate()
     return(
-        <div className='card'>
+        <div className='card'
+        onClick={()=>{
+            navigate(`/alunos/${id}`)
+        }}
+        >
+            
             <p>Nome: {nome}</p>
-            <p>Turma: {turma}</p>
+            <p>{turma}</p>
         </div>
     )
 }

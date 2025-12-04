@@ -40,8 +40,7 @@ export default function TurmasView(){
                     onClick={
                        ativarCadastramento
                     }
-                    size={30}
-                /></div>
+                    size={30}/></div>
                {!turmaInfo.nome 
                     && <h3>Carregando turma...</h3>
                 }
@@ -59,7 +58,7 @@ export default function TurmasView(){
                 }
             </div>
             {cadastramento && <FormTurma cadastramento={desativarCadastramento} edit={turmaInfo}/>}
-            <div>
+            <div className={`${style.ficha}`}>
             {alunos.length > 0 && 
                 alunos.map((item,id)=>
                     
@@ -67,7 +66,7 @@ export default function TurmasView(){
                         key={id}
                         id={item.id}   
                         nome={item.nome}
-                        turma={item.turmaNome}
+                        turma={`Pontos: ${item.pontos}`}
                     />
                 )
             }
