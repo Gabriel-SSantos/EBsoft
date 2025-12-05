@@ -7,7 +7,7 @@ import FormTurma from "../../Forms/Cadastro"
 import { getDocumentoUnico, filtro } from "../../../firebase/CRUD"
 import { FichaAluno } from "../../layout/Fichas"
 import { useParams } from "react-router-dom"
-
+import BackButton from '../../layout/BackButton'
 export default function TurmasView(){
 
     const [turmaInfo,setTurmaInfo] = useState({})
@@ -34,8 +34,9 @@ export default function TurmasView(){
                 <div style={{
                     display:"flex",
                     width:"90%",
-                    justifyContent:"flex-end"
+                    justifyContent:"space-between"
                 }}>
+                    <BackButton/>
                     <BiPencil
                     onClick={
                        ativarCadastramento

@@ -15,12 +15,26 @@ export const FichaAluno = ({nome, turma,id})=>{
             navigate(`/alunos/${id}`)
         }}
         >
-            
             <p>Nome: {nome}</p>
             <p>{turma}</p>
         </div>
     )
 }
+
+export const FichaProfessor = ({nome, turma,id})=>{
+    const navigate = useNavigate()
+    return(
+        <div className='card'
+        onClick={()=>{
+            navigate(`/professores/${id}`)
+        }}
+        >
+            <p>Nome: {nome}</p>
+            <p>{turma}</p>
+        </div>
+    )
+}
+
 
 export const FichaTurma = ({nomeTurma,descricaoTurma,id})=>{
     const navigate = useNavigate()

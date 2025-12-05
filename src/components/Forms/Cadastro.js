@@ -41,6 +41,7 @@ export function FormAluno({cadastramento,edit}){
     const [turmaNome, setTurmaNome] = useState("")
     const [turmas, setTurmas] = useState([])
     
+
     const buscar = (key,lista)=>{
         const tam = lista.length
         console.log(lista)
@@ -50,6 +51,18 @@ export function FormAluno({cadastramento,edit}){
                 return lista[i].nome
             }
         }
+    }
+    let attAluno = {
+        nome:"",
+        genero:"",
+        nascimento: Date(),
+        turma: "",
+        turmaNome: "",
+        oferta: false,
+        biblia: false,
+        revista: false,
+        presencas: 0,
+        pontos: 0,
     }
     const mudancaEstadoNome = (e)=>{
         setNome(e.target.value)
@@ -65,6 +78,14 @@ export function FormAluno({cadastramento,edit}){
         setGenero(e.target.value)
     }
     useEffect(()=>{
+        if(edit){
+            setTurma(edit.turma)
+            setTurmaNome(edit.turmaNome)
+            setNome(edit.nome)
+            setDataNascimento(edit.nascimento)
+            setGenero(edit.genero)
+
+        }
         getDocCollection("turmas",setTurmas)
     },[])
 
@@ -113,6 +134,7 @@ export function FormAluno({cadastramento,edit}){
         <div
             style={{display:"flex",alignItems:"center",width:"50%"}}
         ></div>
+        {!edit && 
         <button type='button'
             className={`${style.button}`}
             
@@ -135,6 +157,25 @@ export function FormAluno({cadastramento,edit}){
                     localstore:"alunos"
                 })}}
         >Salvar</button>
+        }
+        {edit && 
+        <button type='button'
+            className={`${style.button}`}
+            
+            onClick={()=>{
+                cadastramento()
+                attAluno.nome = nome
+                attAluno.turma = turma
+                attAluno.turmaNome = turmaNome
+                attAluno.genero = genero
+                attAluno.nascimento = dataNascimento
+                updateItem(
+                    "alunos",
+                    edit.id,
+                    attAluno,
+                )}}
+        >Atualizar</button>
+        }
     </div>
     )
 }
