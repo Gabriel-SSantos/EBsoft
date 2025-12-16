@@ -12,12 +12,15 @@ export default function TurmasView(){
 
     const [turmaInfo,setTurmaInfo] = useState({})
     const [alunos, setAlunos] = useState([])
+    const [professores,setProfessores] = useState([])
     const [cadastramento,setCadastramento] = useState(false)
     const {id} = useParams()
 
     useEffect(()=>{
         getDocumentoUnico("turmas",id,setTurmaInfo)
         filtro("alunos","turma",id,setAlunos)
+        filtro("professores","turma",id,setProfessores)
+        console.log(professores)
     },[])
 
     console.log(turmaInfo)
@@ -52,8 +55,16 @@ export default function TurmasView(){
             <div className={`${style.descricao}`}>
                 {turmaInfo.descricao && 
                     <div>
-                        <p>Professores: {turmaInfo.professor}</p>
-                        <p>Matriculados: {turmaInfo.alunos.length}</p>
+                        <p>Professores:  
+                        {professores.length > 0 && 
+                            professores.map((item,id)=>
+                            <spam 
+                                key={id}
+                            > {item.nome};</spam>
+                        )
+                    }
+                        </p>
+                        <p>Matriculados: {alunos.length}</p>
                         <p>Descrição: {turmaInfo.descricao}</p>
                     </div>
                 }

@@ -1,20 +1,20 @@
 import { BiPencil } from "react-icons/bi"
 import BotaoCadastro from "../../Forms/BotaoCadastro"
-import style from "./alunos.module.css"
+import style from "./professores.module.css"
 import { useEffect, useState } from "react"
-import {FormAluno} from "../../Forms/Cadastro"
+import {FormProfessor} from "../../Forms/Cadastro"
 import { getDocumentoUnico, getItens } from "../../../firebase/CRUD"
 import { FichaAluno } from "../../layout/Fichas"
 import { useParams } from "react-router-dom"
 import BackButton from '../../layout/BackButton'
-export default function AlunosView(){
+export default function ProfessoresView(){
 
     const [AlunoInfo,setAlunoInfo] = useState({})
     const [cadastramento,setCadastramento] = useState(false)
     const {id} = useParams()
 
     useEffect(()=>{
-        getDocumentoUnico("alunos",id,setAlunoInfo)
+        getDocumentoUnico("professores",id,setAlunoInfo)
     },[cadastramento])
 
     console.log(AlunoInfo)
@@ -40,13 +40,13 @@ export default function AlunosView(){
                         }
                         size={30}/></div>
                 {!AlunoInfo.nome 
-                    && <h3>Carregando Aluno...</h3>
+                    && <h3>Carregando Professor...</h3>
                 }
                 {AlunoInfo.nome  
-                    && <h3>Aluno {AlunoInfo.nome}</h3>
+                    && <h3>Professor {AlunoInfo.nome}</h3>
                 }
             </div>
-            {cadastramento && <FormAluno cadastramento={desativarCadastramento} edit={AlunoInfo}/>}
+            {cadastramento && <FormProfessor cadastramento={desativarCadastramento} edit={AlunoInfo}/>}
             <div className={`${style.descricao}`}>
                 {AlunoInfo.nome && 
                     <div>

@@ -180,25 +180,47 @@ export function FormAluno({cadastramento,edit}){
     )
 }
 
-export const FormProfessor=({cadastramento})=>{
+export const FormProfessor=({cadastramento, edit})=>{
+    const [email,setEmail] = useState("")
+    const [senha,setSenha] = useState("")
     const [nome,setNome] = useState("")
     const [genero,setGenero] = useState("")
     const [dataNascimento, setDataNascimento] = useState(Date)
     const [turma,setTurma] = useState("")
-    const [email,setEmail] = useState("")
-    const [senha,setSenha] = useState("")
+    const [turmaNome, setTurmaNome] = useState("")
+    const [turmas, setTurmas] = useState([])
     
+
+    const buscar = (key,lista)=>{
+        const tam = lista.length
+        console.log(lista)
+        for(let i = 0; i < tam; i++){
+            if(key == lista[i].id){
+                console.log("Aqui")
+                return lista[i].nome
+            }
+        }
+    }
+    let attProf = {
+        nome:"",
+        genero:"",
+        nascimento: Date(),
+        turma: "",
+        turmaNome: "",
+        oferta: false,
+        biblia: false,
+        revista: false,
+        email: "",
+        senha: "",
+        presencas: 0,
+        pontos: 0,
+    }
     const mudancaEstadoNome = (e)=>{
         setNome(e.target.value)
     }
     const mudancaEstadoTurma = (e)=>{
         setTurma(e.target.value)
-    }
-    const mudancaEstadoSenha = (e)=>{
-        setSenha(e.target.value)
-    }
-    const mudancaEstadoEmail = (e)=>{
-        setEmail(e.target.value)
+        setTurmaNome(buscar(e.target.value,turmas))
     }
     const mudancaEstadoNascimento = (e)=>{
         setDataNascimento(e.target.value)
@@ -206,6 +228,24 @@ export const FormProfessor=({cadastramento})=>{
     const mudancaEstadoGenero = (e)=>{
         setGenero(e.target.value)
     }
+    const mudancaEstadoSenha = (e)=>{
+        setSenha(e.target.value)
+    }
+    const mudancaEstadoEmail = (e)=>{
+        setEmail(e.target.value)
+    }
+    
+    useEffect(()=>{
+        if(edit){
+            setTurma(edit.turma)
+            setTurmaNome(edit.turmaNome)
+            setNome(edit.nome)
+            setDataNascimento(edit.nascimento)
+            setGenero(edit.genero)
+
+        }
+        getDocCollection("turmas",setTurmas)
+    },[])
 
     return(
     <div className={`${style.cad_box}`}>
@@ -237,11 +277,18 @@ export const FormProfessor=({cadastramento})=>{
                 onChange={mudancaEstadoNascimento}
             />
         </div>
-        <div><p>Turma: </p><input 
-            type='text'
-            value={turma}
-            onChange={mudancaEstadoTurma}
-            /></div>
+
+        <div>
+            {
+                Selection(
+                    {
+                        name:"turmas",
+                        text:"turmas",handleOnChange:mudancaEstadoTurma,
+                        options:turmas,
+                        value:turma
+                    })
+            }
+            </div>
         <div
             style={{display:"flex",alignItems:"center",width:"50%"}}
         ></div>
@@ -261,25 +308,50 @@ export const FormProfessor=({cadastramento})=>{
         <div
             style={{display:"flex",alignItems:"center",width:"50%"}}
         ></div>
+        {!edit && 
+        <button type='button'
+        className={`${style.button}`}
+        
+        onClick={()=>{
+           
+            cadastramento()
+            const professor = {
+                nome:nome,
+                genero:genero,
+                nascimento: dataNascimento,
+                turma: turma,
+                turmaNome:turmaNome,
+                email:email,
+                senha:senha,
+                oferta: false,
+                biblia: false,
+                revista: false,
+                presencas: 0,
+                pontos: 0,
+            }
+            salvar({
+                item:professor,
+                localstore:"professores"
+            })}}>Salvar</button>
+        }
+        {edit && 
         <button type='button'
             className={`${style.button}`}
             
             onClick={()=>{
-               
                 cadastramento()
-                const professor = {
-                    nome:nome,
-                    genero:genero,
-                    nascimento: dataNascimento,
-                    turma: turma,
-                    email:email,
-                    senha:senha,
-                }
-                salvar({
-                    item:professor,
-                    localstore:"professores"
-                })}}
-        >Salvar</button>
+                attProf.nome = nome
+                attProf.turma = turma
+                attProf.turmaNome = turmaNome
+                attProf.genero = genero
+                attProf.nascimento = dataNascimento
+                updateItem(
+                    "alunos",
+                    edit.id,
+                    attProf,
+                )}}
+        >Atualizar</button>
+        }
     </div>
     )
 }

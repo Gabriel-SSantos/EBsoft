@@ -1,12 +1,12 @@
 import { BiPlus } from "react-icons/bi"
 import BotaoCadastro from "../../Forms/BotaoCadastro"
-import style from "./alunos.module.css"
+import style from "./professores.module.css"
 import { useEffect, useState } from "react"
 import { FormProfessor } from "../../Forms/Cadastro"
 import { getDocCollection, getItens } from "../../../firebase/CRUD"
 import { FichaProfessor } from "../../layout/Fichas"
 
-export default function Professors(){
+export default function Professores(){
 
     const [Professores,setProfessores] = useState([])
     const [cadastramento,setCadastramento] = useState(false)

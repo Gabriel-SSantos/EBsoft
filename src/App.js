@@ -10,6 +10,8 @@ import Turmas from './components/pages/Turmas/Turmas';
 import TurmasView from './components/pages/Turmas/TurmasView';
 import Alunos from './components/pages/Alunos/Alunos';
 import AlunosView from './components/pages/Alunos/AlunosView';
+import Professores from './components/pages/Professores/Professores';
+import ProfessoresView from './components/pages/Professores/ProfessoresView';
 import { getAuth, onAuthStateChanged, signInAnonymously } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 
@@ -73,7 +75,8 @@ function App() {
             <Route path='/turmas' Component={Turmas}></Route>
             <Route path='/turmas/:id' Component={TurmasView}></Route>
             <Route path='/alunos' Component={Alunos}></Route>
-            <Route path='/alunos/:id' Component={AlunosView}></Route>
+            <Route path='/alunos/:id' Component={AlunosView}></Route><Route path='/professores' Component={Professores}></Route>
+            <Route path='/professores/:id' Component={ProfessoresView}></Route>
             <Route path='/cadastros' Component={Cadastrar}></Route>
             <Route path='/padrao' Component={Padrao}></Route>
             <Route exact path='/classificacoes' Component={Ranking}></Route>

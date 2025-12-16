@@ -17,7 +17,7 @@ function Navbar(){
                     <li className='item'> <Link to="/alunos"> 
                     <MdPeople size={30}/>
                     Alunos</Link></li>
-                    <li className='item'> <Link to="/padrao"> 
+                    <li className='item'> <Link to="/professores"> 
                     <GiTeacher size={30}/>
                     Professores</Link></li>
                     <li className='item'> <Link to="/padrao"> 
