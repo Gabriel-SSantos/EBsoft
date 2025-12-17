@@ -180,6 +180,104 @@ export function FormAluno({cadastramento,edit}){
     )
 }
 
+
+export function FormAula({cadastramento,edit}){
+
+    const [licao,setLicao] = useState("")
+    const [dataAula, setDataAula] = useState(Date)
+    const [observacao,setObservacao] = useState("")
+    
+    let attAula = {
+        licao:"",
+        genero:"",
+        nascimento: Date(),
+        biblia: 0,
+        revista: 0,
+        presencas: 0,
+        situacao: "aberta",
+    }
+    const mudancaEstadoLicao = (e)=>{
+        setLicao(e.target.value)
+    }
+    const mudancaEstadoObs = (e)=>{
+        setObservacao(e.target.value)
+    }
+    const mudancaEstadoData = (e)=>{
+        setDataAula(e.target.value)
+    }
+   
+    useEffect(()=>{
+        if(edit){
+            setLicao(edit.licao)
+            setObservacao(edit.obs)
+            setDataAula(edit.data)
+        }
+    },[])
+
+    return(
+    <div className={`${style.cad_box}`}>
+        <div style={{width:"100%",display:"flex",justifyContent:"flex-start"}}><p style={{fontSize:"15px",textAlign:"center"}}>Preencha o formulário para realizar a matrícula</p><BiX size={30} onClick={cadastramento}/></div>
+        
+        <div><p>Lição: </p><input 
+            type='text'
+            value={licao}
+            onChange={mudancaEstadoLicao}
+            /></div>
+        <div>
+            <input
+                type='date'
+                value={dataAula}
+                onChange={mudancaEstadoData}
+            />
+        </div>
+        <div><p>Observação: </p><input 
+            type='text'
+            value={observacao}
+            onChange={mudancaEstadoObs}
+            /></div>
+        <div></div>
+        <div
+            style={{display:"flex",alignItems:"center",width:"50%"}}
+        ></div>
+        {!edit && 
+        <button type='button'
+            className={`${style.button}`}
+            
+            onClick={()=>{
+                cadastramento()
+                const aula = {
+                    licao:licao,
+                    dataAula:dataAula,
+                    observacao: observacao,
+                    oferta: 0,
+                    biblia: 0,
+                    revista: 0,
+                    presencas: 0,
+                    situacao: "aberta",
+                }
+                salvar({
+                    item:aula,
+                    localstore:"aulas"
+                })}}
+        >Salvar</button>
+        }
+        {edit && 
+        <button type='button'
+            className={`${style.button}`}
+            
+            onClick={()=>{
+                cadastramento()
+                updateItem(
+                    "aulas",
+                    edit.id,
+                    attAula,
+                )}}
+        >Atualizar</button>
+        }
+    </div>
+    )
+}
+
 export const FormProfessor=({cadastramento, edit})=>{
     const [email,setEmail] = useState("")
     const [senha,setSenha] = useState("")
@@ -242,6 +340,8 @@ export const FormProfessor=({cadastramento, edit})=>{
             setNome(edit.nome)
             setDataNascimento(edit.nascimento)
             setGenero(edit.genero)
+            setEmail(edit.email)
+            setSenha(edit.senha)
 
         }
         getDocCollection("turmas",setTurmas)
@@ -345,8 +445,10 @@ export const FormProfessor=({cadastramento, edit})=>{
                 attProf.turmaNome = turmaNome
                 attProf.genero = genero
                 attProf.nascimento = dataNascimento
+                attProf.email = email
+                attProf.senha = senha
                 updateItem(
-                    "alunos",
+                    "professores",
                     edit.id,
                     attProf,
                 )}}

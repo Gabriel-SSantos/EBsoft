@@ -2,7 +2,14 @@
     width: 100%;
     padding: 1em;
 }
-
+.home_container section{
+    width: 100%;
+}
+.home_list{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
 .home_container p{
     font-size: 16;
     margin-bottom: .5em;
@@ -14,13 +21,3 @@
     color: #05193C;
     text-align: center;
 }
-#buttons{
-    margin-top: 3em;
-    display: flex;
-    flex-direction: column;
-}
-.home_container div{
-    display: flex;
-    justify-content: space-between;
-}
-

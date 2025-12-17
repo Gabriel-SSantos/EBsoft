@@ -62,6 +62,23 @@ export const FichaAulaTurma = ({nomeTurma, situacao, aproveitamento})=>{
     )
 }
 
+export const FichaAula = ({licao, data, situacao, presentes, revista,biblia,aproveitamento})=>{
+    let dataModificada = data.split("-").reverse().join("/")
+    return(
+        <div className='card_aula'>
+            <div><p>{situacao}</p></div>
+            <div>
+                <h3>{licao} - {dataModificada}</h3>
+            </div>
+            <div>
+                <p>Presentes: {presentes}</p>
+                <p>Revistas: {revista}</p>
+                <p>Bíblias: {biblia}</p>
+                <p>Aproveitamento: {aproveitamento}</p>
+            </div>
+        </div>
+    )
+}
 
 export default function Ficha({nome, turma, genero,id,edit,apagar})
     {

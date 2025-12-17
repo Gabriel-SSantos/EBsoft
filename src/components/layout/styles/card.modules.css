@@ -12,6 +12,33 @@
     border-color: #a1a1a185;
     box-shadow: 2px 2px #99bfff8f;
 }
+.card_aula{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    border: solid 1px;   
+    width: 90%;
+    margin-top: 7px;
+    margin-bottom: 2px;
+    border-radius: 20px;
+    padding: 15px;
+    color: black;
+    border-color: #a1a1a185;
+    box-shadow: 2px 2px #99bfff8f;
+}
+.card_aula p{
+    font-size: 16px;
+}
+.card_aula h3{
+    width: 100%;
+    
+}
+.card_aula div{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
 
 .cardTurma{
     display: flex;
