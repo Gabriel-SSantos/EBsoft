@@ -8,6 +8,7 @@ import Ranking from './components/pages/Ranking/Ranking';
 import Padrao from './components/pages/Padrao';
 import Turmas from './components/pages/Turmas/Turmas';
 import TurmasView from './components/pages/Turmas/TurmasView';
+import ListaTurmas from './components/pages/Aulas/ListaTurmas'
 import Alunos from './components/pages/Alunos/Alunos';
 import AlunosView from './components/pages/Alunos/AlunosView';
 import Professores from './components/pages/Professores/Professores';
@@ -74,6 +75,8 @@ function App() {
             <Route exact path='/' Component={Home}></Route>
             <Route path='/turmas' Component={Turmas}></Route>
             <Route path='/turmas/:id' Component={TurmasView}></Route>
+            <Route path='/aula/:id' Component={ListaTurmas}></Route>
+            
             <Route path='/alunos' Component={Alunos}></Route>
             <Route path='/alunos/:id' Component={AlunosView}></Route><Route path='/professores' Component={Professores}></Route>
             <Route path='/professores/:id' Component={ProfessoresView}></Route>

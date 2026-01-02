@@ -62,10 +62,15 @@ export const FichaAulaTurma = ({nomeTurma, situacao, aproveitamento})=>{
     )
 }
 
-export const FichaAula = ({licao, data, situacao, presentes, revista,biblia,aproveitamento})=>{
+export const FichaAula = ({licao, data, situacao, presentes, revista,biblia,aproveitamento,id})=>{
+    const navigate = useNavigate()
     let dataModificada = data.split("-").reverse().join("/")
     return(
-        <div className='card_aula'>
+        <div className='card_aula'
+            onClick={()=>{
+                navigate(`/aula/${id}`)
+            }}
+        >
             <div><p>{situacao}</p></div>
             <div>
                 <h3>{licao} - {dataModificada}</h3>
