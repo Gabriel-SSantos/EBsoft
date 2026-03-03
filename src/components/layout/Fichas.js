@@ -1,11 +1,10 @@
 import style from './styles/card.modules.css'
 import { useNavigate } from 'react-router-dom'
+import { BiBible } from 'react-icons/bi'
+import { BiBook } from 'react-icons/bi'
+import { FaCoins } from 'react-icons/fa'
+import { BsStarFill } from 'react-icons/bs'
 
-
-// function navegar(rota,id){
-//     const navigate = useNavigate()
-//     navigate(`${rota}/${id}`)
-// }
 
 export const FichaAluno = ({nome, turma,id})=>{
     const navigate = useNavigate()
@@ -20,6 +19,61 @@ export const FichaAluno = ({nome, turma,id})=>{
         </div>
     )
 }
+
+export const FichaAlunoChamada = ({nome, id,marcarBiblia,marcarRevista,marcarOferta,marcarPonto,biblia,pontos,revista,oferta,presenca})=>{
+  
+    const siz = 25
+    return(
+        <div className='card'
+        
+        >
+           <div onClick={()=>{
+            console.log("Está presente", nome)
+        }}><p >{nome}</p></div> 
+            <div className='cardAlunoChamada'>
+                <div
+                    onClick={()=>{
+                        
+                        marcarBiblia(id)
+                    }}
+                >
+                    <BiBible size={siz} color={biblia? 'brown':'black'}/>
+                    <p>Bíblia</p>
+                </div>
+                <div
+                    onClick={()=>{
+                        
+                        marcarRevista(id)
+                    }}
+                >
+                    <BiBook size={siz} color={revista? 'blue':'black'} />
+                    <p>Revista</p>
+                </div>
+                <div
+                    onClick={()=>{
+                        
+                        marcarOferta(id)
+                    }}
+                >
+                    <FaCoins size={siz} color={oferta? 'orange':'black'} />
+                    <p>Oferta</p>
+                </div>
+                 <div
+                    onClick={()=>{
+                        
+                        marcarPonto(id)
+                    }}
+                 >
+                    <BsStarFill size={siz} color={pontos > 0? 'yellow':'black'}/>
+                    <p>Pontos</p>
+                </div>
+            </div>
+
+        </div>
+    
+    )
+}
+
 
 export const FichaProfessor = ({nome, turma,id})=>{
     const navigate = useNavigate()
@@ -50,9 +104,14 @@ export const FichaTurma = ({nomeTurma,descricaoTurma,id})=>{
     )
 }
 
-export const FichaAulaTurma = ({nomeTurma, situacao, aproveitamento})=>{
+export const FichaAulaTurma = ({nomeTurma, situacao, aproveitamento,id})=>{
+    const navigate = useNavigate()
     return(
-        <div className='card'>
+        <div className='card'
+            onClick={()=>{
+                navigate(`/aulachamada/${id}`)
+            }}
+        >
             <p>Nome: {nomeTurma}</p>
             <div>
                 <p>{situacao}</p>
@@ -89,24 +148,10 @@ export default function Ficha({nome, turma, genero,id,edit,apagar})
     {
     return(
         <div className='card'>
-                {/* <div>
-                    {genero==="M"? <FaMale size={40}/>:<FaFemale size={40}/>}
-                </div> */}
                 <div>
                     <p>Nome: {nome}</p>
                     <p>Turma: {turma}</p>
                 </div>
-            {/* <div>
-                <PiPencil 
-                size={27} 
-                style={{marginRight:"5px"}}
-                onClick={()=>edit(id)}
-
-                />
-                <BiTrash size={27}
-                onClick={()=>apagar(id)}
-                />
-            </div> */}
         </div>
     )
 }

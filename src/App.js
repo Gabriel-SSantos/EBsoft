@@ -13,6 +13,7 @@ import Alunos from './components/pages/Alunos/Alunos';
 import AlunosView from './components/pages/Alunos/AlunosView';
 import Professores from './components/pages/Professores/Professores';
 import ProfessoresView from './components/pages/Professores/ProfessoresView';
+import AulaChamada from './components/pages/Aulas/AulaChamada';
 import { getAuth, onAuthStateChanged, signInAnonymously } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 
@@ -76,7 +77,7 @@ function App() {
             <Route path='/turmas' Component={Turmas}></Route>
             <Route path='/turmas/:id' Component={TurmasView}></Route>
             <Route path='/aula/:id' Component={ListaTurmas}></Route>
-            
+            <Route path='/aulachamada/:id' Component={AulaChamada}></Route>
             <Route path='/alunos' Component={Alunos}></Route>
             <Route path='/alunos/:id' Component={AlunosView}></Route><Route path='/professores' Component={Professores}></Route>
             <Route path='/professores/:id' Component={ProfessoresView}></Route>

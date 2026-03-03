@@ -1,4 +1,3 @@
-
 import style from "./aulaLista.module.css"
 import { useEffect, useState } from "react"
 import { getDocumentoUnico, getItens } from "../../../firebase/CRUD"
@@ -46,7 +45,6 @@ export default function ListaTurmas(){
                         key={id}
                         id={item.id}   
                         nomeTurma={item.nome}
-                        // descricaoTurma={item.descricao}
                     />
                 )
             }

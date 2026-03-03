@@ -61,9 +61,6 @@ export default function Cadastrar(){
                         id = {index}
                         nome={alunos.nome}
                         turma={alunos.turma}
-                        // genero={alunos.genero}
-                        // edit={indiceEdit}
-                        // apagar={Apagar}
                         />))}
             <div
                 style={{
