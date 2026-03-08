@@ -135,3 +135,7 @@ export async function filtro(collectionName,campo,parametros,callback){
       throw error;
   }
 }
+
+// export async function salvarChamadaGeral(dataAula, escolaId, vetorTurmas){
+
+// }

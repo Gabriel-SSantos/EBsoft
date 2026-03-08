@@ -9,11 +9,24 @@ export default function ListaTurmas(){
     const {id} = useParams()
     const [aulaInfo, setAulaInfo] = useState({})
     const [listaTurmas, setListaTurmas] = useState([])
+    
     useEffect(()=>{
-        getDocumentoUnico("aulas",id,setAulaInfo)
-        getItens("turmas",setListaTurmas)
+        const listasTurma = (doc)=>{
+            let lista = []
+            const up = (e)=>{ 
+                lista.push(e)
+            }
+            doc.turmas.forEach(element => {
+                getDocumentoUnico("aulaTurma",element,up)
+            });
+            if(listaTurmas.length == 0)
+                setListaTurmas(lista)
+            setAulaInfo(doc)
+        } 
+        getDocumentoUnico("aulas",id,listasTurma)
     },[])
-
+    
+    
     return(
         <div className={`${style.container}`}>
             <div className={`${style.cabecalho}`}>
@@ -23,18 +36,13 @@ export default function ListaTurmas(){
                     justifyContent:"space-between"
                 }}>
                     <BackButton/>
-                    {/* <BiPencil
-                    onClick={
-                       ativarCadastramento
-                    }
-                    size={30}/> */}
                 </div>
                 <div style={{width: "100%"}}>
                 {aulaInfo.licao  
                     &&
                     <h2>{aulaInfo.licao}</h2>}</div>
             </div>
-            
+            {console.log(listaTurmas.length)}
             {
                 listaTurmas.length == 0 
                 && <p>Carregando turmas...</p>

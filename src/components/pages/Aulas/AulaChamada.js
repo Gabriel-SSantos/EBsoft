@@ -6,11 +6,16 @@ import style from "./aulaLista.module.css"
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { filtro } from "../../../firebase/CRUD"
+import { salvar } from '../../Forms/Cadastro'
 import {  FichaAlunoChamada } from "../../layout/Fichas"
 
 export default function AulaChamada(){
 
     const [AlunosTurma,setAlunosTurma] = useState([])
+    const [totBiblia, setTotBiblia] = useState(0)
+    const [totRevista, setTotRevista] = useState(0)
+    const [totOferta, setTotOferta] = useState(0)
+    const [visitantes,setVisitantes] = useState(0)
     const [click,setClick] = useState(false)
      const {id} = useParams()
 
@@ -18,12 +23,16 @@ export default function AulaChamada(){
         filtro("alunos","turma",id,setAlunosTurma)
     },[])
 
-    console.log(AlunosTurma)
-
+    // const somar = (v)=>{
+    //     AlunosTurma.forEach((conta)=>{
+    //         if(conta.)
+    //     })
+        
+    // }
     const marcarBiblia = (index)=>{
         AlunosTurma[index].biblia = !AlunosTurma[index].biblia 
+
         setClick(!click)
-        console.log(AlunosTurma[index].biblia)
     }
     const marcarRevista = (index)=>{
         AlunosTurma[index].revista = !AlunosTurma[index].revista 
@@ -37,6 +46,10 @@ export default function AulaChamada(){
         AlunosTurma[index].pontos += 1 
         setClick(!click)
         console.log(AlunosTurma[index].nome, " fez ", AlunosTurma[index].pontos, " pontos")
+    }
+    const mudancaEstadoVisitantes = (e)=>{
+        console.log(e.target.value)
+        setVisitantes(e.target.value)
     }
     return(
         <div className={`${style.container}`}>
@@ -63,7 +76,11 @@ export default function AulaChamada(){
             } 
             <div>
                 <p>Visitantes: </p>
-                <input type="number"/>
+                <input 
+                type="number"
+                onChange={mudancaEstadoVisitantes}
+                value={visitantes}
+                />
             </div>
             <div>
                 <p>Resumo</p>
@@ -84,7 +101,21 @@ export default function AulaChamada(){
                     <p>{} <BsPersonFill size={20} color='black'/></p>
                 </div>
             </div>
-            <button>
+            <button
+                onClick={()=>{
+                    if(AlunosTurma.length > 0){
+                        let turmaAula = {
+                            listaAlunos: AlunosTurma,
+                            visitantes: visitantes
+                        }
+                        salvar({
+                            localstore:"aulaTurma",
+                            item:turmaAula
+                        })
+                    }
+                    
+                }}
+            >
                 Enviar Relatório
             </button>
         </div>

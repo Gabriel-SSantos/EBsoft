@@ -1,11 +1,11 @@
 import style from './cadastros.module.css'
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import { BiX } from 'react-icons/bi'
 import {addItem } from "../../firebase/CRUD"
 import { getItens, getDocCollection,updateItem } from '../../firebase/CRUD'
 
-const salvar=({localstore,item})=>{
-    addItem(localstore,item)
+export const salvar=({localstore,item})=>{
+    return addItem(localstore,item)
 }
 
 function Selection({text,name,options,handleOnChange,value}){
@@ -40,7 +40,6 @@ export function FormAluno({cadastramento,edit}){
     const [turma,setTurma] = useState("")
     const [turmaNome, setTurmaNome] = useState("")
     const [turmas, setTurmas] = useState([])
-    
 
     const buscar = (key,lista)=>{
         const tam = lista.length
@@ -152,10 +151,25 @@ export function FormAluno({cadastramento,edit}){
                     presencas: 0,
                     pontos: 0,
                 }
+                let atualizacao = {}
                 salvar({
                     item:aluno,
                     localstore:"alunos"
-                })}}
+                }).then((novoID)=>{
+                    turmas.forEach((atualiza)=>{
+                        if(atualiza.id == turma){
+                            atualiza.alunos.push(novoID)
+                            atualizacao = atualiza
+                        }
+                    })
+                    updateItem(
+                        "turmas",
+                        turma,
+                        atualizacao,
+                    )
+                })
+   
+            }}
         >Salvar</button>
         }
         {edit && 
@@ -173,7 +187,30 @@ export function FormAluno({cadastramento,edit}){
                     "alunos",
                     edit.id,
                     attAluno,
-                )}}
+                ).then(()=>{
+                    turmas.forEach((atualiza)=>{
+                        // turmas.forEach((remover)=>{
+                        // if(remover.id == edit.turma){
+                        //     remover.alunos.forEach((sair)=>{
+                        //         if(sair != edit.id)
+                                    
+                        //     })
+                        //     remover.alunos.push(edit.id)
+                        // }
+                        // }) 
+                        if(atualiza.id == turma){
+                            atualiza.alunos.push(edit.id)
+                        }
+                    })
+                    updateItem(
+                        "turmas",
+                        turma,
+                        turmas,
+                    )
+                })
+                
+            
+            }}
         >Atualizar</button>
         }
     </div>
@@ -186,34 +223,79 @@ export function FormAula({cadastramento,edit}){
     const [licao,setLicao] = useState("")
     const [dataAula, setDataAula] = useState(Date)
     const [observacao,setObservacao] = useState("")
+    const [turmasID, setTurmasID] = useState([])
+    const [idsTurmas, setIdsTurmas] = useState({})
+    const [idsTurmasAulas,setIdsTurmasAulas] = useState([])
     
     let attAula = {
-        licao:"",
+        licao:licao,
         genero:"",
         nascimento: Date(),
         biblia: 0,
         revista: 0,
         presencas: 0,
+        turmas:[],
         situacao: "aberta",
     }
+    
     const mudancaEstadoLicao = (e)=>{
         setLicao(e.target.value)
     }
     const mudancaEstadoObs = (e)=>{
+        console.log(idsTurmasAulas)
         setObservacao(e.target.value)
     }
     const mudancaEstadoData = (e)=>{
+        if(idsTurmasAulas.length < 1)
+            turmaAula()
         setDataAula(e.target.value)
     }
    
+    
     useEffect(()=>{
+        getDocCollection("turmas",setIdsTurmas)
+        
         if(edit){
             setLicao(edit.licao)
             setObservacao(edit.obs)
             setDataAula(edit.data)
         }
+        // turmaAula()
     },[])
 
+    const turmaAula =()=>{
+       
+        let ids = []
+        idsTurmas.forEach(element => {
+            salvar({
+                item:{
+                    situacao: "aberta",
+                    id:element.id, 
+                    nome:element.nome
+                },
+                localstore:"aulaTurma"
+                }).then((element)=>{
+                    ids.push(element)
+                })
+        });
+        setIdsTurmasAulas(ids)   
+    }
+    const salvarAulas = ()=>{
+        let id = idsTurmasAulas
+        turmasID.forEach(element =>{
+            salvar({
+                item:{
+                    situacao: "aberta",
+                    id:element 
+                },
+                localstore:"aulaTurma"
+                }).then((element)=>{
+                    id.push(element)
+                })
+            })
+        setIdsTurmasAulas(id)    
+        }
+    
     return(
     <div className={`${style.cad_box}`}>
         <div style={{width:"100%",display:"flex",justifyContent:"flex-start"}}><p style={{fontSize:"15px",textAlign:"center"}}>Preencha o formulário para realizar a matrícula</p><BiX size={30} onClick={cadastramento}/></div>
@@ -245,6 +327,8 @@ export function FormAula({cadastramento,edit}){
             
             onClick={()=>{
                 cadastramento()
+                salvarAulas()
+                console.log(idsTurmasAulas)
                 const aula = {
                     licao:licao,
                     dataAula:dataAula,
@@ -253,12 +337,15 @@ export function FormAula({cadastramento,edit}){
                     biblia: 0,
                     revista: 0,
                     presencas: 0,
-                    situacao: "aberta",
+                    situacao: "aberta", 
+                    turmas:idsTurmasAulas
                 }
                 salvar({
                     item:aula,
                     localstore:"aulas"
-                })}}
+                })
+            }}
+                
         >Salvar</button>
         }
         {edit && 

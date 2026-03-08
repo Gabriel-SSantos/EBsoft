@@ -48,7 +48,6 @@ function Home(){
                                     id={item.id}  
                                     licao={"Lição " + item.licao}
                                     presentes={item.presencas}
-                                    // aproveitamento={item.aproveitamento}
                                     biblia={item.biblia}
                                     data={item.dataAula}
                                     revista={item.revista}
