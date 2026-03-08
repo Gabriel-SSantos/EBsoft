@@ -254,13 +254,11 @@ export function FormAula({cadastramento,edit}){
     
     useEffect(()=>{
         getDocCollection("turmas",setIdsTurmas)
-        
         if(edit){
             setLicao(edit.licao)
             setObservacao(edit.obs)
             setDataAula(edit.data)
         }
-        // turmaAula()
     },[])
 
     const turmaAula =()=>{
@@ -270,7 +268,7 @@ export function FormAula({cadastramento,edit}){
             salvar({
                 item:{
                     situacao: "aberta",
-                    id:element.id, 
+                    idTurma:element.id, 
                     nome:element.nome
                 },
                 localstore:"aulaTurma"
@@ -280,21 +278,7 @@ export function FormAula({cadastramento,edit}){
         });
         setIdsTurmasAulas(ids)   
     }
-    const salvarAulas = ()=>{
-        let id = idsTurmasAulas
-        turmasID.forEach(element =>{
-            salvar({
-                item:{
-                    situacao: "aberta",
-                    id:element 
-                },
-                localstore:"aulaTurma"
-                }).then((element)=>{
-                    id.push(element)
-                })
-            })
-        setIdsTurmasAulas(id)    
-        }
+
     
     return(
     <div className={`${style.cad_box}`}>
@@ -327,7 +311,7 @@ export function FormAula({cadastramento,edit}){
             
             onClick={()=>{
                 cadastramento()
-                salvarAulas()
+                // salvarAulas()
                 console.log(idsTurmasAulas)
                 const aula = {
                     licao:licao,

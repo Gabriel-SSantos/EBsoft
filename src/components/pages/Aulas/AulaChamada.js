@@ -5,7 +5,7 @@ import { BsPersonFill } from 'react-icons/bs'
 import style from "./aulaLista.module.css"
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { filtro } from "../../../firebase/CRUD"
+import { filtro,getDocumentoUnico,updateItem } from "../../../firebase/CRUD"
 import { salvar } from '../../Forms/Cadastro'
 import {  FichaAlunoChamada } from "../../layout/Fichas"
 
@@ -17,18 +17,22 @@ export default function AulaChamada(){
     const [totOferta, setTotOferta] = useState(0)
     const [visitantes,setVisitantes] = useState(0)
     const [click,setClick] = useState(false)
+    const [aula,setAula] = useState()
      const {id} = useParams()
 
     useEffect(()=>{
-        filtro("alunos","turma",id,setAlunosTurma)
+        const listaAlunos = (doc)=>{
+            if(!doc.listaAlunos){
+                filtro("alunos","turma","==",doc.idTurma,setAlunosTurma)
+            }else {
+                setAlunosTurma(doc.listaAlunos)
+            }
+            setAula(doc)
+        }
+        getDocumentoUnico("aulaTurma",id,listaAlunos)
     },[])
 
-    // const somar = (v)=>{
-    //     AlunosTurma.forEach((conta)=>{
-    //         if(conta.)
-    //     })
-        
-    // }
+   
     const marcarBiblia = (index)=>{
         AlunosTurma[index].biblia = !AlunosTurma[index].biblia 
 
@@ -104,14 +108,28 @@ export default function AulaChamada(){
             <button
                 onClick={()=>{
                     if(AlunosTurma.length > 0){
-                        let turmaAula = {
-                            listaAlunos: AlunosTurma,
-                            visitantes: visitantes
-                        }
-                        salvar({
-                            localstore:"aulaTurma",
-                            item:turmaAula
+                        let alunos = []
+                        AlunosTurma.forEach((item)=>{
+                            alunos.push({
+                                nome: item.nome,
+                                presenca: item.presencas,
+                                revista: item.revista,
+                                biblia: item.biblia,
+                                oferta: item.oferta
+                            })
                         })
+                        let turmaAula = {
+                            listaAlunos: alunos,
+                            visitantes: visitantes,
+                            situacao: "fechada",
+                            nome: aula.nome
+                        }
+                        console.log(turmaAula)
+                        updateItem(
+                            "aulaTurma",
+                            id,
+                            turmaAula,
+                        )
                     }
                     
                 }}

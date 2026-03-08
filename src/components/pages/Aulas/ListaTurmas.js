@@ -1,6 +1,7 @@
 import style from "./aulaLista.module.css"
 import { useEffect, useState } from "react"
-import { getDocumentoUnico, getItens } from "../../../firebase/CRUD"
+import { getDocumentoUnico, filtro } from "../../../firebase/CRUD"
+import {documentId} from "firebase/firestore";
 import { useParams } from "react-router-dom"
 import { FichaAulaTurma } from "../../layout/Fichas"
 import BackButton from '../../layout/BackButton'
@@ -10,20 +11,20 @@ export default function ListaTurmas(){
     const [aulaInfo, setAulaInfo] = useState({})
     const [listaTurmas, setListaTurmas] = useState([])
     
+    
+
     useEffect(()=>{
         const listasTurma = (doc)=>{
-            let lista = []
-            const up = (e)=>{ 
-                lista.push(e)
-            }
-            doc.turmas.forEach(element => {
-                getDocumentoUnico("aulaTurma",element,up)
-            });
-            if(listaTurmas.length == 0)
-                setListaTurmas(lista)
+            setListaTurmas([])
             setAulaInfo(doc)
+            if(doc.turmas.length && doc.turmas.length > 0){
+                filtro("aulaTurma",documentId(),"in",doc.turmas,setListaTurmas)
+            }
+            
+                 
         } 
         getDocumentoUnico("aulas",id,listasTurma)
+        
     },[])
     
     
@@ -40,9 +41,10 @@ export default function ListaTurmas(){
                 <div style={{width: "100%"}}>
                 {aulaInfo.licao  
                     &&
-                    <h2>{aulaInfo.licao}</h2>}</div>
+                    <h2>{aulaInfo.licao}</h2>}
+                </div>
             </div>
-            {console.log(listaTurmas.length)}
+            {console.log(listaTurmas)}
             {
                 listaTurmas.length == 0 
                 && <p>Carregando turmas...</p>
@@ -53,6 +55,7 @@ export default function ListaTurmas(){
                         key={id}
                         id={item.id}   
                         nomeTurma={item.nome}
+                        situacao={item.situacao}
                     />
                 )
             }

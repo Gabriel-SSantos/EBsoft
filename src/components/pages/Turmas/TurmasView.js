@@ -18,8 +18,8 @@ export default function TurmasView(){
 
     useEffect(()=>{
         getDocumentoUnico("turmas",id,setTurmaInfo)
-        filtro("alunos","turma",id,setAlunos)
-        filtro("professores","turma",id,setProfessores)
+        filtro("alunos","turma","==",id,setAlunos)
+        filtro("professores","turma","==",id,setProfessores)
         console.log(professores)
     },[])
 

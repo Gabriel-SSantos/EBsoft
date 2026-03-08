@@ -10,7 +10,8 @@ import {
     query, 
     where, 
     orderBy,
-    serverTimestamp 
+    serverTimestamp,
+    documentId 
 } from "firebase/firestore";
 
 import {db} from "./firebase"
@@ -119,15 +120,14 @@ export async function deleteItem(collectionName, docId){
     }
   };
 
-export async function filtro(collectionName,campo,parametros,callback){
+export async function filtro(collectionName,campo,operador,parametros,callback){
   try{
-    const q = query(collection(db,collectionName), where(campo,"==",parametros))
+    const q = query(collection(db,collectionName), where(campo,operador,parametros))
     const querySnapshot = await getDocs(q)
     const dados = querySnapshot.docs.map(doc=>({
       id:doc.id,
       ...doc.data()
     }))
-    console.log(dados)
     callback(dados)
     return;
   }catch(error){
@@ -136,6 +136,3 @@ export async function filtro(collectionName,campo,parametros,callback){
   }
 }
 
-// export async function salvarChamadaGeral(dataAula, escolaId, vetorTurmas){
-
-// }
