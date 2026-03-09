@@ -90,7 +90,7 @@ export function FormAluno({cadastramento,edit}){
 
     return(
     <div className={`${style.cad_box}`}>
-        <div style={{width:"100%",display:"flex",justifyContent:"flex-start"}}><p style={{fontSize:"15px",textAlign:"center"}}>Preencha o formulário para realizar a matrícula</p><BiX size={30} onClick={cadastramento}/></div>
+        <div className={`${style.cabecalhoForm}`}><p style={{fontSize:"15px",textAlign:"center"}}>Preencha o formulário para realizar a matrícula</p><BiX size={30} onClick={cadastramento}/></div>
         
         <div><p>Nome: </p><input 
             type='text'
@@ -281,70 +281,87 @@ export function FormAula({cadastramento,edit}){
 
     
     return(
-    <div className={`${style.cad_box}`}>
-        <div style={{width:"100%",display:"flex",justifyContent:"flex-start"}}><p style={{fontSize:"15px",textAlign:"center"}}>Preencha o formulário para realizar a matrícula</p><BiX size={30} onClick={cadastramento}/></div>
-        
-        <div><p>Lição: </p><input 
-            type='text'
-            value={licao}
-            onChange={mudancaEstadoLicao}
-            /></div>
+    <div className={`${style.envelope_box}`}>
+        <div className={`${style.cad_box}`}>
+            <div className={`${style.cabecalhoForm}`} >
+                <BiX size={30} onClick={cadastramento}/>
+                <p className={`${style.cabecalhoFormp}`}
+                >Nova Aula</p>
+            </div>
         <div>
-            <input
-                type='date'
-                value={dataAula}
-                onChange={mudancaEstadoData}
-            />
+            <div>
+                <label>Lição:
+                    <input 
+                    type='text'
+                    value={licao}
+                    placeholder='Título da lição ou número'
+                    onChange={mudancaEstadoLicao}
+                    /> 
+                </label>
+            </div>
+            <div>
+                <label>Data da aula: 
+                    <input
+                    style={{textAlign:"center"}}
+                        type='date'
+                        value={dataAula}
+                        placeholder='Data da aula'
+                        onChange={mudancaEstadoData}
+                    />
+                </label>
+            </div>
+                <div>
+                    <label>Observação: </label>
+                    <input 
+                    type='text'
+                    placeholder='Deixe aqui observações quanto a esta aula'
+                    value={observacao}
+                    onChange={mudancaEstadoObs}/>
+                </div>
         </div>
-        <div><p>Observação: </p><input 
-            type='text'
-            value={observacao}
-            onChange={mudancaEstadoObs}
-            /></div>
-        <div></div>
-        <div
-            style={{display:"flex",alignItems:"center",width:"50%"}}
-        ></div>
-        {!edit && 
-        <button type='button'
-            className={`${style.button}`}
-            
-            onClick={()=>{
-                cadastramento()
-                // salvarAulas()
-                console.log(idsTurmasAulas)
-                const aula = {
-                    licao:licao,
-                    dataAula:dataAula,
-                    observacao: observacao,
-                    oferta: 0,
-                    biblia: 0,
-                    revista: 0,
-                    presencas: 0,
-                    situacao: "aberta", 
-                    turmas:idsTurmasAulas
-                }
-                salvar({
-                    item:aula,
-                    localstore:"aulas"
-                })
-            }}
+            {!edit && 
+            <div 
+                className={`${style.button}`}
                 
-        >Salvar</button>
-        }
-        {edit && 
-        <button type='button'
-            className={`${style.button}`}
-            
-            onClick={()=>{
-                cadastramento()
-                updateItem(
-                    "aulas",
-                    edit.id,
-                    attAula,
-                )}}
-        >Atualizar</button>
-        }
+                onClick={()=>{
+                    cadastramento()
+                    // salvarAulas()
+                    console.log(idsTurmasAulas)
+                    const aula = {
+                        licao:licao,
+                        dataAula:dataAula,
+                        observacao: observacao,
+                        oferta: 0,
+                        biblia: 0,
+                        revista: 0,
+                        presencas: 0,
+                        situacao: "aberta", 
+                        turmas:idsTurmasAulas
+                    }
+                    salvar({
+                        item:aula,
+                        localstore:"aulas"
+                    })
+                }}
+                    
+            >
+                <p>Salvar</p>   
+            </div>
+            }
+            {edit && 
+            <button type='button'
+                className={`${style.button}`}
+                
+                onClick={()=>{
+                    cadastramento()
+                    updateItem(
+                        "aulas",
+                        edit.id,
+                        attAula,
+                    )}}
+            >Atualizar</button>
+            }
+        </div>
     </div>
     )
 }

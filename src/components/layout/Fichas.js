@@ -124,8 +124,11 @@ export const FichaAulaTurma = ({nomeTurma, situacao, aproveitamento,id})=>{
 export const FichaAula = ({licao, data, situacao, presentes, revista,biblia,aproveitamento,id})=>{
     const navigate = useNavigate()
     let dataModificada = data.split("-").reverse().join("/")
+    
     return(
-        <div className='card_aula'
+        <div 
+        style={{backgroundColor: situacao == "fechada"? "#deffc1":"#feffc1"}}
+        className='card_aula'
             onClick={()=>{
                 navigate(`/aula/${id}`)
             }}

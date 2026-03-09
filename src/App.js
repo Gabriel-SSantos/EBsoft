@@ -40,14 +40,14 @@ function App() {
     return(
       <div style={
         {
-          padding: 10,
+          padding: 5,
           backgroundColor:"#7488DA", 
           display:"flex",
           alignItems:"center",
           justifyContent:"center",
-          position: "fixed",
-          top: 0,
-          left: 0,
+          // position: "fixed",
+          // top: 0,
+          // left: 0,
           width: "100%",
         }}>
           <BiBookOpen size={50}

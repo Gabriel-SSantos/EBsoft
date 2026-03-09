@@ -1,15 +1,13 @@
 .container{
     flex: 1;
     overflow-y: auto;
+    scrollbar-width: auto;
     width: 100%;
     margin: 0 auto;
 }
 
 .min-height{
-    padding-top: 3.2em; 
-    padding-left: 0.4em;
-    padding-right: 0.4em; 
-    padding-bottom: 85px;
+    padding-bottom: 85px; 
 }
 
 .start{

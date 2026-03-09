@@ -29,7 +29,7 @@ function Home(){
                     <div>
                         <h2>Aulas</h2>
                     </div>
-                    <div>
+                    <div style={{display:"flex",width:"100%",justifyContent:"center"}}>
                         <BotaoCadastro 
                             cadastramento={ativarCadastramento}
                             texto={"Nova Aula"}
