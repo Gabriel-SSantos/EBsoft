@@ -107,15 +107,16 @@ export const FichaTurma = ({nomeTurma,descricaoTurma,id})=>{
 export const FichaAulaTurma = ({nomeTurma, situacao, aproveitamento,id})=>{
     const navigate = useNavigate()
     return(
-        <div className='card'
+        <div 
+            style={{backgroundColor: situacao == "fechada"? "#deffc1":"#feffc1"}}
+            className='card_aula_turma'
             onClick={()=>{
                 navigate(`/aulachamada/${id}`)
             }}
         >
-            <p>Nome: {nomeTurma}</p>
+            <p>{nomeTurma}</p>
             <div>
                 <p>{situacao}</p>
-                <p>{aproveitamento}</p>
             </div>
         </div>
     )

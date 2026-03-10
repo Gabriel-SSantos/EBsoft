@@ -15,6 +15,7 @@ export default function AulaChamada(){
     const [totBiblia, setTotBiblia] = useState(0)
     const [totRevista, setTotRevista] = useState(0)
     const [totOferta, setTotOferta] = useState(0)
+    const [totPresenca,setTotPresenca] = useState(0)
     const [visitantes,setVisitantes] = useState(0)
     const [click,setClick] = useState(false)
     const [aula,setAula] = useState()
@@ -32,15 +33,29 @@ export default function AulaChamada(){
         getDocumentoUnico("aulaTurma",id,listaAlunos)
     },[])
 
-   
+   const contar = ()=>{
+        let totBib = 0
+        let totRev = 0
+        let totPres = 0
+        AlunosTurma.forEach((element)=>{
+            if(element.biblia) 
+                totBib++
+            if(element.revista)
+                totRev++
+            if(element.presenca > 0)
+                totPres++
+        })
+        setTotBiblia(totBib)
+        setTotRevista(totRev)
+        setTotPresenca(totPres)
+   }
     const marcarBiblia = (index)=>{
         AlunosTurma[index].biblia = !AlunosTurma[index].biblia 
-
-        setClick(!click)
+        contar()
     }
     const marcarRevista = (index)=>{
         AlunosTurma[index].revista = !AlunosTurma[index].revista 
-        setClick(!click)
+        contar()
     }
     const marcarOferta = (index)=>{
         AlunosTurma[index].oferta = !AlunosTurma[index].oferta 
@@ -90,11 +105,11 @@ export default function AulaChamada(){
                 <p>Resumo</p>
                 <div>
                     <p>Total de Bíblias</p>
-                    <p>{} <BiBible size={20} color='brown'/></p>
+                    <p>{totBiblia} <BiBible size={20} color='brown'/></p>
                 </div>
                 <div>
                     <p>Total de Revistas</p>
-                    <p>{} <BiBook size={20} color='blue'/></p>
+                    <p>{totRevista} <BiBook size={20} color='blue'/></p>
                 </div>
                 <div>
                     <p>Total de Ofertas</p>
@@ -102,7 +117,7 @@ export default function AulaChamada(){
                 </div>
                 <div>
                     <p>Visitantes</p>
-                    <p>{} <BsPersonFill size={20} color='black'/></p>
+                    <p>{visitantes} <BsPersonFill size={20} color='black'/></p>
                 </div>
             </div>
             <button
@@ -122,7 +137,10 @@ export default function AulaChamada(){
                             listaAlunos: alunos,
                             visitantes: visitantes,
                             situacao: "fechada",
-                            nome: aula.nome
+                            nome: aula.nome,
+                            biblias: totBiblia,
+                            revistas: totRevista,
+                            presencas: totPresenca,
                         }
                         console.log(turmaAula)
                         updateItem(

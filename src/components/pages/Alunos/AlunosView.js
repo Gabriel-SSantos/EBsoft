@@ -38,7 +38,8 @@ export default function AlunosView(){
                         onClick={
                             ativarCadastramento
                         }
-                        size={30}/></div>
+                        size={30}/>
+                </div>
                 {!AlunoInfo.nome 
                     && <h3>Carregando Aluno...</h3>
                 }
