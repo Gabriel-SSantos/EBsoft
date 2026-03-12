@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/EBsoft/static/css/main.d84bdf6b.css",
-    "main.js": "/EBsoft/static/js/main.c2353d4b.js",
+    "main.css": "/EBsoft/static/css/main.98d388b6.css",
+    "main.js": "/EBsoft/static/js/main.8b1d7bf7.js",
     "index.html": "/EBsoft/index.html",
-    "main.d84bdf6b.css.map": "/EBsoft/static/css/main.d84bdf6b.css.map",
-    "main.c2353d4b.js.map": "/EBsoft/static/js/main.c2353d4b.js.map"
+    "main.98d388b6.css.map": "/EBsoft/static/css/main.98d388b6.css.map",
+    "main.8b1d7bf7.js.map": "/EBsoft/static/js/main.8b1d7bf7.js.map"
   },
   "entrypoints": [
-    "static/css/main.d84bdf6b.css",
-    "static/js/main.c2353d4b.js"
+    "static/css/main.98d388b6.css",
+    "static/js/main.8b1d7bf7.js"
   ]
 }
