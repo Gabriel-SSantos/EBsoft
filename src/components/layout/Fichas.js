@@ -20,15 +20,14 @@ export const FichaAluno = ({nome, turma,id})=>{
     )
 }
 
-export const FichaAlunoChamada = ({nome, id,marcarBiblia,marcarRevista,marcarOferta,marcarPonto,biblia,pontos,revista,oferta,presenca})=>{
-  
+export const FichaAlunoChamada = ({nome, id,marcarBiblia,marcarRevista,marcarOferta,marcarPonto,biblia,pontos,revista,oferta,marcarPresenca,presenca})=>{
     const siz = 25
     return(
         <div className='card'
-        
+        style={{borderColor: presenca ? "blue":"#FFF"}}
         >
            <div onClick={()=>{
-            console.log("Está presente", nome)
+                marcarPresenca(id)
         }}><p >{nome}</p></div> 
             <div className='cardAlunoChamada'>
                 <div

@@ -3,7 +3,7 @@ import { BiBook } from 'react-icons/bi'
 import { FaCoins } from 'react-icons/fa'
 import { BsPersonFill } from 'react-icons/bs'
 import style from "./aulaLista.module.css"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { filtro,getDocumentoUnico,updateItem } from "../../../firebase/CRUD"
 import { salvar } from '../../Forms/Cadastro'
@@ -19,6 +19,7 @@ export default function AulaChamada(){
     const [visitantes,setVisitantes] = useState(0)
     const [click,setClick] = useState(false)
     const [aula,setAula] = useState()
+    const navigate = useNavigate()
      const {id} = useParams()
 
     useEffect(()=>{
@@ -33,6 +34,18 @@ export default function AulaChamada(){
         getDocumentoUnico("aulaTurma",id,listaAlunos)
     },[])
 
+    const atulizar = (colecao,documento,objeto)=>{
+       
+
+        updateItem(
+            colecao,
+            documento,
+            objeto,
+        ).then((final)=>{
+            navigate(-1)
+        })
+
+    }
    const contar = ()=>{
         let totBib = 0
         let totRev = 0
@@ -42,7 +55,7 @@ export default function AulaChamada(){
                 totBib++
             if(element.revista)
                 totRev++
-            if(element.presenca > 0)
+            if(element.presencas)
                 totPres++
         })
         setTotBiblia(totBib)
@@ -57,6 +70,11 @@ export default function AulaChamada(){
         AlunosTurma[index].revista = !AlunosTurma[index].revista 
         contar()
     }
+     const marcarPresenca = (index)=>{
+        AlunosTurma[index].presencas = !AlunosTurma[index].presencas
+        
+        contar()
+    }
     const marcarOferta = (index)=>{
         AlunosTurma[index].oferta = !AlunosTurma[index].oferta 
         setClick(!click)
@@ -69,6 +87,9 @@ export default function AulaChamada(){
     const mudancaEstadoVisitantes = (e)=>{
         console.log(e.target.value)
         setVisitantes(e.target.value)
+    }
+     const mudancaEstadoOferta = (e)=>{
+        setTotOferta(e.target.value)
     }
     return(
         <div className={`${style.container}`}>
@@ -86,6 +107,8 @@ export default function AulaChamada(){
                         marcarRevista={marcarRevista}
                         marcarOferta={marcarOferta}
                         marcarPonto={marcarPonto}
+                        marcarPresenca={marcarPresenca}
+                        presenca={item.presencas}
                         oferta={item.oferta}
                         biblia={item.biblia}
                         revista={item.revista}
@@ -93,16 +116,26 @@ export default function AulaChamada(){
                     />
                 )
             } 
-            <div>
-                <p>Visitantes: </p>
+            <div className={`${style.resumoTurma}`}>
+            
+                <label>Visitantes: 
                 <input 
                 type="number"
                 onChange={mudancaEstadoVisitantes}
                 value={visitantes}
-                />
+                /></label>
+            
+                <label>Oferta: 
+                <input 
+                type="number"
+                onChange={mudancaEstadoOferta}
+                value={totOferta}
+                /></label>
+            
             </div>
-            <div>
-                <p>Resumo</p>
+            <h3 style={{display:"flex", width:"100%"}}>Resumo</h3>
+            <div className={`${style.resumoTurma}`}>
+                
                 <div>
                     <p>Total de Bíblias</p>
                     <p>{totBiblia} <BiBible size={20} color='brown'/></p>
@@ -113,7 +146,7 @@ export default function AulaChamada(){
                 </div>
                 <div>
                     <p>Total de Ofertas</p>
-                    <p>{} <FaCoins size={20} color='orange'/></p>
+                    <p>{totOferta} <FaCoins size={20} color='orange'/></p>
                 </div>
                 <div>
                     <p>Visitantes</p>
@@ -127,7 +160,7 @@ export default function AulaChamada(){
                         AlunosTurma.forEach((item)=>{
                             alunos.push({
                                 nome: item.nome,
-                                presenca: item.presencas,
+                                presencas: item.presencas,
                                 revista: item.revista,
                                 biblia: item.biblia,
                                 oferta: item.oferta
@@ -143,11 +176,7 @@ export default function AulaChamada(){
                             presencas: totPresenca,
                         }
                         console.log(turmaAula)
-                        updateItem(
-                            "aulaTurma",
-                            id,
-                            turmaAula,
-                        )
+                        atulizar("aulaTurma",id,turmaAula)
                     }
                     
                 }}
