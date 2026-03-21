@@ -14,8 +14,8 @@ export const FichaAluno = ({nome, turma,id})=>{
             navigate(`/alunos/${id}`)
         }}
         >
-            <p>Nome: {nome}</p>
-            <p>{turma}</p>
+            <p>{nome}</p>
+            <p> - {turma}</p>
         </div>
     )
 }

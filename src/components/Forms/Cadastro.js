@@ -89,130 +89,137 @@ export function FormAluno({cadastramento,edit}){
     },[])
 
     return(
-    <div className={`${style.cad_box}`}>
-        <div className={`${style.cabecalhoForm}`}><p style={{fontSize:"15px",textAlign:"center"}}>Preencha o formulário para realizar a matrícula</p><BiX size={30} onClick={cadastramento}/></div>
-        
-        <div><p>Nome: </p><input 
-            type='text'
-            value={nome}
-            onChange={mudancaEstadoNome}
-            /></div>
-        <div
-            style={{display:"flex",alignItems:"center",width:"100%"}}
-        ><p>Gênero:</p><p style={{marginLeft:"4px"}}>Masculino</p><input 
-                value={"M"}
-                type='radio' 
-                name='genero'
-                onChange={mudancaEstadoGenero}
-            /> 
-            <p>Feminino </p><input 
-                value={"F"}
-                type='radio' 
-                name='genero'
-                onChange={mudancaEstadoGenero}
-            /></div>
-        <div>
-            <input
-                type='date'
-                value={dataNascimento}
-                onChange={mudancaEstadoNascimento}
-            />
-        </div>
-
-        <div>
-            {
-                Selection(
-                    {
-                        name:"turmas",
-                        text:"turmas",handleOnChange:mudancaEstadoTurma,
-                        options:turmas,
-                        value:turma
-                    })
-            }
+    <div className={`${style.envelope_box}`}>
+        <div className={`${style.cad_box}`}>
+            <div className={`${style.cabecalhoForm}`} >
+                <BiX size={30} onClick={cadastramento}/>
+                <p className={`${style.cabecalhoFormp}`}
+                >Preencha o formulário para realizar a matrícula</p>
             </div>
-        <div
-            style={{display:"flex",alignItems:"center",width:"50%"}}
-        ></div>
-        {!edit && 
-        <button type='button'
-            className={`${style.button}`}
-            
-            onClick={()=>{
-                cadastramento()
-                const aluno = {
-                    nome:nome,
-                    genero:genero,
-                    nascimento: dataNascimento,
-                    turma: turma,
-                    turmaNome: turmaNome,
-                    oferta: false,
-                    biblia: false,
-                    revista: false,
-                    presencas: 0,
-                    pontos: 0,
-                }
-                let atualizacao = {}
-                salvar({
-                    item:aluno,
-                    localstore:"alunos"
-                }).then((novoID)=>{
-                    turmas.forEach((atualiza)=>{
-                        if(atualiza.id == turma){
-                            atualiza.alunos.push(novoID)
-                            atualizacao = atualiza
-                        }
+            <div>
+                <input 
+                    type='text'
+                    placeholder='Nome do aluno'
+                    value={nome}
+                    onChange={mudancaEstadoNome}
+                />
+                <div
+                    style={{display:"flex",alignItems:"center",width:"100%", marginTop:'5px'}}
+                >
+                    <label
+                        style={{fontSize: '15px'}}
+                    >Masculino </label>
+                    <input 
+                            style={{width:'20px', margin:'4px'}}
+                            value={"M"}
+                            type='radio' 
+                            name='genero'
+                            onChange={mudancaEstadoGenero}/> 
+                    <label
+                        style={{fontSize: '15px'}}
+                    >Feminino</label> 
+                    <input 
+                        value={"F"}
+                        style={{width:'20px', margin:'4px'}}
+                        type='radio' 
+                        name='genero'
+                        onChange={mudancaEstadoGenero}/>
+                        
+                </div>
+                <div>
+                    <label
+                        style={{fontSize: '15px'}}
+                    >Nascimento: 
+                        <input
+                            type='date'
+                            placeholder='dd/mm/aa'
+                            value={dataNascimento}
+                            onChange={mudancaEstadoNascimento}
+                        />
+                    </label>
+                </div>
+                <div>
+                    {
+                        Selection(
+                            {
+                                name:"turmas",
+                                text:"Turma: ",handleOnChange:mudancaEstadoTurma,
+                                options:turmas,
+                                value:turma
+                            })
+                    }
+                </div>
+            </div>
+            {!edit && 
+            <div className={`${style.button}`}
+                onClick={()=>{
+                    cadastramento()
+                    const aluno = {
+                        nome:nome,
+                        genero:genero,
+                        nascimento: dataNascimento,
+                        turma: turma,
+                        turmaNome: turmaNome,
+                        oferta: false,
+                        biblia: false,
+                        revista: false,
+                        presencas: 0,
+                        pontos: 0,
+                    }
+                    let atualizacao = {}
+                    salvar({
+                        item:aluno,
+                        localstore:"alunos"
+                    }).then((novoID)=>{
+                        turmas.forEach((atualiza)=>{
+                            if(atualiza.id == turma){
+                                atualiza.alunos.push(novoID)
+                                atualizacao = atualiza
+                            }
+                        })
+                        updateItem(
+                            "turmas",
+                            turma,
+                            atualizacao,
+                        )
                     })
-                    updateItem(
-                        "turmas",
-                        turma,
-                        atualizacao,
-                    )
-                })
-   
-            }}
-        >Salvar</button>
-        }
-        {edit && 
-        <button type='button'
-            className={`${style.button}`}
-            
-            onClick={()=>{
-                cadastramento()
-                attAluno.nome = nome
-                attAluno.turma = turma
-                attAluno.turmaNome = turmaNome
-                attAluno.genero = genero
-                attAluno.nascimento = dataNascimento
-                updateItem(
-                    "alunos",
-                    edit.id,
-                    attAluno,
-                ).then(()=>{
-                    turmas.forEach((atualiza)=>{
-                        // turmas.forEach((remover)=>{
-                        // if(remover.id == edit.turma){
-                        //     remover.alunos.forEach((sair)=>{
-                        //         if(sair != edit.id)
-                                    
-                        //     })
-                        //     remover.alunos.push(edit.id)
-                        // }
-                        // }) 
-                        if(atualiza.id == turma){
-                            atualiza.alunos.push(edit.id)
-                        }
-                    })
-                    updateItem(
-                        "turmas",
-                        turma,
-                        turmas,
-                    )
-                })
+                }}>
+                    <p>Salvar</p>
+                </div>
+            }
+            {edit && 
+            <div className={`${style.button}`}
                 
-            
-            }}
-        >Atualizar</button>
-        }
+                onClick={()=>{
+                    cadastramento()
+                    attAluno.nome = nome
+                    attAluno.turma = turma
+                    attAluno.turmaNome = turmaNome
+                    attAluno.genero = genero
+                    attAluno.nascimento = dataNascimento
+                    updateItem(
+                        "alunos",
+                        edit.id,
+                        attAluno,
+                    ).then(()=>{
+                        turmas.forEach((atualiza)=>{
+                            
+                            if(atualiza.id == turma){
+                                atualiza.alunos.push(edit.id)
+                            }
+                        })
+                        updateItem(
+                            "turmas",
+                            turma,
+                            turmas,
+                        )
+                    })
+                    
+                
+                }}
+            ><p>Atualizar</p></div>
+            }
+        </div>
     </div>
     )
 }
@@ -288,37 +295,37 @@ export function FormAula({cadastramento,edit}){
                 <p className={`${style.cabecalhoFormp}`}
                 >Nova Aula</p>
             </div>
-        <div>
             <div>
-                <label>Lição:
-                    <input 
-                    type='text'
-                    value={licao}
-                    placeholder='Título da lição ou número'
-                    onChange={mudancaEstadoLicao}
-                    /> 
-                </label>
-            </div>
-            <div>
-                <label>Data da aula: 
-                    <input
-                    style={{textAlign:"center"}}
-                        type='date'
-                        value={dataAula}
-                        placeholder='Data da aula'
-                        onChange={mudancaEstadoData}
-                    />
-                </label>
-            </div>
                 <div>
-                    <label>Observação: </label>
-                    <input 
-                    type='text'
-                    placeholder='Deixe aqui observações quanto a esta aula'
-                    value={observacao}
-                    onChange={mudancaEstadoObs}/>
+                    <label>Lição:
+                        <input 
+                        type='text'
+                        value={licao}
+                        placeholder='Título da lição ou número'
+                        onChange={mudancaEstadoLicao}
+                        /> 
+                    </label>
                 </div>
-        </div>
+                <div>
+                    <label>Data da aula: 
+                        <input
+                            style={{textAlign:"center"}}
+                            type='date'
+                            value={dataAula}
+                            placeholder='Data da aula'
+                            onChange={mudancaEstadoData}
+                        />
+                    </label>
+                </div>
+                    <div>
+                        <label>Observação: </label>
+                        <input 
+                        type='text'
+                        placeholder='Deixe aqui observações quanto a esta aula'
+                        value={observacao}
+                        onChange={mudancaEstadoObs}/>
+                    </div>
+            </div>
             {!edit && 
             <div 
                 className={`${style.button}`}
