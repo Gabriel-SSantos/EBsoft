@@ -12,19 +12,59 @@ export default function ListaTurmas(){
     const [aulaInfo, setAulaInfo] = useState({})
     const [listaTurmas, setListaTurmas] = useState([])
     const [cadastramento,setCadastramento] = useState(false)
-    
+    const [totBiblia, setTotBiblia] = useState(0)
+    const [totRevista, setTotRevista] = useState(0)
+    const [totPresenca, setTotPresenca] = useState(0)
+    const [totOferta, setTotOferta] = useState(0)
+    const [totAusentes, setTotAusentes] = useState(0)
+    const [totAlunos, setTotAlunos] = useState(0)
+    const [totVisitantes, setTotVisitantes] = useState(0)
+    const [totPercentual, setTotPercentual] = useState(0)
 
     useEffect(()=>{
+        const computarDados = (doc)=>{
+            let Bib = 0
+            let Rev = 0
+            let Pres = 0
+            let Ofer = 0
+            let totAlunos = 0
+            let totAusentes = 0
+            let totVisitantes = 0
+        
+            if(doc){
+                doc.forEach((element)=>
+                {
+                    if(element.matriculados){
+                        Bib += element.biblias
+                        Pres += element.presencas
+                        Rev += element.revistas
+                        Ofer += Number(element.totalOfertas)
+                        totAlunos += element.matriculados
+                        totAusentes += element.ausentes
+                        totVisitantes += Number(element.visitantes)
+                    }
+                }) 
+                setTotBiblia(Bib)
+                setTotRevista(Rev)
+                setTotPresenca(Pres)
+                setTotOferta(Ofer)
+                setTotAlunos(totAlunos)
+                setTotAusentes(totAusentes)
+                setTotVisitantes(totVisitantes)
+            }
+            setListaTurmas(doc)
+        }
         const listasTurma = (doc)=>{
             setListaTurmas([])
             setAulaInfo(doc)
             if(doc.turmas.length && doc.turmas.length > 0){
-                filtro("aulaTurma",documentId(),"in",doc.turmas,setListaTurmas)
+                filtro("aulaTurma",documentId(),"in",doc.turmas,computarDados)
             }       
         } 
-        getDocumentoUnico("aulas",id,listasTurma)
-        
+        getDocumentoUnico("aulas",id,listasTurma).then((sla)=>console.log(sla))
     },[])
+
+    
     const ativarCadastramento = ()=>{
         setCadastramento(true)
     }
@@ -70,21 +110,21 @@ export default function ListaTurmas(){
             <h3>Resumo Geral</h3>
             <div className={`${style.resumo}`}>
                 
-                <div><p>Matriculados</p><p>{}</p></div>
+                <div><p>Matriculados</p><p>{totAlunos}</p></div>
                 <div>
-                    <div style={{width:"50%"}}><p>Presentes</p><p>{}</p></div>
-                    <div style={{width:"50%"}}><p>Ausentes</p><p>{}</p></div>
+                    <div style={{width:"50%"}}><p>Presentes</p><p>{totPresenca}</p></div>
+                    <div style={{width:"50%"}}><p>Ausentes</p><p>{totAusentes}</p></div>
                 </div>
                 <div>
-                    <div style={{width:"50%"}}><p>Total visitantes: </p><p>{}</p></div>
-                    <div style={{width:"50%"}}><p>Total: </p><p>{}</p></div>
+                    <div style={{width:"50%"}}><p>Total visitantes: </p><p>{totVisitantes}</p></div>
+                    <div style={{width:"50%"}}><p>Total: </p><p>{(totPresenca + totVisitantes)}</p></div>
                 </div>
                 <div>
-                    <div style={{width:"50%"}}><p>Total de Bíblias: </p><p>{}</p></div>
-                    <div style={{width:"50%"}}><p>Total de Revistas: </p><p>{}</p></div>
+                    <div style={{width:"50%"}}><p>Total de Bíblias: </p><p>{totBiblia}</p></div>
+                    <div style={{width:"50%"}}><p>Total de Revistas: </p><p>{totRevista}</p></div>
                 </div>
-                <div><p>Total de Ofertas</p><p>{}</p></div>
-                <div><p>Percentual</p><p>{}</p></div>
+                <div><p>Total de Ofertas</p><p>{totOferta}</p></div>
+                <div><p>Percentual</p><p>{Number((100*totPresenca)/totAlunos).toFixed(2)}%</p></div>
             </div>
         </div>
     )

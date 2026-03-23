@@ -167,6 +167,11 @@ export default function AulaChamada(){
                             })
                         })
                         let turmaAula = {
+                            matriculados: AlunosTurma.length,
+                            ausentes: AlunosTurma.length - totPresenca,
+                            totalGeral: totPresenca + visitantes,
+                            totalOfertas: totOferta,
+                            percentual: ((100*totPresenca)/AlunosTurma.length),
                             listaAlunos: alunos,
                             visitantes: visitantes,
                             situacao: "fechada",
