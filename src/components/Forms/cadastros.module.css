@@ -5,6 +5,19 @@
     align-items: center;
     flex-direction: column;
 }
+.option{
+    border: 1px solid;
+    border-color: #5b5b5b8e;
+    text-align: center;
+    border-radius: 15px;
+    height: 30px; 
+    font-size: 15px;
+    padding: 1px;
+    margin-bottom: 4px;
+    margin-top: 1px;
+    background-color: rgba(255, 255, 255, 0.534);
+    width: 100%;
+}
 .cabecalhoForm{
     width:100%;
     display: flex;
@@ -21,7 +34,7 @@
 .cad_container p{
     font-size: 19px;
 }
-.card{
+/* .card{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -35,28 +48,27 @@
     background-color: #fffce2;
     border-color: #0050D8;
     box-shadow: 2px 2px #004fd88f;
-}
+} */
 
 .Info_Icon{
     display: flex;
     flex-direction: row;
 }
-.card p{
+/* .card p{
     font-size: 19px; 
     margin-bottom: 5px; 
     width: 12em;
-}
+} */
 .botao{
     background-color: #64A2FF;
-    width: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     text-decoration: none;
     transition: 0.5s;
-    padding: 10px;
+    padding: 15px;
     margin: 1em;
-    border-radius: 15px;
+    border-radius: 20px;
 }
 .botao p{
     color: #FFFF;
@@ -99,7 +111,7 @@
     border-radius: 15px;
     height: 30px; 
     font-size: 15px;
-    padding: 1px;
+    padding: 3px;
     margin-bottom: 4px;
     margin-top: 1px;
     background-color: rgba(255, 255, 255, 0.534);
@@ -120,10 +132,10 @@
     font-weight: 450;
     margin: 0px;
 }
-
+/* 
 .formSection{
     display: flex;
     flex-direction: column;
     height: 90%;
     justify-content: space-between;
-}
+} */

@@ -1,6 +1,6 @@
 import { BiPencil } from "react-icons/bi"
 import BotaoCadastro from "../../Forms/BotaoCadastro"
-import style from "./professores.module.css"
+import style from "../Alunos/alunos.module.css"
 import { useEffect, useState } from "react"
 import {FormProfessor} from "../../Forms/Cadastro"
 import { getDocumentoUnico, getItens } from "../../../firebase/CRUD"
@@ -26,7 +26,7 @@ export default function ProfessoresView(){
     }
 
     return(
-        <div className={`${style.container}`}>
+        <div className={`${style.view}`}>
             <div className={`${style.cabecalho}`}>
                 <div style={{
                         display:"flex",

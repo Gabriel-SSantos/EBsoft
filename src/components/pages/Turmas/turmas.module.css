@@ -7,11 +7,17 @@
     align-items: center;
     color: #000;
 }
+.conteudoView{
+    padding: 0.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .cabecalho{
     background-color: #D0D8F8;
     width: 100%;
-    
-    border-radius: 20px;
+
+    border-radius: 0px 0px 20px 20px;
     display: flex;
     flex-direction: column;
     padding-top: 5px;

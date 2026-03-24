@@ -13,16 +13,21 @@ function Selection({text,name,options,handleOnChange,value}){
         <div>
             <label>{text}  </label>
             <select
+                className={`${style.option}`}
                 name={name}
                 id={name}
                 onChange={handleOnChange}
                 value={value}
             >
-                <options value={"Escolha uma turma"}>Selecione uma opção</options>
-                
+                <option 
+                    value={"Escolha uma turma"}>
+                    Selecione uma opção
+                </option>
                 {
+                   
                     options.map((option)=>(
-                        <option value={option.id} key={option.id}> 
+                        <option 
+                        value={option.id} key={option.id}> 
                             {option.nome}
                         </option>
                     ))
@@ -443,112 +448,128 @@ export const FormProfessor=({cadastramento, edit})=>{
     },[])
 
     return(
-    <div className={`${style.cad_box}`}>
-        <div style={{width:"100%",display:"flex",justifyContent:"flex-start"}}><p style={{fontSize:"15px",textAlign:"center"}}>Preencha o formulário para realizar a matrícula</p><BiX size={30} onClick={cadastramento}/></div>
-        
-        <div><p>Nome: </p><input 
-            type='text'
-            value={nome}
-            onChange={mudancaEstadoNome}
-            /></div>
-        <div
-            style={{display:"flex",alignItems:"center",width:"100%"}}
-        ><p>Gênero:</p><p style={{marginLeft:"4px"}}>Masculino</p><input 
-                value={"M"}
-                type='radio' 
-                name='genero'
-                onChange={mudancaEstadoGenero}
-            /> 
-            <p>Feminino </p><input 
-                value={"F"}
-                type='radio' 
-                name='genero'
-                onChange={mudancaEstadoGenero}
-            /></div>
-        <div>
-            <input
-                type='date'
-                value={dataNascimento}
-                onChange={mudancaEstadoNascimento}
-            />
-        </div>
-
-        <div>
-            {
-                Selection(
-                    {
-                        name:"turmas",
-                        text:"turmas",handleOnChange:mudancaEstadoTurma,
-                        options:turmas,
-                        value:turma
-                    })
-            }
+    <div className={`${style.envelope_box}`}>
+        <div className={`${style.cad_box}`}>
+            <div className={`${style.cabecalhoForm}`} >
+                <BiX size={30} onClick={cadastramento}/>
+                <p className={`${style.cabecalhoFormp}`}
+                >Preencha o formulário para realizar a matrícula</p>
             </div>
-        <div
-            style={{display:"flex",alignItems:"center",width:"50%"}}
-        ></div>
-        <div><p>Email: </p><input 
-            type='email'
-            value={email}
-            onChange={mudancaEstadoEmail}
-            /></div>
-        <div
-            style={{display:"flex",alignItems:"center",width:"50%"}}
-        ></div>
-        <div><p>Senha: </p><input 
-            type='password'
-            value={senha}
-            onChange={mudancaEstadoSenha}
-            /></div>
-        <div
-            style={{display:"flex",alignItems:"center",width:"50%"}}
-        ></div>
-        {!edit && 
-        <button type='button'
-        className={`${style.button}`}
-        
-        onClick={()=>{
-           
-            cadastramento()
-            const professor = {
-                nome:nome,
-                genero:genero,
-                nascimento: dataNascimento,
-                turma: turma,
-                turmaNome:turmaNome,
-                email:email,
-                senha:senha,
-                oferta: false,
-                biblia: false,
-                revista: false,
-                presencas: 0,
-                pontos: 0,
-            }
-            salvar({
-                item:professor,
-                localstore:"professores"
-            })}}>Salvar</button>
-        }
-        {edit && 
-        <button type='button'
+            <div>
+                <div><label>Nome: <input 
+                    type='text'
+                    value={nome}
+                    placeholder='Coloque o nome'
+                    onChange={mudancaEstadoNome}
+                    /></label></div>
+                <div
+                    style={{display:"flex",alignItems:"center",width:"100%", marginTop:'5px'}}
+                >
+                    <label
+                        style={{fontSize: '15px'}}
+                    >Masculino </label>
+                    <input 
+                            style={{width:'20px', margin:'4px'}}
+                            value={"M"}
+                            type='radio' 
+                            name='genero'
+                            onChange={mudancaEstadoGenero}/> 
+                    <label
+                        style={{fontSize: '15px'}}
+                    >Feminino</label> 
+                    <input 
+                        value={"F"}
+                        style={{width:'20px', margin:'4px'}}
+                        type='radio' 
+                        name='genero'
+                        onChange={mudancaEstadoGenero}/>
+                        
+                </div>
+                <div>
+                    <label> Nascimento
+                        <input
+                            type='date'
+                            value={dataNascimento}
+                            onChange={mudancaEstadoNascimento}
+                        />
+                    </label>
+                </div>
+
+                <div>
+                    {
+                        Selection(
+                            {
+                                name:"turmas",
+                                text:"turmas",handleOnChange:mudancaEstadoTurma,
+                                options:turmas,
+                                value:turma
+                            })
+                    }
+                    </div>
+                <div>
+                    <label>Email:<input 
+                    type='email'
+                    placeholder='Digite o E-mail'
+                    value={email}
+                    onChange={mudancaEstadoEmail}
+                    /> </label>
+                    </div>
+                <div><label>Senha: <input 
+                    type='password'
+                    placeholder='Digite a senha'
+                    value={senha}
+                    onChange={mudancaEstadoSenha}
+                    /></label></div>
+            </div>
+            {!edit && 
+            <div
             className={`${style.button}`}
             
             onClick={()=>{
+            
                 cadastramento()
-                attProf.nome = nome
-                attProf.turma = turma
-                attProf.turmaNome = turmaNome
-                attProf.genero = genero
-                attProf.nascimento = dataNascimento
-                attProf.email = email
-                attProf.senha = senha
-                updateItem(
-                    "professores",
-                    edit.id,
-                    attProf,
-                )}}
-        >Atualizar</button>
-        }
+                const professor = {
+                    nome:nome,
+                    genero:genero,
+                    nascimento: dataNascimento,
+                    turma: turma,
+                    turmaNome:turmaNome,
+                    email:email,
+                    senha:senha,
+                    oferta: false,
+                    biblia: false,
+                    revista: false,
+                    presencas: 0,
+                    pontos: 0,
+                }
+                salvar({
+                    item:professor,
+                    localstore:"professores"
+                })}}>
+                    <p>Salvar</p></div>
+            }
+            {edit && 
+            <div
+                className={`${style.button}`}
+                
+                onClick={()=>{
+                    cadastramento()
+                    attProf.nome = nome
+                    attProf.turma = turma
+                    attProf.turmaNome = turmaNome
+                    attProf.genero = genero
+                    attProf.nascimento = dataNascimento
+                    attProf.email = email
+                    attProf.senha = senha
+                    updateItem(
+                        "professores",
+                        edit.id,
+                        attProf,
+                    )}}
+            ><p>Atualizar</p></div>
+            }
+            
+        </div>
     </div>
     )
 }
@@ -578,70 +599,70 @@ export default function FormTurma({cadastramento,edit}){
     },[])
     
     return(
-    <div className={`${style.cad_box}`}>
-        <div>
-            <div style={{margin:"0", display:"flex",justifyContent:"flex-end"}}>
+    <div className={`${style.envelope_box}`}>
+        <div className={`${style.cad_box}`}>
+            <div className={`${style.cabecalhoForm}`} >
                 <BiX size={30} onClick={cadastramento}/>
+                <p className={`${style.cabecalhoFormp}`}
+                >Insira as informações da turma</p>
             </div>
-            <div style={{marginTop:"0", textAlign:"center"}}>
-                <p>Faça o cadastro de uma nova turma</p>
-            </div>
-        </div>
-        <div className={`${style.formSection}`}>
             <div>
-                <p>Nome: </p>
-                <input 
-                    placeholder='Insira o Nome da Turma'
-                    type='text'
-                    value={nome}
-                    onChange={mudancaEstadoNome}
-                />
-            </div><div>
-                <p>Descrição: </p>
-                <input 
-                    placeholder='Insira o Nome da Turma'
-                    type='text'
-                    value={descricao}
-                    onChange={mudancaEstadoDescricao}
-                />
-            </div>
+                <div>
+                    <p>Nome: </p>
+                    <input 
+                        placeholder='Insira o Nome da Turma'
+                        type='text'
+                        value={nome}
+                        onChange={mudancaEstadoNome}
+                    />
+                </div><div>
+                    <p>Descrição: </p>
+                    <input 
+                        placeholder='Descrição da turma'
+                        type='text'
+                        value={descricao}
+                        onChange={mudancaEstadoDescricao}
+                    />
+                </div>
 
-            <div style={{display:"flex",justifyContent:"center"}}>
-               {!edit &&
-                <button type='button'
-                    
-                    onClick={()=>{
-                        if(nome.length < 1){
-                            alert("Preencha o nome")
-                            return
-                        }
-                        const turma = {
-                            nome:nome,
-                            descricao:descricao,
-                            professor: "",
-                            alunos: [],
-                        }
-                        cadastramento()
-                        salvar({
-                            localstore:"turmas",
-                            item:turma,
-                        })
-                    }}
-                >Salvar</button>}
-                {edit &&
-                <button type='button'
-                    onClick={()=>{
-                        if(nome.length < 1){
-                            alert("Preencha o nome")
-                            return
-                        }
-                        
-                        attTurma.nome = nome
-                        attTurma.descricao = descricao
-                        updateItem("turmas",edit.id,attTurma)
-                        cadastramento()
-                    }}
-                >Atualizar</button>}
+                <div style={{display:"flex",justifyContent:"center"}}>
+                {!edit &&
+                    <div
+                        className={`${style.button}`}
+                        onClick={()=>{
+                            if(nome.length < 1){
+                                alert("Preencha o nome")
+                                return
+                            }
+                            const turma = {
+                                nome:nome,
+                                descricao:descricao,
+                                professor: "",
+                                alunos: [],
+                            }
+                            cadastramento()
+                            salvar({
+                                localstore:"turmas",
+                                item:turma,
+                            })
+                        }}
+                    ><p>Salvar</p></div>}
+                    {edit &&
+                    <div       
+                        className={`${style.button}`}                 
+                        onClick={()=>{
+                            if(nome.length < 1){
+                                alert("Preencha o nome")
+                                return
+                            }
+                            
+                            attTurma.nome = nome
+                            attTurma.descricao = descricao
+                            updateItem("turmas",edit.id,attTurma)
+                            cadastramento()
+                        }}
+                    ><p>Atualizar</p></div>}
+                </div>
             </div>
         </div>
     </div>

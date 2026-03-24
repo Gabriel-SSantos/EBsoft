@@ -14,6 +14,7 @@ import AlunosView from './components/pages/Alunos/AlunosView';
 import Professores from './components/pages/Professores/Professores';
 import ProfessoresView from './components/pages/Professores/ProfessoresView';
 import AulaChamada from './components/pages/Aulas/AulaChamada';
+import RelatorioDetalhado from './components/pages/Aulas/RelatorioDetalhado';
 import { getAuth, onAuthStateChanged, signInAnonymously } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 
@@ -83,7 +84,7 @@ function App() {
             <Route path='/professores/:id' Component={ProfessoresView}></Route>
             <Route path='/cadastros' Component={Cadastrar}></Route>
             <Route path='/padrao' Component={Padrao}></Route>
-            <Route exact path='/classificacoes' Component={Ranking}></Route>
+            <Route exact path='/relatorio' Component={RelatorioDetalhado}></Route>
 
           </Routes>
         </Container>

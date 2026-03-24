@@ -32,7 +32,7 @@ export default function TurmasView(){
     }
 
     return(
-        <div className={`${style.container}`}>
+        <div className={`${style.view}`}>
             <div className={`${style.cabecalho}`}>
                 <div style={{
                     display:"flex",
@@ -52,38 +52,39 @@ export default function TurmasView(){
                     && <h3>Turma {turmaInfo.nome}</h3>
                 }
             </div>
-            <div className={`${style.descricao}`}>
-                {turmaInfo.descricao && 
-                    <div>
-                        <p>Professores:  
-                        {professores.length > 0 && 
-                            professores.map((item,id)=>
-                            <spam 
+            <div className={`${style.conteudoView}`}>
+                <div className={`${style.descricao}`}>
+                    {turmaInfo.descricao && 
+                        <div>
+                            <p>Professores:  
+                            {professores.length > 0 && 
+                                professores.map((item,id)=>
+                                <spam 
+                                    key={id}
+                                > {item.nome};</spam>
+                            )
+                        }
+                            </p>
+                            <p>Matriculados: {alunos.length}</p>
+                            <p>Descrição: {turmaInfo.descricao}</p>
+                        </div>
+                    }
+                </div>
+                {cadastramento && <FormTurma cadastramento={desativarCadastramento} edit={turmaInfo}/>}
+                <div className={`${style.ficha}`}>
+                    {alunos.length > 0 && 
+                        alunos.map((item,id)=>
+                            
+                            <FichaAluno 
                                 key={id}
-                            > {item.nome};</spam>
+                                id={item.id}   
+                                nome={item.nome}
+                                turma={`Pontos: ${item.pontos}`}
+                            />
                         )
                     }
-                        </p>
-                        <p>Matriculados: {alunos.length}</p>
-                        <p>Descrição: {turmaInfo.descricao}</p>
-                    </div>
-                }
+                </div>
             </div>
-            {cadastramento && <FormTurma cadastramento={desativarCadastramento} edit={turmaInfo}/>}
-            <div className={`${style.ficha}`}>
-            {alunos.length > 0 && 
-                alunos.map((item,id)=>
-                    
-                    <FichaAluno 
-                        key={id}
-                        id={item.id}   
-                        nome={item.nome}
-                        turma={`Pontos: ${item.pontos}`}
-                    />
-                )
-            }
-            </div>
-            
         </div>
     )
 }

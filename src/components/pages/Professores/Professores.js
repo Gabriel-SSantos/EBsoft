@@ -30,7 +30,7 @@ export default function Professores(){
             <div>
                 <BotaoCadastro 
                     cadastramento={ativarCadastramento}
-                    texto={"Cadastrar Novo Professor"}
+                    texto={"Novo Professor"}
                 />
             </div>
             {cadastramento && <FormProfessor cadastramento={desativarCadastramento}/>}

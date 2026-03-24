@@ -26,7 +26,7 @@ export default function AlunosView(){
     }
 
     return(
-        <div className={`${style.container}`}>
+        <div className={`${style.view}`}>
             <div className={`${style.cabecalho}`}>
                 <div style={{
                         display:"flex",
