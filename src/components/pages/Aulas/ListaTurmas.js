@@ -9,25 +9,25 @@ import { BiPencil } from "react-icons/bi";
 import LinkButton from "../../layout/LinkButton";
 
 export function Relatorio({aula}){
-    let total = aula.totPresenca + aula.totVisitantes
-    let percentual = Number((100*aula.totPresenca)/aula.totAlunos).toFixed(2)
+    let total = Number(aula.presencas) + Number(aula.visitantes)
+    let percentual = Number((100*aula.presencas)/aula.matriculados).toFixed(2)
     return(
         <div className={`${style.resumo}`}>
                 
-                <div><p>Matriculados</p><p>{aula.totAlunos}</p></div>
+                <div><p>Matriculados</p><p>{aula.matriculados}</p></div>
                 <div>
-                    <div style={{width:"50%"}}><p>Presentes</p><p>{aula.totPresenca}</p></div>
-                    <div style={{width:"50%"}}><p>Ausentes</p><p>{aula.totAusentes}</p></div>
+                    <div style={{width:"50%"}}><p>Presentes</p><p>{aula.presencas}</p></div>
+                    <div style={{width:"50%"}}><p>Ausentes</p><p>{aula.ausentes}</p></div>
                 </div>
                 <div>
-                    <div style={{width:"50%"}}><p>Total visitantes: </p><p>{aula.totVisitantes}</p></div>
+                    <div style={{width:"50%"}}><p>Total visitantes: </p><p>{aula.visitantes}</p></div>
                     <div style={{width:"50%"}}><p>Total: </p><p>{total}</p></div>
                 </div>
                 <div>
-                    <div style={{width:"50%"}}><p>Total de Bíblias: </p><p>{aula.totBiblia}</p></div>
-                    <div style={{width:"50%"}}><p>Total de Revistas: </p><p>{aula.totRevista}</p></div>
+                    <div style={{width:"50%"}}><p>Total de Bíblias: </p><p>{aula.biblias}</p></div>
+                    <div style={{width:"50%"}}><p>Total de Revistas: </p><p>{aula.revistas}</p></div>
                 </div>
-                <div><p>Total de Ofertas</p><p>{aula.totOferta}</p></div>
+                <div><p>Total de Ofertas</p><p>{aula.totalOfertas}</p></div>
                 <div><p>Percentual</p><p>{percentual}%</p></div>
             </div>
     )
@@ -64,16 +64,13 @@ export default function ListaTurmas(){
                     }
                 }) 
                 setGeral({
-                    totAlunos: totAlunos,
-                    totPresenca: Pres,
-                    totOferta: Ofer,
-                    totAusentes: totAusentes,
-                    totVisitantes: totVisitantes,
-                    totBiblia: Bib,
-                    totRevista: Rev,
-                    id: id,
-                    nome: aulaInfo.nome,
-                    data: aulaInfo.dataAula
+                    matriculados: totAlunos,
+                    presencas: Pres,
+                    totalOfertas: Ofer,
+                    ausentes: totAusentes,
+                    visitantes: totVisitantes,
+                    biblias: Bib,
+                    revistas: Rev
                 })
             }
             setListaTurmas(doc)
@@ -81,14 +78,14 @@ export default function ListaTurmas(){
         const listasTurma = (doc)=>{
             setListaTurmas([])
             setAulaInfo(doc)
+
             if(doc.turmas.length && doc.turmas.length > 0){
                 filtro("aulaTurma",documentId(),"in",doc.turmas,computarDados)
             }       
         } 
-        getDocumentoUnico("aulas",id,listasTurma).then((sla)=>console.log(sla))
+        getDocumentoUnico("aulas",id,listasTurma)
     },[])
 
-    
     const ativarCadastramento = ()=>{
         setCadastramento(true)
     }
@@ -113,10 +110,11 @@ export default function ListaTurmas(){
                 <div>
                 {aulaInfo.licao  
                     &&
-                    <h2>Lição {aulaInfo.licao} - {aulaInfo.dataAula}</h2>}
+                    <h2>Lição {aulaInfo.licao} - {aulaInfo.dataAula}</h2>
+
+                }
                 </div>
             </div>
-            {console.log(listaTurmas)}
             {
                 listaTurmas.length == 0 
                 && <p>Carregando turmas...</p>
@@ -133,7 +131,11 @@ export default function ListaTurmas(){
             }
             <h3>Resumo Geral</h3>
             {geral && <Relatorio aula={geral}/>}
-            <LinkButton text={"Ver Detalhado"} to={"/relatorio"} state={{listaTurmas:listaTurmas,geral:geral}}/>
+            <LinkButton text={"Ver Detalhado"} to={"/relatorio"} state={{
+                listaTurmas:listaTurmas,
+                geral:geral,
+                dadosAula:aulaInfo
+                }}/>
         </div>
     )
 }

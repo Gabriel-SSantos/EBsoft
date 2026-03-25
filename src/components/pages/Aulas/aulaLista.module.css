@@ -106,3 +106,30 @@
 .descricao h3{
     color: #7488DA;
 }
+
+.relatorioDetalhado{
+    background-color: #D0D8F8;
+    width: 100%;
+    border-radius: 0px 0px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 5px;
+    padding-bottom: 5%;
+    align-items: center;
+}
+.relatoriosListas{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.relatoriosListas h2{
+    margin-top: 30px;
+    color: #000000;
+}
+
+.relatoriosListas h3{
+    margin-top: 25px;
+    color: #64A2FF;
+}

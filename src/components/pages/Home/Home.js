@@ -51,7 +51,8 @@ function Home(){
                                     biblia={item.biblia}
                                     data={item.dataAula}
                                     revista={item.revista}
-                                    situacao={item.situacao} 
+                                    situacao={item.situacao}
+                                    aproveitamento={item.aproveitamento + "%"} 
                                 />
                             )
                         }
