@@ -11,7 +11,8 @@ import {
     where, 
     orderBy,
     serverTimestamp,
-    documentId 
+    documentId,
+    writeBatch
 } from "firebase/firestore";
 
 import {db} from "./firebase"
@@ -135,4 +136,35 @@ export async function filtro(collectionName,campo,operador,parametros,callback){
       throw error;
   }
 }
+
+export async function atualizarListaDeAlunos  (listaAlunos){
+  try {
+    // 1. Cria a "caixa" do lote
+    const batch = writeBatch(db);
+
+    // 2. Percorre a sua lista de alunos (que já tem os IDs)
+    listaAlunos.forEach((aluno) => {
+      // Cria a referência para o documento específico deste aluno
+      const {id, ...dados} = aluno
+      const alunoRef = doc(db, "alunos", id);
+      
+      // Adiciona a instrução de atualização na "caixa"
+      // Nota: Não usamos 'await' aqui dentro! Estamos apenas preparando o pacote.
+      batch.update(alunoRef, {
+        ...dados,
+        dataAtualizacao: new Date() // Exemplo de outro campo
+      });
+    });
+
+    // 3. Envia a "caixa" inteira para o banco de dados de uma só vez
+    await batch.commit();
+    
+    console.log("Todos os alunos foram atualizados com sucesso!");
+    return true;
+
+  } catch (error) {
+    console.error("Erro ao atualizar os alunos em lote:", error);
+    throw error;
+  }
+};
 

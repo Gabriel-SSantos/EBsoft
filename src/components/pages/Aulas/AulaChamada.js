@@ -5,7 +5,7 @@ import { BsPersonFill } from 'react-icons/bs'
 import style from "./aulaLista.module.css"
 import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { filtro,getDocumentoUnico,updateItem } from "../../../firebase/CRUD"
+import { filtro,getDocumentoUnico,updateItem, atualizarListaDeAlunos } from "../../../firebase/CRUD"
 import { salvar } from '../../Forms/Cadastro'
 import {  FichaAlunoChamada } from "../../layout/Fichas"
 
@@ -29,14 +29,13 @@ export default function AulaChamada(){
             }else {
                 setAlunosTurma(doc.listaAlunos)
             }
+            console.log(doc)
             setAula(doc)
         }
         getDocumentoUnico("aulaTurma",id,listaAlunos)
     },[])
 
     const atulizar = (colecao,documento,objeto)=>{
-       
-
         updateItem(
             colecao,
             documento,
@@ -45,6 +44,23 @@ export default function AulaChamada(){
             navigate(-1)
         })
 
+    }
+    const atualizarAlunos = ()=>{
+        console.log(AlunosTurma)
+        let historico = {
+            pontos: [0,0,0,0],
+            biblias: [0,0,0,0],
+            revista: [0,0,0,0]
+        }
+        let trimestre = aula 
+        console.log(trimestre)
+        // AlunosTurma.forEach((item)=>{
+        //     if(item.biblia){
+        //         historico.biblias[]
+        //     }
+        // })
+        // AlunosTurma.forEach
+        // atualizarListaDeAlunos()
     }
    const contar = ()=>{
         let totBib = 0
@@ -72,7 +88,6 @@ export default function AulaChamada(){
     }
      const marcarPresenca = (index)=>{
         AlunosTurma[index].presencas = !AlunosTurma[index].presencas
-        
         contar()
     }
     const marcarOferta = (index)=>{
@@ -166,7 +181,12 @@ export default function AulaChamada(){
                                 oferta: item.oferta
                             })
                         })
+                        console.log(aula)
                         let turmaAula = {
+                            // dia:
+                            // mes:
+                            // ano:
+                            // trimestre:
                             matriculados: AlunosTurma.length,
                             ausentes: AlunosTurma.length - totPresenca,
                             totalGeral: totPresenca + visitantes,
@@ -180,7 +200,7 @@ export default function AulaChamada(){
                             revistas: totRevista,
                             presencas: totPresenca,
                         }
-                        console.log(turmaAula)
+                        atualizarAlunos()
                         atulizar("aulaTurma",id,turmaAula)
                     }
                     

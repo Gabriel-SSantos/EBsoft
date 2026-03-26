@@ -241,8 +241,6 @@ export function FormAula({cadastramento,edit}){
     
     let attAula = {
         licao:licao,
-        genero:"",
-        nascimento: Date(),
         biblia: 0,
         revista: 0,
         presencas: 0,
@@ -254,12 +252,9 @@ export function FormAula({cadastramento,edit}){
         setLicao(e.target.value)
     }
     const mudancaEstadoObs = (e)=>{
-        console.log(idsTurmasAulas)
         setObservacao(e.target.value)
     }
     const mudancaEstadoData = (e)=>{
-        if(idsTurmasAulas.length < 1)
-            turmaAula()
         setDataAula(e.target.value)
     }
    
@@ -273,22 +268,28 @@ export function FormAula({cadastramento,edit}){
         }
     },[])
 
-    const turmaAula =()=>{
-       
-        let ids = []
-        idsTurmas.forEach(element => {
-            salvar({
+    const turmaAula = async (dataAula)=>{
+        let dt = {
+            dia: Number(dataAula[8] + dataAula[9]),
+            mes:Number(dataAula[5] + dataAula[6]),
+            ano:Number(dataAula[2] + dataAula[3]),
+            trimestre: parseInt((Number(dataAula[5] + dataAula[6])/3) + 0.67)
+        }
+        const criacaoFichas = idsTurmas.map((element) => {
+           return salvar({
                 item:{
                     situacao: "aberta",
                     idTurma:element.id, 
-                    nome:element.nome
+                    nome:element.nome,
+                    data: dt
                 },
                 localstore:"aulaTurma"
-                }).then((element)=>{
-                    ids.push(element)
                 })
-        });
-        setIdsTurmasAulas(ids)   
+        })
+        
+        const resposta = await Promise.all(criacaoFichas)
+        return resposta
+            
     }
 
     
@@ -335,10 +336,10 @@ export function FormAula({cadastramento,edit}){
             <div 
                 className={`${style.button}`}
                 
-                onClick={()=>{
+                onClick={async ()=>{
+                    let ids = await turmaAula(dataAula)
                     cadastramento()
-                    // salvarAulas()
-                    console.log(idsTurmasAulas)
+                    console.log(ids)
                     const aula = {
                         licao:licao,
                         dataAula:dataAula,
@@ -348,7 +349,7 @@ export function FormAula({cadastramento,edit}){
                         revista: 0,
                         presencas: 0,
                         situacao: "aberta", 
-                        turmas:idsTurmasAulas
+                        turmas:ids
                     }
                     salvar({
                         item:aula,

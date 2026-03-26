@@ -12,7 +12,11 @@ function Home(){
     const [cadastramento,setCadastramento] = useState(false)
 
     useEffect(()=>{
-        return getItens("aulas",setAulas)
+        const pegarAulas = (doc)=>{
+            let listaAulas = doc.toReversed()
+            setAulas(listaAulas)
+        }
+        return getItens("aulas",pegarAulas)
     },[])
 
     const ativarCadastramento = ()=>{
@@ -37,10 +41,8 @@ function Home(){
                     </div>
                     <div className={`${style.home_list}`}>
                         {cadastramento && <FormAula cadastramento={desativarCadastramento}/>}
-                        {
-                            Aulas.length == 0 
-                            && <p>Carregando aulas</p>
-                        }
+                        {Aulas.length == 0 
+                            && <p>Carregando aulas</p>}
                         {Aulas.length > 0 && 
                             Aulas.map((item,id)=>
                                 <FichaAula
