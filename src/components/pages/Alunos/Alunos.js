@@ -46,6 +46,7 @@ export default function Alunos(){
                         id={item.id}   
                         nome={item.nome}
                         turma={item.turmaNome}
+                        aluno={item}
                     />
                 )
             }

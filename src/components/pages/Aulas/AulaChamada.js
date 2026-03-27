@@ -20,7 +20,7 @@ export default function AulaChamada(){
     const [click,setClick] = useState(false)
     const [aula,setAula] = useState()
     const navigate = useNavigate()
-     const {id} = useParams()
+    const {id} = useParams()
 
     useEffect(()=>{
         const listaAlunos = (doc)=>{
@@ -47,20 +47,29 @@ export default function AulaChamada(){
     }
     const atualizarAlunos = ()=>{
         console.log(AlunosTurma)
-        let historico = {
-            pontos: [0,0,0,0],
-            biblias: [0,0,0,0],
-            revista: [0,0,0,0]
-        }
-        let trimestre = aula 
+        let trimestre = aula.data.trimestre 
         console.log(trimestre)
-        // AlunosTurma.forEach((item)=>{
-        //     if(item.biblia){
-        //         historico.biblias[]
-        //     }
-        // })
-        // AlunosTurma.forEach
-        // atualizarListaDeAlunos()
+        AlunosTurma.forEach((item)=>{
+            if(item.biblia){
+                item.biblia = false
+                item.historico.biblias[trimestre] += 1
+                item.historico.pontos[trimestre] += 2
+            }
+             if(item.revista){
+                item.revista = false
+                item.historico.revista[trimestre] += 1
+                item.historico.pontos[trimestre] += 2
+            }
+            if(item.presencas){
+                item.presencas = false
+                item.historico.presenca[trimestre] += 1
+                item.historico.pontos[trimestre] += 1
+            }
+            if(item.oferta){
+                item.oferta = false
+            }
+        })
+        atualizarListaDeAlunos(AlunosTurma)
     }
    const contar = ()=>{
         let totBib = 0
@@ -99,6 +108,7 @@ export default function AulaChamada(){
         setClick(!click)
         console.log(AlunosTurma[index].nome, " fez ", AlunosTurma[index].pontos, " pontos")
     }
+
     const mudancaEstadoVisitantes = (e)=>{
         console.log(e.target.value)
         setVisitantes(e.target.value)
@@ -173,20 +183,10 @@ export default function AulaChamada(){
                     if(AlunosTurma.length > 0){
                         let alunos = []
                         AlunosTurma.forEach((item)=>{
-                            alunos.push({
-                                nome: item.nome,
-                                presencas: item.presencas,
-                                revista: item.revista,
-                                biblia: item.biblia,
-                                oferta: item.oferta
-                            })
+                            alunos.push(item)
                         })
                         console.log(aula)
                         let turmaAula = {
-                            // dia:
-                            // mes:
-                            // ano:
-                            // trimestre:
                             matriculados: AlunosTurma.length,
                             ausentes: AlunosTurma.length - totPresenca,
                             totalGeral: totPresenca + visitantes,
@@ -200,8 +200,8 @@ export default function AulaChamada(){
                             revistas: totRevista,
                             presencas: totPresenca,
                         }
-                        atualizarAlunos()
                         atulizar("aulaTurma",id,turmaAula)
+                        atualizarAlunos()
                     }
                     
                 }}

@@ -45,6 +45,7 @@ export function FormAluno({cadastramento,edit}){
     const [turma,setTurma] = useState("")
     const [turmaNome, setTurmaNome] = useState("")
     const [turmas, setTurmas] = useState([])
+    const [historico,setHistorico] = useState({})
 
     const buscar = (key,lista)=>{
         const tam = lista.length
@@ -65,6 +66,7 @@ export function FormAluno({cadastramento,edit}){
         oferta: false,
         biblia: false,
         revista: false,
+        historico: {},
         presencas: 0,
         pontos: 0,
     }
@@ -88,6 +90,7 @@ export function FormAluno({cadastramento,edit}){
             setNome(edit.nome)
             setDataNascimento(edit.nascimento)
             setGenero(edit.genero)
+            setHistorico(edit.historico)
 
         }
         getDocCollection("turmas",setTurmas)
@@ -170,23 +173,16 @@ export function FormAluno({cadastramento,edit}){
                         revista: false,
                         presencas: 0,
                         pontos: 0,
+                        historico:{
+                            biblias:[0,0,0,0],
+                            revista:[0,0,0,0],
+                            presenca:[0,0,0,0],
+                            pontos:[0,0,0,0]
+                        }
                     }
-                    let atualizacao = {}
                     salvar({
                         item:aluno,
                         localstore:"alunos"
-                    }).then((novoID)=>{
-                        turmas.forEach((atualiza)=>{
-                            if(atualiza.id == turma){
-                                atualiza.alunos.push(novoID)
-                                atualizacao = atualiza
-                            }
-                        })
-                        updateItem(
-                            "turmas",
-                            turma,
-                            atualizacao,
-                        )
                     })
                 }}>
                     <p>Salvar</p>
@@ -202,25 +198,12 @@ export function FormAluno({cadastramento,edit}){
                     attAluno.turmaNome = turmaNome
                     attAluno.genero = genero
                     attAluno.nascimento = dataNascimento
+                    attAluno.historico = historico
                     updateItem(
                         "alunos",
                         edit.id,
                         attAluno,
-                    ).then(()=>{
-                        turmas.forEach((atualiza)=>{
-                            
-                            if(atualiza.id == turma){
-                                atualiza.alunos.push(edit.id)
-                            }
-                        })
-                        updateItem(
-                            "turmas",
-                            turma,
-                            turmas,
-                        )
-                    })
-                    
-                
+                    )
                 }}
             ><p>Atualizar</p></div>
             }
@@ -526,7 +509,7 @@ export const FormProfessor=({cadastramento, edit})=>{
             <div
             className={`${style.button}`}
             
-            onClick={()=>{
+            onClick={ async ()=>{
             
                 cadastramento()
                 const professor = {
@@ -543,10 +526,19 @@ export const FormProfessor=({cadastramento, edit})=>{
                     presencas: 0,
                     pontos: 0,
                 }
-                salvar({
+                let idProf = await salvar({
                     item:professor,
                     localstore:"professores"
-                })}}>
+                })
+                let turmaAtualizada = {}
+                turmas.forEach((item)=>{
+                    if (item.id == turma){
+                        item.professor.push(idProf)
+                        turmaAtualizada = item
+                    }
+                })
+                updateItem("turmas",turma,turmaAtualizada)
+                }}>
                     <p>Salvar</p></div>
             }
             {edit && 
@@ -555,6 +547,18 @@ export const FormProfessor=({cadastramento, edit})=>{
                 
                 onClick={()=>{
                     cadastramento()
+                   
+                    if(attProf.turma != turma){
+                    let turmaAtualizada = {}
+                    turmas.forEach((item)=>{
+                    
+                        if (item.id == turma){
+                        item.professor.push(edit.id)
+                        turmaAtualizada = item
+                        }})
+                        updateItem("turmas",turma,turmaAtualizada)
+                    }
+                    
                     attProf.nome = nome
                     attProf.turma = turma
                     attProf.turmaNome = turmaNome
@@ -566,7 +570,9 @@ export const FormProfessor=({cadastramento, edit})=>{
                         "professores",
                         edit.id,
                         attProf,
-                    )}}
+                    )
+                    
+                }}
             ><p>Atualizar</p></div>
             }
             
@@ -578,27 +584,47 @@ export const FormProfessor=({cadastramento, edit})=>{
 export default function FormTurma({cadastramento,edit}){
     const [nome,setNome] = useState("")
     const [descricao,setDescricao] = useState("")
+    const [grupoTurma,setGrupoTurma] = useState("")
+    const [professor,setProfessor] = useState('')
     const mudancaEstadoDescricao = (e)=>{
         setDescricao(e.target.value)
     }
     const mudancaEstadoNome = (e)=>{
         setNome(e.target.value)
     }
+    const mudancaEstadoGrupo = (e)=>{
+        setGrupoTurma(e.target.value)
+    }
     let attTurma = {
         nome: "",
         descricao: "",
         professor: "",
-        alunos: [],
+        grupo: ""
     }
     useEffect(()=>{
         if(edit){
             setNome(edit.nome)
             setDescricao(edit.descricao)
+            setGrupoTurma(edit.grupo)
+            setProfessor(edit.professor)
             attTurma.alunos = edit.alunos
             attTurma.professor = edit.professor  
+            attTurma.grupo = edit.grupo
         }
     },[])
-    
+    const grupos = [
+        {nome:'Berçário'},
+        {nome:'Maternal'},
+        {nome:'Primário'},
+        {nome:'Juniores'},
+        {nome:'Pré-adolescentes'},
+        {nome:'Adolescentes'},
+        {nome:'Juvenis'},
+        {nome:'Jovens'},
+        {nome:'Adultos'},
+        {nome:'Discipulado'},
+        {nome:'Classe Mista'}
+    ]
     return(
     <div className={`${style.envelope_box}`}>
         <div className={`${style.cad_box}`}>
@@ -609,23 +635,34 @@ export default function FormTurma({cadastramento,edit}){
             </div>
             <div>
                 <div>
-                    <p>Nome: </p>
+                    <label>Nome: 
                     <input 
                         placeholder='Insira o Nome da Turma'
                         type='text'
                         value={nome}
                         onChange={mudancaEstadoNome}
-                    />
-                </div><div>
-                    <p>Descrição: </p>
+                    /></label>
+                </div>
+                <div>
+                    <label>Descrição: 
                     <input 
                         placeholder='Descrição da turma'
                         type='text'
                         value={descricao}
                         onChange={mudancaEstadoDescricao}
-                    />
+                    /></label>
                 </div>
-
+                <div>
+                    {
+                        Selection(
+                            {
+                                name:"grupo",
+                                text:"Grupo",handleOnChange:mudancaEstadoGrupo,
+                                options:grupos,
+                                value:grupoTurma
+                            })
+                    }
+                    </div>
                 <div style={{display:"flex",justifyContent:"center"}}>
                 {!edit &&
                     <div
@@ -638,8 +675,8 @@ export default function FormTurma({cadastramento,edit}){
                             const turma = {
                                 nome:nome,
                                 descricao:descricao,
-                                professor: "",
-                                alunos: [],
+                                grupo: grupoTurma,
+                                professor: professor
                             }
                             cadastramento()
                             salvar({
@@ -658,7 +695,9 @@ export default function FormTurma({cadastramento,edit}){
                             }
                             
                             attTurma.nome = nome
+                            attTurma.grupo = grupoTurma
                             attTurma.descricao = descricao
+                            attTurma.professor = professor
                             updateItem("turmas",edit.id,attTurma)
                             cadastramento()
                         }}

@@ -2,6 +2,7 @@ import { BiPencil } from "react-icons/bi"
 import BotaoCadastro from "../../Forms/BotaoCadastro"
 import style from "./alunos.module.css"
 import { useEffect, useState } from "react"
+import { useLocation } from "react-router-dom"
 import {FormAluno} from "../../Forms/Cadastro"
 import { getDocumentoUnico, getItens } from "../../../firebase/CRUD"
 import { FichaAluno } from "../../layout/Fichas"
@@ -11,10 +12,22 @@ export default function AlunosView(){
 
     const [AlunoInfo,setAlunoInfo] = useState({})
     const [cadastramento,setCadastramento] = useState(false)
+    const [historico,setHistorico] = useState({})
     const {id} = useParams()
+    const location = useLocation()
+    const aluno = location.state
 
     useEffect(()=>{
-        getDocumentoUnico("alunos",id,setAlunoInfo)
+        // getDocumentoUnico("alunos",id,setAlunoInfo)
+        let hist = {
+            biblias: aluno.historico.biblias.reduce((acumulador, valorAtual)=>acumulador + valorAtual,0),
+            revistas: aluno.historico.revista.reduce((acumulador, valorAtual)=>acumulador + valorAtual,0),
+            pontos: aluno.historico.pontos.reduce((acumulador, valorAtual)=>acumulador + valorAtual,0),
+            presencas: aluno.historico.presenca.reduce((acumulador, valorAtual)=>acumulador + valorAtual,0),
+        }
+        setHistorico(hist)
+        setAlunoInfo(aluno)
+
     },[cadastramento])
 
     console.log(AlunoInfo)
@@ -59,11 +72,11 @@ export default function AlunosView(){
                         <h3>Dados da EBD</h3>
 
                         <p>Turma: {AlunoInfo.turmaNome}</p>
-                        <p>Dias presentes: {AlunoInfo.presencas}</p>
-                        <p>Pontos acumulados: {AlunoInfo.pontos}</p>
-                        <p>Frequência: {AlunoInfo.presencas}</p>
-                        <p>Status: {AlunoInfo.presencas}</p>
-                        
+                        <p>Total Bíblias: {historico.biblias}</p>
+                        <p>Total Revistas: {historico.revistas}</p>
+                        <p>Pontos acumulados: {historico.pontos}</p>
+                        <p>Frequência: {historico.presencas}</p>
+                        {/* <p>Status: {historico.presencas}</p> */}
                     </div>
                 }
             </div>

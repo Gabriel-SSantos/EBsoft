@@ -15,8 +15,10 @@ import Professores from './components/pages/Professores/Professores';
 import ProfessoresView from './components/pages/Professores/ProfessoresView';
 import AulaChamada from './components/pages/Aulas/AulaChamada';
 import RelatorioDetalhado from './components/pages/Aulas/RelatorioDetalhado';
+import Geral from './components/pages/Geral/Geral'
 import { getAuth, onAuthStateChanged, signInAnonymously } from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import RelatorioMensal from './components/pages/Geral/RelatorioMensal';
 
 function App() {
 
@@ -46,9 +48,6 @@ function App() {
           display:"flex",
           alignItems:"center",
           justifyContent:"center",
-          // position: "fixed",
-          // top: 0,
-          // left: 0,
           width: "100%",
         }}>
           <BiBookOpen size={50}
@@ -85,6 +84,10 @@ function App() {
             <Route path='/cadastros' Component={Cadastrar}></Route>
             <Route path='/padrao' Component={Padrao}></Route>
             <Route exact path='/relatorio' Component={RelatorioDetalhado}></Route>
+
+            <Route exact path='/geral' Component={Geral}></Route>
+            <Route exact path='/relatoriomensal' Component={RelatorioMensal}></Route>
+
 
           </Routes>
         </Container>

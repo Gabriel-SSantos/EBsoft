@@ -4,17 +4,60 @@ import BackButton from "../../layout/BackButton"
 import { BiPencil } from "react-icons/bi"
 import { Relatorio } from "./ListaTurmas"
 import { GrDocumentDownload } from "react-icons/gr"
-import { useEffect } from "react"
-import { updateItem } from "../../../firebase/CRUD"
+import { useEffect, useState } from "react"
+import { filtro, getDocCollection, updateItem } from "../../../firebase/CRUD"
+import { documentId } from "firebase/firestore"
 export default function RelatorioDetalhado(){
     const location = useLocation()
     const turmas = location.state?.listaTurmas
     const geral = location.state?.geral
     const dadosAula = location.state?.dadosAula
-    
+    const [dadosTurmas,setDadosTurmas] = useState()
+
+    const progressao = [
+        {nome:'Berçário',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
+        {nome:'Maternal',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
+        {nome:'Primário',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
+        {nome:'Juniores',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
+        {nome:'Pré-adolescentes',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
+        {nome:'Adolescentes',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
+        {nome:'Juvenis',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
+        {nome:'Jovens',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
+        {nome:'Adultos',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
+        {nome:'Discipulado',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
+        {nome:'Classe Mista',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0}
+    ]
+
     useEffect(()=>{
-        console.log(dadosAula)
+        console.log(turmas)
+        
+        const pegarTurmas = (doc)=>{
+            console.log(turmas)
+
+            doc.map((element) => {
+                for(let i=0;i<progressao.length;i++){
+                if(element.grupo == progressao[i].nome){
+                    
+                    progressao[i].qtd += 1 
+                    progressao[i].qtdProf += element.professor.length
+                    
+                    turmas.map((item)=> {
+                       if(element.id == item.idTurma){
+                            console.log(item)
+                            progressao[i].qtdAlunos += item.matriculados
+                            progressao[i].qtdVisit += item.visitantes
+                            progressao[i].qtdVisit += item.presencas
+                       } 
+                            
+                    })
+                }
+            }
+            });
+            setDadosTurmas(doc)
+        }
+        getDocCollection("turmas",pegarTurmas)
         if(dadosAula.situacao === "aberta"){
+            
             let percentual = Number((100*geral.presencas)/geral.matriculados).toFixed(2)
             dadosAula.biblia = geral.biblias
             dadosAula.presencas = geral.presencas

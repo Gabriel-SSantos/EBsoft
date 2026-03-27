@@ -6,12 +6,12 @@ import { FaCoins } from 'react-icons/fa'
 import { BsStarFill } from 'react-icons/bs'
 
 
-export const FichaAluno = ({nome, turma,id})=>{
+export const FichaAluno = ({aluno,nome, turma,id})=>{
     const navigate = useNavigate()
     return(
         <div className='card'
         onClick={()=>{
-            navigate(`/alunos/${id}`)
+            navigate(`/alunos/${id}`,{state:aluno})
         }}
         >
             <p>{nome}</p>
@@ -99,6 +99,21 @@ export const FichaTurma = ({nomeTurma,descricaoTurma,id})=>{
 
             <p>Nome: {nomeTurma}</p>
             <p className='cardTurmaDescricao'>Descrição: {descricaoTurma}</p>
+        </div>
+    )
+}
+
+
+export const FichaRelatorio = ({trimestre,id})=>{
+    const navigate = useNavigate()
+    return(
+        <div className='cardRelatorio'
+            // onClick={()=>{
+            //     navigate(`/geral/${id}`)
+            // }}
+            >
+
+            <p>Relatorio: {trimestre}</p>
         </div>
     )
 }
