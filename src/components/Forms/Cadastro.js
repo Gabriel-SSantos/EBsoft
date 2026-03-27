@@ -585,7 +585,7 @@ export default function FormTurma({cadastramento,edit}){
     const [nome,setNome] = useState("")
     const [descricao,setDescricao] = useState("")
     const [grupoTurma,setGrupoTurma] = useState("")
-    const [professor,setProfessor] = useState('')
+    const [professor,setProfessor] = useState([])
     const mudancaEstadoDescricao = (e)=>{
         setDescricao(e.target.value)
     }
@@ -598,7 +598,7 @@ export default function FormTurma({cadastramento,edit}){
     let attTurma = {
         nome: "",
         descricao: "",
-        professor: "",
+        professor: [],
         grupo: ""
     }
     useEffect(()=>{

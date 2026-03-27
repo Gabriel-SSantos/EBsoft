@@ -111,10 +111,10 @@ export default function AulaChamada(){
 
     const mudancaEstadoVisitantes = (e)=>{
         console.log(e.target.value)
-        setVisitantes(e.target.value)
+        setVisitantes(Number(e.target.value))
     }
      const mudancaEstadoOferta = (e)=>{
-        setTotOferta(e.target.value)
+        setTotOferta(Number(e.target.value))
     }
     return(
         <div className={`${style.container}`}>
@@ -203,7 +203,6 @@ export default function AulaChamada(){
                         atulizar("aulaTurma",id,turmaAula)
                         atualizarAlunos()
                     }
-                    
                 }}
             >
                 Enviar Relatório

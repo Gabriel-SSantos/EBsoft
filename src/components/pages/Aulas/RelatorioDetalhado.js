@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom"
+import { data, useLocation } from "react-router-dom"
 import style from './aulaLista.module.css'
 import BackButton from "../../layout/BackButton"
 import { BiPencil } from "react-icons/bi"
@@ -7,6 +7,7 @@ import { GrDocumentDownload } from "react-icons/gr"
 import { useEffect, useState } from "react"
 import { filtro, getDocCollection, updateItem } from "../../../firebase/CRUD"
 import { documentId } from "firebase/firestore"
+import { salvar } from "../../Forms/Cadastro"
 export default function RelatorioDetalhado(){
     const location = useLocation()
     const turmas = location.state?.listaTurmas
@@ -29,11 +30,7 @@ export default function RelatorioDetalhado(){
     ]
 
     useEffect(()=>{
-        console.log(turmas)
-        
         const pegarTurmas = (doc)=>{
-            console.log(turmas)
-
             doc.map((element) => {
                 for(let i=0;i<progressao.length;i++){
                 if(element.grupo == progressao[i].nome){
@@ -46,7 +43,7 @@ export default function RelatorioDetalhado(){
                             console.log(item)
                             progressao[i].qtdAlunos += item.matriculados
                             progressao[i].qtdVisit += item.visitantes
-                            progressao[i].qtdVisit += item.presencas
+                            progressao[i].qtdPresent += item.presencas
                        } 
                             
                     })
@@ -54,10 +51,19 @@ export default function RelatorioDetalhado(){
             }
             });
             setDadosTurmas(doc)
+            const relatorio = {
+                progressao,
+                data:turmas[0].data,
+                ofertas: geral.totalOfertas,
+                licao: dadosAula.licao
+            }
+            salvar({
+                localstore:"relatorio",
+                item:relatorio
+            })
         }
-        getDocCollection("turmas",pegarTurmas)
         if(dadosAula.situacao === "aberta"){
-            
+            getDocCollection("turmas",pegarTurmas)
             let percentual = Number((100*geral.presencas)/geral.matriculados).toFixed(2)
             dadosAula.biblia = geral.biblias
             dadosAula.presencas = geral.presencas
@@ -73,6 +79,7 @@ export default function RelatorioDetalhado(){
                 dadosAula,
             )
         }
+       
     },[])
 
     return (
