@@ -7,14 +7,15 @@ import { getDocumentoUnico, getItens } from "../../../firebase/CRUD"
 import { FichaAluno } from "../../layout/Fichas"
 import { useParams } from "react-router-dom"
 import BackButton from '../../layout/BackButton'
+import { useAuth } from "../../../hooks/AuthContext"
 export default function ProfessoresView(){
-
+    const {usuario} = useAuth()
     const [AlunoInfo,setAlunoInfo] = useState({})
     const [cadastramento,setCadastramento] = useState(false)
     const {id} = useParams()
 
     useEffect(()=>{
-        getDocumentoUnico("professores",id,setAlunoInfo)
+        getDocumentoUnico("professores",id,setAlunoInfo,usuario.idEscola)
     },[cadastramento])
 
     console.log(AlunoInfo)

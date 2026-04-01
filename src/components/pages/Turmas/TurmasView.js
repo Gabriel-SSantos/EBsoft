@@ -8,6 +8,7 @@ import { getDocumentoUnico, filtro } from "../../../firebase/CRUD"
 import { FichaAluno } from "../../layout/Fichas"
 import { useParams } from "react-router-dom"
 import BackButton from '../../layout/BackButton'
+import { useAuth } from "../../../hooks/AuthContext"
 export default function TurmasView(){
 
     const [turmaInfo,setTurmaInfo] = useState({})
@@ -15,11 +16,11 @@ export default function TurmasView(){
     const [professores,setProfessores] = useState([])
     const [cadastramento,setCadastramento] = useState(false)
     const {id} = useParams()
-
+    const {usuario} = useAuth()
     useEffect(()=>{
-        getDocumentoUnico("turmas",id,setTurmaInfo)
-        filtro("alunos","turma","==",id,setAlunos)
-        filtro("professores","turma","==",id,setProfessores)
+        getDocumentoUnico("turmas",id,setTurmaInfo,usuario.idEscola)
+        filtro("alunos","turma","==",id,setAlunos,usuario.idEscola)
+        filtro("professores","turma","==",id,setProfessores,usuario.idEscola)
         console.log(professores)
     },[])
 

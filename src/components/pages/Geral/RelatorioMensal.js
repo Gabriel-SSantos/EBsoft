@@ -3,17 +3,32 @@ import style from './geral.module.css'
 import { filtro, getDocCollection, getDocumentoUnico } from '../../../firebase/CRUD'
 import { FichaAula, FichaRelatorio } from '../../layout/Fichas'
 import LinkButton from '../../layout/LinkButton'
+import { useAuth } from '../../../hooks/AuthContext'
 
 export default function RelatorioMensal(){
 
+    const {usuario} = useAuth()
     const [relatorios,setRelatorios]= useState()
     const [alunos,setAlunos] = useState()
-
-
+    const [relatorioCrescimento, setRelatorioCrescimento] = useState()
     useEffect(()=>{
         let mes = (new Date().getMonth() + 1)
         console.log(mes)
+
+        const ordenar = (ord)=>{
+            
+            let temp = 0
+            for(let i = 0;i<ord.length - 1;i++){
+                if(ord[i].data.dia > ord[i + 1].data.dia){
+                    temp = ord[i]
+                    ord[i] = ord[i + 1]
+                    ord[i + 1] = temp
+                }
+            }
+        }
         const pegarRelatorio = (doc)=>{
+            ordenar(doc)
+            // let = 
             doc.forEach(element => {
                 let novo = {
                     nome:"Total",
@@ -25,13 +40,12 @@ export default function RelatorioMensal(){
                 }
                 element.progressao.push(novo)
             });
-            
-            setRelatorios(doc)
             console.log(doc)
-        }
-        filtro('relatorio','data.mes',"==",mes,pegarRelatorio)
-    },[])
+            setRelatorios(doc)
 
+        }
+        filtro('relatorio','data.mes',"==",mes,pegarRelatorio,usuario.idEscola)
+    },[])
    
     return(
         <section className={`${style.container}`}>
@@ -73,13 +87,54 @@ export default function RelatorioMensal(){
                                     
                                         })}
                                         </tbody>
-                                        </table></div>
+                                        </table>
+                                    </div>
                                         )
                                     }
+                                   
                                     
                                     )
-
+                                    
                                 }
+                                {/* <th>{relatorios[0].progressao[11].qtdProf}</th>
+                                                <th>{relatorios[relatorios.length - 1].progressao[11].qtdProf}</th> */}
+                                {/* {relatorios && 
+                                <div>
+                                    <h2>Controle de Crescimento</h2>
+                                    <table className={`${style.tabela}`}>
+                                        <thead>
+                                            <tr>
+                                                <th>Faixa etária</th>
+                                                <th>Nº Professores</th>
+                                                <th>
+                                                    Alunos Matriculados
+                                                    <th>Início do Mês</th>
+                                                    <th>Fim do Mês</th>
+                                                </th>
+                                                <th>Nº visitantes no mês</th>
+                                            </tr>
+                                        </thead>
+                                    <tbody > {relatorios[0].progressao.map((relatorioDia,index)=>{
+                                         return <tr key={`${index}`}>
+                                            <td>{relatorioDia.nome}</td>
+                                            <td>{relatorioDia.qtdProf}</td>
+                                            
+                                            <td>{relatorioDia.qtdAlunos > 0 ? relatorioDia.qtdAlunos:""}</td>
+                                            <td>{relatorioDia.qtdAlunos > 0 ? relatorioDia.qtdAlunos:""}</td>
+                                        
+                                            
+                                            <td>{
+                                                }</td>        
+                                        </tr>
+                                    
+                                        })}
+                                        </tbody>
+                                        </table>
+                                    </div>
+                                        
+                                    
+                                      
+                                } */}
                            
                         
                     </div>

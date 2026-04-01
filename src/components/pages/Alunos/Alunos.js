@@ -5,14 +5,15 @@ import { useEffect, useState } from "react"
 import { FormAluno } from "../../Forms/Cadastro"
 import { getDocCollection, getItens } from "../../../firebase/CRUD"
 import { FichaAluno } from "../../layout/Fichas"
+import { useAuth } from "../../../hooks/AuthContext"
 
 export default function Alunos(){
-
+    const {usuario} = useAuth()
     const [Alunos,setAlunos] = useState([])
     const [cadastramento,setCadastramento] = useState(false)
 
     useEffect(()=>{
-        return getItens("alunos",setAlunos)
+        return getItens("alunos",setAlunos,usuario.idEscola)
     },[])
 
     const ativarCadastramento = ()=>{

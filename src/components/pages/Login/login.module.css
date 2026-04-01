@@ -1,0 +1,76 @@
+.login{
+    padding: 0.4;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 90%;
+    align-items: center;
+    justify-content: space-evenly;
+    /* gap: 100px; */
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 75%;
+}
+.form label{
+    width: 100%;
+}
+.form label input{
+    border: 1px solid;
+    border-color: #5b5b5b8e;
+    text-align: center;
+    border-radius: 25px;
+    height: 45px; 
+    font-size: 17px;
+    padding: 3px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    width: 100%;
+}
+
+.botao{
+    display: flex;
+    margin-top: 20px;
+    padding: 7px;
+    width: 100%;
+    height: 45px; 
+    align-items: center;
+    justify-content: center;
+    background-color: #3C5CDD;
+    border-radius: 25px;
+}
+.botao p{
+    color: #FFFF;
+    font-size: 18px;
+    font-weight: 450;
+    margin: 0px;
+}
+.Cad{
+    width: 100%;
+    margin-top: 10px;
+    text-align: right;
+}
+.Cad span{
+    font-size: 15px;
+    padding-right: 10px;
+}
+.botaoCad{
+    display: flex;
+    padding: 7px;
+    width: 100%;
+    height: 45px; 
+    align-items: center;
+    justify-content: center;
+    border:solid 1px #3C5CDD;
+    border-radius: 25px;
+    
+}
+.botaoCad p{
+    color: #3C5CDD;
+    font-size: 18px;
+    font-weight: 450;
+    margin: 0px;
+}

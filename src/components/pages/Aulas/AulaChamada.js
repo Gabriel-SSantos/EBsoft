@@ -8,6 +8,7 @@ import { useEffect, useState } from "react"
 import { filtro,getDocumentoUnico,updateItem, atualizarListaDeAlunos } from "../../../firebase/CRUD"
 import { salvar } from '../../Forms/Cadastro'
 import {  FichaAlunoChamada } from "../../layout/Fichas"
+import { useAuth } from '../../../hooks/AuthContext'
 
 export default function AulaChamada(){
 
@@ -21,25 +22,26 @@ export default function AulaChamada(){
     const [aula,setAula] = useState()
     const navigate = useNavigate()
     const {id} = useParams()
-
+    const {usuario} = useAuth()
     useEffect(()=>{
         const listaAlunos = (doc)=>{
             if(!doc.listaAlunos){
-                filtro("alunos","turma","==",doc.idTurma,setAlunosTurma)
+                filtro("alunos","turma","==",doc.idTurma,setAlunosTurma,usuario.idEscola)
             }else {
                 setAlunosTurma(doc.listaAlunos)
             }
             console.log(doc)
             setAula(doc)
         }
-        getDocumentoUnico("aulaTurma",id,listaAlunos)
+        getDocumentoUnico("aulaTurma",id,listaAlunos,usuario.idEscola)
     },[])
 
-    const atulizar = (colecao,documento,objeto)=>{
+    const atualizar = (colecao,documento,objeto,idEscola)=>{
         updateItem(
             colecao,
             documento,
             objeto,
+            idEscola
         ).then((final)=>{
             navigate(-1)
         })
@@ -69,7 +71,7 @@ export default function AulaChamada(){
                 item.oferta = false
             }
         })
-        atualizarListaDeAlunos(AlunosTurma)
+        atualizarListaDeAlunos(AlunosTurma,usuario.idEscola)
     }
    const contar = ()=>{
         let totBib = 0
@@ -200,7 +202,7 @@ export default function AulaChamada(){
                             revistas: totRevista,
                             presencas: totPresenca,
                         }
-                        atulizar("aulaTurma",id,turmaAula)
+                        atualizar("aulaTurma",id,turmaAula,usuario.idEscola)
                         atualizarAlunos()
                     }
                 }}

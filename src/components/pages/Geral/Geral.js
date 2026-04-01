@@ -3,14 +3,15 @@ import style from './geral.module.css'
 import { filtro, getDocCollection, getDocumentoUnico } from '../../../firebase/CRUD'
 import { FichaAula, FichaRelatorio } from '../../layout/Fichas'
 import LinkButton from '../../layout/LinkButton'
+import { useAuth } from '../../../hooks/AuthContext'
 
 export default function Geral(){
-
+    const {usuario} = useAuth()
     const [aulas,setAulas]= useState()
     const [alunos,setAlunos] = useState()
     useEffect(()=>{
         // getDocCollection("aulaTurma",setAulas)
-        getDocCollection('alunos',setAlunos)
+        getDocCollection('alunos',setAlunos,usuario.idEscola)
     },[])
 
     console.log(alunos)

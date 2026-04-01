@@ -5,14 +5,15 @@ import { useEffect, useState } from "react"
 import FormTurma from "../../Forms/Cadastro"
 import { getDocCollection, getItens } from "../../../firebase/CRUD"
 import { FichaTurma } from "../../layout/Fichas"
+import { useAuth } from "../../../hooks/AuthContext"
 
 export default function Turmas(){
-
+    const {usuario} = useAuth()
     const [turmas,setTurmas] = useState([])
     const [cadastramento,setCadastramento] = useState(false)
 
     useEffect(()=>{
-        return getItens("turmas",setTurmas)
+        return getItens("turmas",setTurmas,usuario.idEscola)
     },[])
 
     const ativarCadastramento = ()=>{

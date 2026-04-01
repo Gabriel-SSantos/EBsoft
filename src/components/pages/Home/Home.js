@@ -7,16 +7,19 @@ import { getItens } from '../../../firebase/CRUD'
 import BotaoCadastro from '../../Forms/BotaoCadastro'
 import { FormAula } from '../../Forms/Cadastro'
 import { FichaAula } from '../../layout/Fichas'
+import { useAuth } from '../../../hooks/AuthContext'
+
 function Home(){
+    const {usuario} = useAuth()
     const [Aulas,setAulas] = useState([])
     const [cadastramento,setCadastramento] = useState(false)
 
     useEffect(()=>{
         const pegarAulas = (doc)=>{
-            let listaAulas = doc.toReversed()
-            setAulas(listaAulas)
+            // let listaAulas = doc.toReversed()
+            setAulas(doc)
         }
-        return getItens("aulas",pegarAulas)
+        return getItens("aulas",pegarAulas,usuario.idEscola)
     },[])
 
     const ativarCadastramento = ()=>{
@@ -28,7 +31,7 @@ function Home(){
             
     return (
         <section className={`${style.home_container}`}>
-            <h3>Bem vindo ao seu app de registro de EBD</h3>
+            <h3>Bem vindo {usuario?.Diretor.nome}, ao seu app de registro de EBD</h3>
                 <section>
                     <div>
                         <h2>Aulas</h2>

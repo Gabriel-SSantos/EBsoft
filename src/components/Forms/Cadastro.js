@@ -3,9 +3,10 @@ import { use, useEffect, useState } from 'react'
 import { BiX } from 'react-icons/bi'
 import {addItem } from "../../firebase/CRUD"
 import { getItens, getDocCollection,updateItem } from '../../firebase/CRUD'
+import { useAuth } from '../../hooks/AuthContext'
 
-export const salvar=({localstore,item})=>{
-    return addItem(localstore,item)
+export const salvar=({localstore,item,idEscola})=>{
+    return addItem(localstore,item,idEscola)
 }
 
 function Selection({text,name,options,handleOnChange,value}){
@@ -37,8 +38,10 @@ function Selection({text,name,options,handleOnChange,value}){
     )
 }
 
-export function FormAluno({cadastramento,edit}){
 
+
+export function FormAluno({cadastramento,edit}){
+    const {usuario} = useAuth()
     const [nome,setNome] = useState("")
     const [genero,setGenero] = useState("")
     const [dataNascimento, setDataNascimento] = useState(Date)
@@ -93,7 +96,7 @@ export function FormAluno({cadastramento,edit}){
             setHistorico(edit.historico)
 
         }
-        getDocCollection("turmas",setTurmas)
+        getDocCollection("turmas",setTurmas,usuario.idEscola)
     },[])
 
     return(
@@ -182,7 +185,8 @@ export function FormAluno({cadastramento,edit}){
                     }
                     salvar({
                         item:aluno,
-                        localstore:"alunos"
+                        localstore:"alunos",
+                        idEscola:usuario.idEscola
                     })
                 }}>
                     <p>Salvar</p>
@@ -214,7 +218,7 @@ export function FormAluno({cadastramento,edit}){
 
 
 export function FormAula({cadastramento,edit}){
-
+    const {usuario} = useAuth()
     const [licao,setLicao] = useState("")
     const [dataAula, setDataAula] = useState(Date)
     const [observacao,setObservacao] = useState("")
@@ -243,7 +247,7 @@ export function FormAula({cadastramento,edit}){
    
     
     useEffect(()=>{
-        getDocCollection("turmas",setIdsTurmas)
+        getDocCollection("turmas",setIdsTurmas,usuario.idEscola)
         if(edit){
             setLicao(edit.licao)
             setObservacao(edit.obs)
@@ -266,7 +270,8 @@ export function FormAula({cadastramento,edit}){
                     nome:element.nome,
                     data: dt
                 },
-                localstore:"aulaTurma"
+                localstore:"aulaTurma",
+                idEscola:usuario.idEscola
                 })
         })
         
@@ -336,7 +341,8 @@ export function FormAula({cadastramento,edit}){
                     }
                     salvar({
                         item:aula,
-                        localstore:"aulas"
+                        localstore:"aulas",
+                        idEscola:usuario.idEscola
                     })
                 }}
                     
@@ -363,6 +369,7 @@ export function FormAula({cadastramento,edit}){
 }
 
 export const FormProfessor=({cadastramento, edit})=>{
+    const {usuario} = useAuth()
     const [email,setEmail] = useState("")
     const [senha,setSenha] = useState("")
     const [nome,setNome] = useState("")
@@ -428,7 +435,7 @@ export const FormProfessor=({cadastramento, edit})=>{
             setSenha(edit.senha)
 
         }
-        getDocCollection("turmas",setTurmas)
+        getDocCollection("turmas",setTurmas,usuario.idEscola)
     },[])
 
     return(
@@ -528,7 +535,8 @@ export const FormProfessor=({cadastramento, edit})=>{
                 }
                 let idProf = await salvar({
                     item:professor,
-                    localstore:"professores"
+                    localstore:"professores",
+                    idEscola:usuario.idEscola
                 })
                 let turmaAtualizada = {}
                 turmas.forEach((item)=>{
@@ -537,7 +545,7 @@ export const FormProfessor=({cadastramento, edit})=>{
                         turmaAtualizada = item
                     }
                 })
-                updateItem("turmas",turma,turmaAtualizada)
+                updateItem("turmas",turma,turmaAtualizada,usuario.idEscola)
                 }}>
                     <p>Salvar</p></div>
             }
@@ -556,7 +564,7 @@ export const FormProfessor=({cadastramento, edit})=>{
                         item.professor.push(edit.id)
                         turmaAtualizada = item
                         }})
-                        updateItem("turmas",turma,turmaAtualizada)
+                        updateItem("turmas",turma,turmaAtualizada,usuario.idEscola)
                     }
                     
                     attProf.nome = nome
@@ -570,6 +578,7 @@ export const FormProfessor=({cadastramento, edit})=>{
                         "professores",
                         edit.id,
                         attProf,
+                        usuario.idEscola
                     )
                     
                 }}
@@ -582,6 +591,7 @@ export const FormProfessor=({cadastramento, edit})=>{
 }
 
 export default function FormTurma({cadastramento,edit}){
+    const {usuario} = useAuth()
     const [nome,setNome] = useState("")
     const [descricao,setDescricao] = useState("")
     const [grupoTurma,setGrupoTurma] = useState("")
@@ -682,6 +692,7 @@ export default function FormTurma({cadastramento,edit}){
                             salvar({
                                 localstore:"turmas",
                                 item:turma,
+                                idEscola:usuario.idEscola
                             })
                         }}
                     ><p>Salvar</p></div>}
@@ -698,7 +709,7 @@ export default function FormTurma({cadastramento,edit}){
                             attTurma.grupo = grupoTurma
                             attTurma.descricao = descricao
                             attTurma.professor = professor
-                            updateItem("turmas",edit.id,attTurma)
+                            updateItem("turmas",edit.id,attTurma,usuario.idEscola)
                             cadastramento()
                         }}
                     ><p>Atualizar</p></div>}

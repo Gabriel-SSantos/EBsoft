@@ -8,8 +8,10 @@ import { useEffect, useState } from "react"
 import { filtro, getDocCollection, updateItem } from "../../../firebase/CRUD"
 import { documentId } from "firebase/firestore"
 import { salvar } from "../../Forms/Cadastro"
+import { useAuth } from "../../../hooks/AuthContext"
 export default function RelatorioDetalhado(){
     const location = useLocation()
+    const {usuario} = useAuth()
     const turmas = location.state?.listaTurmas
     const geral = location.state?.geral
     const dadosAula = location.state?.dadosAula
@@ -59,11 +61,12 @@ export default function RelatorioDetalhado(){
             }
             salvar({
                 localstore:"relatorio",
-                item:relatorio
+                item:relatorio,
+                idEscola:usuario.idEscola
             })
         }
         if(dadosAula.situacao === "aberta"){
-            getDocCollection("turmas",pegarTurmas)
+            getDocCollection("turmas",pegarTurmas,usuario.idEscola)
             let percentual = Number((100*geral.presencas)/geral.matriculados).toFixed(2)
             dadosAula.biblia = geral.biblias
             dadosAula.presencas = geral.presencas
@@ -77,6 +80,7 @@ export default function RelatorioDetalhado(){
                 "aulas",
                 dadosAula.id,
                 dadosAula,
+                usuario.idEscola
             )
         }
        

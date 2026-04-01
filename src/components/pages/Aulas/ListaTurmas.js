@@ -7,6 +7,7 @@ import { FichaAulaTurma } from "../../layout/Fichas"
 import BackButton from '../../layout/BackButton'
 import { BiPencil } from "react-icons/bi";
 import LinkButton from "../../layout/LinkButton";
+import { useAuth } from "../../../hooks/AuthContext";
 
 export function Relatorio({aula}){
     let total = Number(aula.presencas) + Number(aula.visitantes)
@@ -34,7 +35,7 @@ export function Relatorio({aula}){
 }
 
 export default function ListaTurmas(){
-
+    const {usuario} = useAuth()
     const {id} = useParams()
     const [aulaInfo, setAulaInfo] = useState({})
     const [listaTurmas, setListaTurmas] = useState([])
@@ -80,10 +81,10 @@ export default function ListaTurmas(){
             setAulaInfo(doc)
 
             if(doc.turmas.length && doc.turmas.length > 0){
-                filtro("aulaTurma",documentId(),"in",doc.turmas,computarDados)
+                filtro("aulaTurma",documentId(),"in",doc.turmas,computarDados,usuario.idEscola)
             }       
         } 
-        getDocumentoUnico("aulas",id,listasTurma)
+        getDocumentoUnico("aulas",id,listasTurma,usuario.idEscola)
     },[])
 
     const ativarCadastramento = ()=>{

@@ -17,9 +17,15 @@ import {
 
 import {db} from "./firebase"
 
-export async function addItem(collectionName, data){
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
+} from "firebase/auth";
+
+export async function addItem(collectionName, data, idEscola){
     try{
-        const docRef = await addDoc(collection(db,collectionName),{
+        const docRef = await addDoc(collection(db,"escolas",idEscola,collectionName),{
             ...data,
             createdAt:serverTimestamp()
         });
@@ -33,8 +39,8 @@ export async function addItem(collectionName, data){
 
 //Busca pela colecao e atualiza sempre que ela mudar, ideal para dados que são atualizados por outros usuários
 
-export function getItens(collectionName, callback){
-    const q = query(collection(db,collectionName),orderBy("createdAt","desc"))
+export function getItens(collectionName, callback,idEscola){
+    const q = query(collection(db,"escolas",idEscola,collectionName),orderBy("createdAt","desc"))
 
     const unsubscribe = onSnapshot(q,(snapshot)=>{
         const items = snapshot.docs.map(doc=>({
@@ -51,8 +57,8 @@ export function getItens(collectionName, callback){
  * Busca todos os documentos de uma coleção uma única vez.
  * Ideal para dados de consulta ou lista, dados que não precisam de respostas imediatas 
  */
-export async function getDocCollection(collectionName,callback){
-    const q = query(collection(db, collectionName));
+export async function getDocCollection(collectionName,callback,idEscola){
+    const q = query(collection(db,"escolas",idEscola, collectionName));
     const querySnapshot = await getDocs(q);
     const dados = querySnapshot.docs.map(doc => ({
       id: doc.id,
@@ -62,9 +68,9 @@ export async function getDocCollection(collectionName,callback){
     return;
 };
 
-export async function getDocumentoUnico(collectionName,id,callback){
+export async function getDocumentoUnico(collectionName,id,callback,idEscola){
   try{
-    const docRef = doc(db,collectionName,id)
+    const docRef = doc(db,"escolas",idEscola,collectionName,id)
     const docSnap = await getDoc(docRef)
 
     if(docSnap.exists()){
@@ -75,7 +81,6 @@ export async function getDocumentoUnico(collectionName,id,callback){
         console.log("Documento não encontrado!");
         return null
       }
-      // console.log()
     } catch (error){
       console.error("Erro ao buscar elemento", error)
       throw error;
@@ -88,10 +93,10 @@ export async function getDocumentoUnico(collectionName,id,callback){
  * @param {string} docId - ID do documento a ser atualizado.
  * @param {object} data - Objeto contendo APENAS os campos a alterar.
  */
-export async function updateItem(collectionName, docId, data){
+export async function updateItem(collectionName, docId, data,idEscola){
     try {
       // Cria a referência para o documento específico
-      const docRef = doc(db, collectionName, docId);
+      const docRef = doc(db,"escolas",idEscola, collectionName, docId);
       
       // Atualiza
       await updateDoc(docRef, {
@@ -110,9 +115,9 @@ export async function updateItem(collectionName, docId, data){
  * @param {string} collectionName - Nome da coleção.
  * @param {string} docId - ID do documento a ser removido.
  */
-export async function deleteItem(collectionName, docId){
+export async function deleteItem(collectionName, docId,idEscola){
     try {
-      const docRef = doc(db, collectionName, docId);
+      const docRef = doc(db,"escolas",idEscola, collectionName, docId);
       await deleteDoc(docRef);
       console.log("Documento removido");
     } catch (error) {
@@ -121,9 +126,9 @@ export async function deleteItem(collectionName, docId){
     }
   };
 
-export async function filtro(collectionName,campo,operador,parametros,callback){
+export async function filtro(collectionName,campo,operador,parametros,callback,idEscola){
   try{
-    const q = query(collection(db,collectionName), where(campo,operador,parametros))
+    const q = query(collection(db,"escolas",idEscola,collectionName), where(campo,operador,parametros))
     const querySnapshot = await getDocs(q)
     const dados = querySnapshot.docs.map(doc=>({
       id:doc.id,
@@ -137,7 +142,7 @@ export async function filtro(collectionName,campo,operador,parametros,callback){
   }
 }
 
-export async function atualizarListaDeAlunos  (listaAlunos){
+export async function atualizarListaDeAlunos  (listaAlunos,idEscola){
   try {
     // 1. Cria a "caixa" do lote
     const batch = writeBatch(db);
@@ -146,7 +151,8 @@ export async function atualizarListaDeAlunos  (listaAlunos){
     listaAlunos.forEach((aluno) => {
       // Cria a referência para o documento específico deste aluno
       const {id, ...dados} = aluno
-      const alunoRef = doc(db, "alunos", id);
+      console.log("Id escola: ", idEscola)
+      const alunoRef = doc(db,"escolas",idEscola, "alunos", id);
       
       // Adiciona a instrução de atualização na "caixa"
       // Nota: Não usamos 'await' aqui dentro! Estamos apenas preparando o pacote.
@@ -168,3 +174,71 @@ export async function atualizarListaDeAlunos  (listaAlunos){
   }
 };
 
+
+export async function registarDiretorEscola(Diretor, email, senha, nomeIgreja){
+  const auth = getAuth();
+  // 1. Abrimos a nossa "caixa" de lote
+  const batch = writeBatch(db);
+  console.log("Opa 1")
+  try {
+    // 2. Criamos o Login no Auth primeiro (precisamos do UID dele)
+    const credenciais = await createUserWithEmailAndPassword(auth, email, senha);
+    const uidDiretor = credenciais.user.uid;
+
+    // 3. A MAGIA: Geramos o ID da nova Escola ANTES de a enviar para o banco
+    console.log("Opa 2")
+    const novaEscolaRef = doc(collection(db, "escolas"));
+    const idIgrejaGerado = novaEscolaRef.id;
+    console.log("Opa 3")
+    // 4. Preparamos a gravação dos dados da Escola
+    batch.set(novaEscolaRef, {
+      nome: nomeIgreja,
+      idDiretorResponsavel: uidDiretor, // A escola sabe quem é o dono
+      dataFundacao: new Date(),
+      status: "ativa"
+    });
+    console.log("Opa 4")
+    // 5. Preparamos a gravação dos dados do Diretor
+    const usuarioRef = doc(db, "usuarios", uidDiretor);
+    console.log("Opa 5")
+    batch.set(usuarioRef, {
+      Diretor,
+      idEscola: idIgrejaGerado, // O diretor sabe a que escola pertence!
+      dataCriacao: new Date()
+    });
+
+    // 6. Enviamos tudo de uma vez para a internet!
+    await batch.commit();
+
+    console.log("Sucesso! Diretor criado com a Escola ID:", idIgrejaGerado);
+    return { uid: uidDiretor, idEscola: idIgrejaGerado };
+
+  } catch (erro) {
+    console.error("Erro ao criar a estrutura da escola:", erro.message);
+    throw erro;
+  }
+};
+
+export async function verificarLogin(email,senha,callback){
+  const auth = getAuth();
+
+  try{
+    const credenciais = await signInWithEmailAndPassword(auth,email,senha)
+    const uid = credenciais.user.uid;
+    const docRef = doc(db,"usuarios",uid)
+    const docSnap = await getDoc(docRef)
+    if(docSnap.exists()){
+      callback({id: docSnap.id, 
+        ...docSnap.data()})
+      return 
+    } else {
+      console.log("Documento não encontrado!");
+      return null
+    }
+
+  }catch (error){
+    alert("Ocorreu um erro: ", error)
+    return error
+  }
+
+}

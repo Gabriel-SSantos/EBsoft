@@ -1,7 +1,7 @@
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { BiBookOpen } from 'react-icons/bi';
 import Home from './components/pages/Home/Home'
-import Cadastrar from './components/pages/Cadastro/Cadastrar';
+// import Cadastrar from './components/pages/Cadastro/Cadastrar';
 import Navbar from './components/layout/Navbar'
 import Container from './components/layout/Container'
 import Ranking from './components/pages/Ranking/Ranking';
@@ -19,27 +19,22 @@ import Geral from './components/pages/Geral/Geral'
 import { getAuth, onAuthStateChanged, signInAnonymously } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import RelatorioMensal from './components/pages/Geral/RelatorioMensal';
+import Login from './components/pages/Login/Login';
+import CadastroUser from './components/pages/Login/CadastroUser';
+
+import { AuthProvider, useAuth } from './hooks/AuthContext';
 
 function App() {
 
   const [user,setUser] = useState(null)
   useEffect(()=>{
     const auth = getAuth()
-    const naoInscrito = onAuthStateChanged(auth,(usuarioFirebase)=>{
-      if(usuarioFirebase){
-        console.log("Usuário logado: ",usuarioFirebase.uid);
-        setUser(usuarioFirebase);
-      } else {
-        console.log("Iniciando login anonimo ")
-        signInAnonymously(auth).catch((erro)=>{
-          console.error("Erro no login: ", erro)
-        })
-      }
-    })
-    return ()=> naoInscrito()
+ 
+    // return ()=> naoInscrito()
   },[])
   
   const AppHeader = ()=>{
+    
     return(
       <div style={
         {
@@ -60,39 +55,44 @@ function App() {
   }
   const AppLayout = ()=>{
     const location = useLocation();
-    const rotasFull = ['/placar']
+    const rotasFull = ['/login','/cadastro']
     const verificarRotas = rotasFull.includes(location.pathname)
     return (
-      <div style={{
-        display:"flex",
-        flexDirection:"column",
-        width:"100%",
-        height:"100vh",
-        overflow: "hidden"
-      }}>
-        {!verificarRotas && <AppHeader/>}
-        <Container customClass='min-height'>
-          <Routes>
-            <Route exact path='/' Component={Home}></Route>
-            <Route path='/turmas' Component={Turmas}></Route>
-            <Route path='/turmas/:id' Component={TurmasView}></Route>
-            <Route path='/aula/:id' Component={ListaTurmas}></Route>
-            <Route path='/aulachamada/:id' Component={AulaChamada}></Route>
-            <Route path='/alunos' Component={Alunos}></Route>
-            <Route path='/alunos/:id' Component={AlunosView}></Route><Route path='/professores' Component={Professores}></Route>
-            <Route path='/professores/:id' Component={ProfessoresView}></Route>
-            <Route path='/cadastros' Component={Cadastrar}></Route>
-            <Route path='/padrao' Component={Padrao}></Route>
-            <Route exact path='/relatorio' Component={RelatorioDetalhado}></Route>
+       <AuthProvider>
+        <div style={{
+          display:"flex",
+          flexDirection:"column",
+          width:"100%",
+          height:"100vh",
+          overflow: "hidden"
+        }}>
+          {!verificarRotas && <AppHeader/>}
+        
+            <Container customClass='min-height'>
+              <Routes>
+                <Route exact path='/' Component={Home}></Route>
+                <Route path='/turmas' Component={Turmas}></Route>
+                <Route path='/turmas/:id' Component={TurmasView}></Route>
+                <Route path='/aula/:id' Component={ListaTurmas}></Route>
+                <Route path='/aulachamada/:id' Component={AulaChamada}></Route>
+                <Route path='/alunos' Component={Alunos}></Route>
+                <Route path='/alunos/:id' Component={AlunosView}></Route><Route path='/professores' Component={Professores}></Route>
+                <Route path='/professores/:id' Component={ProfessoresView}></Route>
+                {/* <Route path='/cadastros' Component={Cadastrar}></Route> */}
+                <Route path='/padrao' Component={Padrao}></Route>
+                <Route exact path='/relatorio' Component={RelatorioDetalhado}></Route>
 
-            <Route exact path='/geral' Component={Geral}></Route>
-            <Route exact path='/relatoriomensal' Component={RelatorioMensal}></Route>
+                <Route exact path='/geral' Component={Geral}></Route>
+                <Route exact path='/relatoriomensal' Component={RelatorioMensal}></Route>
+                <Route exact path='/login' Component={Login}></Route>
+                <Route exact path='/cadastro' Component={CadastroUser}></Route>
 
-
-          </Routes>
-        </Container>
-        {!verificarRotas && <Navbar/>}
-      </div>
+              </Routes>
+            </Container>
+        
+          {!verificarRotas && <Navbar/>}
+        </div>
+      </AuthProvider>
     )
   }
 

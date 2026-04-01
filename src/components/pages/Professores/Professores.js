@@ -5,14 +5,15 @@ import { useEffect, useState } from "react"
 import { FormProfessor } from "../../Forms/Cadastro"
 import { getDocCollection, getItens } from "../../../firebase/CRUD"
 import { FichaProfessor } from "../../layout/Fichas"
+import { useAuth } from "../../../hooks/AuthContext"
 
 export default function Professores(){
-
+    const {usuario} = useAuth()
     const [Professores,setProfessores] = useState([])
     const [cadastramento,setCadastramento] = useState(false)
 
     useEffect(()=>{
-        return getItens("professores",setProfessores)
+        return getItens("professores",setProfessores,usuario.idEscola)
     },[])
 
     const ativarCadastramento = ()=>{
