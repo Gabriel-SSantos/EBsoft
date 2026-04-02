@@ -220,7 +220,7 @@ export async function registarDiretorEscola(Diretor, email, senha, nomeIgreja){
 };
 
 
-export async function registarProfessor(Professor, email, senha, idIgreja){
+export async function registarProfessor(Professor, email, senha, idIgreja, alunoProf){
   const auth = getAuth();
   // 1. Abrimos a nossa "caixa" de lote
   const batch = writeBatch(db);
@@ -229,12 +229,14 @@ export async function registarProfessor(Professor, email, senha, idIgreja){
     const credenciais = await createUserWithEmailAndPassword(auth, email, senha);
     const uidProfessor = credenciais.user.uid;
 
-   
+    alunoProf = {...alunoProf,uid:uidProfessor}
+    const idAlunoProf = await addItem("professores",alunoProf,idIgreja)
     // 5. Preparamos a gravação dos dados do Professor
     const usuarioRef = doc(db, "usuarios", uidProfessor);
     console.log("Opa 5")
     batch.set(usuarioRef, {
       ...Professor,
+      idProfAluno: idAlunoProf,
       idEscola: idIgreja,
       dataCriacao: new Date()
     });
@@ -243,11 +245,10 @@ export async function registarProfessor(Professor, email, senha, idIgreja){
     await batch.commit();
 
     console.log("Sucesso! Professor criado com o ID:", uidProfessor);
-    return { uid: uidProfessor };
+    return { uid: uidProfessor, idProf: idAlunoProf};
 
   } catch (erro) {
-    console.log(erro.message)
-    if(erro.message == "Firebase: Error (auth/email-already-in-use)"){
+    if(erro.code == "auth/email-already-in-use"){
       alert("O email informado já está em uso")
       return 
     }

@@ -1,0 +1,30 @@
+.box{
+    position: absolute; /* Faz o menu flutuar */
+    top: 120%; /* Coloca-o ligeiramente abaixo do botão */
+    right: 0; /* Alinha o menu à direita */
+    width: 200px;
+    height: 250px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 50; /* Garante que fica por cima de outros elementos da tela */
+    padding: 10px 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.box div{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.perfil p{
+    border-bottom: solid 1px;
+    margin: 5px;
+}
+
+.botoes p{
+    margin: 7px;
+}

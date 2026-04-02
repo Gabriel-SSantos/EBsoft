@@ -11,7 +11,7 @@ export default function Geral(){
     const [alunos,setAlunos] = useState()
     useEffect(()=>{
         // getDocCollection("aulaTurma",setAulas)
-        getDocCollection('alunos',setAlunos,usuario.idEscola)
+        // getDocCollection('alunos',setAlunos,usuario.idEscola)
     },[])
 
     console.log(alunos)
@@ -19,8 +19,8 @@ export default function Geral(){
         <section className={`${style.container}`}>
             <h3>Relatorios e estatísticas</h3>
                 <section>
-                    <div>
-                        <h2>Relatorios</h2>
+                    <h2>Relatorios</h2>
+                    <div style={{display:"flex",width:"100%",justifyContent:"center"}}>
                         <LinkButton text={"Gerar relatório mensal"} to={"/relatoriomensal"}/>
                     </div>
                     <div style={{display:"flex",width:"100%",justifyContent:"center"}}>

@@ -16,7 +16,6 @@ function Home(){
 
     useEffect(()=>{
         const pegarAulas = (doc)=>{
-            // let listaAulas = doc.toReversed()
             setAulas(doc)
         }
         return getItens("aulas",pegarAulas,usuario.idEscola)
@@ -31,12 +30,12 @@ function Home(){
             
     return (
         <section className={`${style.home_container}`}>
-            <h3>Bem vindo {usuario?.nome}, ao seu app de registro de EBD</h3>
+            <h3>Bem vindo(a) {usuario?.nome}, ao seu app de registro de EBD</h3>
                 <section>
                     <div>
                         <h2>Aulas</h2>
                     </div>
-                    {usuario.perfil == 'adm' &&
+                    {usuario?.perfil == 'adm' &&
                         <div style={{display:"flex",width:"100%",justifyContent:"center"}}>
                         <BotaoCadastro 
                             cadastramento={ativarCadastramento}

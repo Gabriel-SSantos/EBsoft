@@ -1,0 +1,30 @@
+.head{
+    display: flex;
+    width: 100%;
+    padding: 0.4em;
+    background-color: #7488DA;
+}
+.head div{
+    display: flex;
+    width: 100%;
+    /* flex-direction: row; */
+    align-items: center;
+}
+.logo img{
+    margin: 5px;
+}
+.logo p{
+    font-weight: 400;
+    font-size: 18px;
+    color: white;
+}
+
+.perfil{
+    justify-content: flex-end;
+}
+.perfil p{
+    margin-right: 5px;
+}
+.containerPerfil{
+    position: relative;
+}

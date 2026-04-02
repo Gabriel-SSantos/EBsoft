@@ -74,81 +74,86 @@ export default function RelatorioMensal(){
                         
                     </div>
                     <div className={`${style.geralList}`}>
-                       {relatorios && <h3>Controle de Crescimento - Mês: {relatorios[0].data.mes < 9 ? '0'+relatorios[0].data.mes:relatorios[0].data.mes}</h3>}
-                        <table className={`${style.tabela}`}>
-                            <thead>
-                                <tr>
-                                    
-                                    <th>F. Etária</th>
-                                    <th>Nº Classes</th>
-                                    <th>Nº Professores</th>
-                                    <th>Nº Matriculados Inicio do Mês</th>
-                                    <th>Nº Matriculados Fim do Mês</th>
-                                    <th>Nº Visitantes</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                        
-                                   {relatorioCrescimento && 
-                                   relatorioCrescimento.map((item,index)=>{  
+                        {/* <div className={`${style.relatorios}`}> */}
 
-                                    return <>{item.qtd != 0 && <tr key={index}>
+                            {relatorios && <h3>Controle de Crescimento - Mês: {relatorios[0].data.mes < 9 ? '0'+relatorios[0].data.mes:relatorios[0].data.mes}</h3>}
+                                <table className={`${style.tabela}`}>
+                                    <thead>
+                                        <tr>
+                                            
+                                            <th>F. Etária</th>
+                                            <th>Nº Classes</th>
+                                            <th>Nº Professores</th>
+                                            <th>Nº Matriculados Inicio do Mês</th>
+                                            <th>Nº Matriculados Fim do Mês</th>
+                                            <th>Nº Visitantes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                                
+                                        {relatorioCrescimento && 
+                                        relatorioCrescimento.map((item,index)=>{  
 
-                                        <td style={{ width:"100%",textAlign:"center"}}>{item.nome}</td>
-                                        <td data-label=' Nº Classes'>{item.qtd}</td>
-                                        <td data-label=' Nº Professores'>{item.qtdProf}</td>
-                                        <td data-label=' Nº Matriculados Início do Mês'>{item.qtdAlunos}</td>
-                                        <td data-label=' Nº Matriculados Fim do Mês'>{item.qtdAlunosFim}</td>
-                                        <td data-label=' Nº Visitantes Mês'>{item.qtdVisit}</td>
-                                        
-                                    </tr> }</>
-                                })}
-                               
-                                    
-                            </tbody>
-                        </table>
-                        <h3>Controle de Frequência de Aluno por Classe</h3>
-                        <table className={`${style.tabela}`}>
-                            <thead>
-                                <tr>
-                                    <th>Data</th>
-                                    <th>F. Etária</th>
-                                    <th>Nº Presentes</th>
-                                    <th>Nº Ausentes</th>
-                                    <th>Ofertas</th>
-                                    
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {relatorios && 
-                                    relatorios.map((dias,indexDias)=>{
-                                       return<>
-                                        <p>{`${dias.data.dia < 9 ? '0'+dias.data.dia:dias.data.dia}/${dias.data.mes < 9 ? '0'+dias.data.mes:dias.data.mes}/${dias.data.ano}`}</p>
-                                      { dias.progressao.map((item,index)=>{
-                                        return (
-                                            <>
-                                                {item.qtd != 0 &&
-                                                <tr key={index+'-'+indexDias}>
-                                                    
-                                                    <>
-                                                    <td></td>
-                                                    <td style={{ width:"100%",textAlign:"center"}}>{item.nome}</td>
-                                                    <td data-label='Presenças'>{item.qtdPresent}</td>
-                                                    <td data-label='Ausências'>{item.qtdAlunos - item.qtdPresent}</td>
-                                                    {item.nome == "Total" && <td data-label='Ofertas'>{Number(dias.ofertas).toFixed(2)}</td>}
-                                                    </>
-                                                    
-                                                </tr>
-                                                }
-                                            </>)
+                                            return <>{item.qtd != 0 && <tr key={index}>
+
+                                                <td style={{ width:"100%",textAlign:"center"}}>{item.nome}</td>
+                                                <td data-label=' Nº Classes'>{item.qtd}</td>
+                                                <td data-label=' Nº Professores'>{item.qtdProf}</td>
+                                                <td data-label=' Nº Matriculados Início do Mês'>{item.qtdAlunos}</td>
+                                                <td data-label=' Nº Matriculados Fim do Mês'>{item.qtdAlunosFim}</td>
+                                                <td data-label=' Nº Visitantes Mês'>{item.qtdVisit}</td>
+                                                
+                                            </tr> }</>
                                         })}
-
-                                       
-                                   </> })
                                     
-                                }
-                            </tbody>
-                        </table>
+                                            
+                                    </tbody>
+                                </table>
+                            {/* </div> */}
+                            
+                            <h3>Controle de Frequência de Aluno por Classe</h3>
+                            {/* <div className={`${style.relatorios}`}></div> */}
+                                <table className={`${style.tabela}`}>
+                                    <thead>
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>F. Etária</th>
+                                            <th>Nº Presentes</th>
+                                            <th>Nº Ausentes</th>
+                                            <th>Ofertas</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {relatorios && 
+                                            relatorios.map((dias,indexDias)=>{
+                                            return<>
+                                                <p>{`${dias.data.dia < 9 ? '0'+dias.data.dia:dias.data.dia}/${dias.data.mes < 9 ? '0'+dias.data.mes:dias.data.mes}/${dias.data.ano}`}</p>
+                                            { dias.progressao.map((item,index)=>{
+                                                return (
+                                                    <>
+                                                        {item.qtd != 0 &&
+                                                        <tr key={index+'-'+indexDias}>
+                                                            
+                                                            <>
+                                                            <td></td>
+                                                            <td style={{ width:"100%",textAlign:"center"}}>{item.nome}</td>
+                                                            <td data-label='Presenças'>{item.qtdPresent}</td>
+                                                            <td data-label='Ausências'>{item.qtdAlunos - item.qtdPresent}</td>
+                                                            {item.nome == "Total" && <td data-label='Ofertas'>{Number(dias.ofertas).toFixed(2)}</td>}
+                                                            </>
+                                                            
+                                                        </tr>
+                                                        }
+                                                    </>)
+                                                })}
+
+                                            
+                                        </> })
+                                            
+                                        }
+                                    </tbody>
+                                </table>
                     </div>
                 </section>
         </section>

@@ -3,6 +3,7 @@ import { BiBookOpen } from 'react-icons/bi';
 import Home from './components/pages/Home/Home'
 // import Cadastrar from './components/pages/Cadastro/Cadastrar';
 import Navbar from './components/layout/Navbar'
+import Header from './components/layout/Header';
 import Container from './components/layout/Container'
 import Ranking from './components/pages/Ranking/Ranking';
 import Padrao from './components/pages/Padrao';
@@ -33,26 +34,7 @@ function App() {
     // return ()=> naoInscrito()
   },[])
   
-  const AppHeader = ()=>{
-    
-    return(
-      <div style={
-        {
-          padding: 5,
-          backgroundColor:"#7488DA", 
-          display:"flex",
-          alignItems:"center",
-          justifyContent:"center",
-          width: "100%",
-        }}>
-          <BiBookOpen size={50}
-            style={{marginRight:"10px"}}
-          />
-          <h1> 
-          EBD Sistema</h1>
-        </div>
-    )
-  }
+  
   const AppLayout = ()=>{
     const location = useLocation();
     const rotasFull = ['/login','/cadastro']
@@ -66,7 +48,7 @@ function App() {
           height:"100vh",
           overflow: "hidden"
         }}>
-          {!verificarRotas && <AppHeader/>}
+          {!verificarRotas && <Header/>}
         
             <Container customClass='min-height'>
               <Routes>

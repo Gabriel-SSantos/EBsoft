@@ -445,7 +445,8 @@ export const FormProfessor=({cadastramento, edit})=>{
     }
     const perfis = [
         {nome:'prof'},
-        {nome:'adm'}]
+        {nome:'adm'}
+    ]
     useEffect(()=>{
         if(edit){
             setTurma(edit.turma)
@@ -519,6 +520,7 @@ export const FormProfessor=({cadastramento, edit})=>{
                             })
                     }
                 </div>
+                {usuario?.perfil == "adm" && 
                 <div>
                     {
                         Selection(
@@ -530,6 +532,7 @@ export const FormProfessor=({cadastramento, edit})=>{
                             })
                     }
                 </div>
+                }
                 <div>
                     <label>Email:<input 
                     type='email'
@@ -556,16 +559,7 @@ export const FormProfessor=({cadastramento, edit})=>{
                     alert("A senha deve ter mais que 6 caracteres")
                     return
                 }
-                
-                let idProf = await registarProfessor({nome:nome,turma:turma,perfil:perfil},email,senha,usuario.idEscola)
-                if(!idProf){
-                    alert("Email já em uso")
-                    return
-                }
-                console.log(idProf)
-                cadastramento()
                 const professor = {
-                    uid: idProf.uid,
                     nome:nome,
                     genero:genero,
                     nascimento: dataNascimento,
@@ -578,16 +572,19 @@ export const FormProfessor=({cadastramento, edit})=>{
                     revista: false,
                     presencas: 0,
                     pontos: 0,
+                    historico:{
+                        biblias:[0,0,0,0],
+                        revista:[0,0,0,0],
+                        presenca:[0,0,0,0],
+                        pontos:[0,0,0,0]
+                    }
                 }
-                let idRegistro = await salvar({
-                    item:professor,
-                    localstore:"professores",
-                    idEscola:usuario.idEscola
-                })
+                let idProf = await registarProfessor({nome:nome,turma:turma,perfil:perfil},email,senha,usuario.idEscola,professor)
+                cadastramento()
                 let turmaAtualizada = {}
                 turmas.forEach((item)=>{
                     if (item.id == turma){
-                        item.professor.push(idRegistro)
+                        item.professor.push(idProf.idProf)
                         turmaAtualizada = item
                     }
                 })
