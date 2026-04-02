@@ -3,7 +3,7 @@ import BotaoCadastro from "../../Forms/BotaoCadastro"
 import style from "./alunos.module.css"
 import { useEffect, useState } from "react"
 import { FormAluno } from "../../Forms/Cadastro"
-import { getDocCollection, getItens } from "../../../firebase/CRUD"
+import { filtro, getDocCollection, getItens } from "../../../firebase/CRUD"
 import { FichaAluno } from "../../layout/Fichas"
 import { useAuth } from "../../../hooks/AuthContext"
 
@@ -13,7 +13,10 @@ export default function Alunos(){
     const [cadastramento,setCadastramento] = useState(false)
 
     useEffect(()=>{
-        return getItens("alunos",setAlunos,usuario.idEscola)
+        if(usuario.perfil == 'adm')
+            return getItens("alunos",setAlunos,usuario.idEscola)
+        if(usuario.perfil == 'prof')
+             filtro("alunos","turma","==",usuario.turma,setAlunos,usuario.idEscola)
     },[])
 
     const ativarCadastramento = ()=>{

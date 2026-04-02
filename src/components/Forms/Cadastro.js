@@ -1,7 +1,7 @@
 import style from './cadastros.module.css'
 import { use, useEffect, useState } from 'react'
 import { BiX } from 'react-icons/bi'
-import {addItem } from "../../firebase/CRUD"
+import {addItem, getDocumentoUnico, registarProfessor } from "../../firebase/CRUD"
 import { getItens, getDocCollection,updateItem } from '../../firebase/CRUD'
 import { useAuth } from '../../hooks/AuthContext'
 
@@ -87,6 +87,14 @@ export function FormAluno({cadastramento,edit}){
         setGenero(e.target.value)
     }
     useEffect(()=>{
+        if(usuario.perfil == 'prof'){
+            const pegarTurma = (doc)=>{
+                setTurma(doc.id)
+                setTurmaNome(doc.nome)
+            }
+            getDocumentoUnico("turmas",usuario.turma,pegarTurma,usuario.idEscola)
+        }
+           
         if(edit){
             setTurma(edit.turma)
             setTurmaNome(edit.turmaNome)
@@ -96,7 +104,8 @@ export function FormAluno({cadastramento,edit}){
             setHistorico(edit.historico)
 
         }
-        getDocCollection("turmas",setTurmas,usuario.idEscola)
+        if(usuario.perfil == 'adm')
+            getDocCollection("turmas",setTurmas,usuario.idEscola)
     },[])
 
     return(
@@ -150,15 +159,23 @@ export function FormAluno({cadastramento,edit}){
                     </label>
                 </div>
                 <div>
-                    {
+                    {usuario.perfil == "adm" &&
                         Selection(
                             {
                                 name:"turmas",
                                 text:"Turma: ",handleOnChange:mudancaEstadoTurma,
-                                options:turmas,
+                                options:(turmas),
                                 value:turma
                             })
-                    }
+                    }{
+                        usuario.perfil == 'prof' &&
+                    <label
+                        style={{fontSize: '15px'}}
+                    >Turma
+                    <input 
+                        value={turmaNome}
+                        type='text'/></label> 
+                        }
                 </div>
             </div>
             {!edit && 
@@ -378,7 +395,7 @@ export const FormProfessor=({cadastramento, edit})=>{
     const [turma,setTurma] = useState("")
     const [turmaNome, setTurmaNome] = useState("")
     const [turmas, setTurmas] = useState([])
-    
+    const [perfil,setPerfil] = useState()    
 
     const buscar = (key,lista)=>{
         const tam = lista.length
@@ -423,7 +440,12 @@ export const FormProfessor=({cadastramento, edit})=>{
     const mudancaEstadoEmail = (e)=>{
         setEmail(e.target.value)
     }
-    
+    const mudancaEstadoPerfil=(e)=>{
+        setPerfil(e.target.value)
+    }
+    const perfis = [
+        {nome:'prof'},
+        {nome:'adm'}]
     useEffect(()=>{
         if(edit){
             setTurma(edit.turma)
@@ -496,7 +518,18 @@ export const FormProfessor=({cadastramento, edit})=>{
                                 value:turma
                             })
                     }
-                    </div>
+                </div>
+                <div>
+                    {
+                        Selection(
+                            {
+                                name:"perfil",
+                                text:"Perfil",handleOnChange:mudancaEstadoPerfil,
+                                options:perfis,
+                                value:perfil
+                            })
+                    }
+                </div>
                 <div>
                     <label>Email:<input 
                     type='email'
@@ -518,8 +551,21 @@ export const FormProfessor=({cadastramento, edit})=>{
             
             onClick={ async ()=>{
             
+                
+                if(senha.length < 6){
+                    alert("A senha deve ter mais que 6 caracteres")
+                    return
+                }
+                
+                let idProf = await registarProfessor({nome:nome,turma:turma,perfil:perfil},email,senha,usuario.idEscola)
+                if(!idProf){
+                    alert("Email já em uso")
+                    return
+                }
+                console.log(idProf)
                 cadastramento()
                 const professor = {
+                    uid: idProf.uid,
                     nome:nome,
                     genero:genero,
                     nascimento: dataNascimento,
@@ -533,7 +579,7 @@ export const FormProfessor=({cadastramento, edit})=>{
                     presencas: 0,
                     pontos: 0,
                 }
-                let idProf = await salvar({
+                let idRegistro = await salvar({
                     item:professor,
                     localstore:"professores",
                     idEscola:usuario.idEscola
@@ -541,7 +587,7 @@ export const FormProfessor=({cadastramento, edit})=>{
                 let turmaAtualizada = {}
                 turmas.forEach((item)=>{
                     if (item.id == turma){
-                        item.professor.push(idProf)
+                        item.professor.push(idRegistro)
                         turmaAtualizada = item
                     }
                 })

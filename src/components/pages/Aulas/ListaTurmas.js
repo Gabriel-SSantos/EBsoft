@@ -2,13 +2,13 @@ import style from "./aulaLista.module.css"
 import { useEffect, useState } from "react"
 import { getDocumentoUnico, filtro } from "../../../firebase/CRUD"
 import {documentId} from "firebase/firestore";
-import { useParams } from "react-router-dom"
+import { replace, useNavigate, useParams } from "react-router-dom"
 import { FichaAulaTurma } from "../../layout/Fichas"
 import BackButton from '../../layout/BackButton'
 import { BiPencil } from "react-icons/bi";
 import LinkButton from "../../layout/LinkButton";
 import { useAuth } from "../../../hooks/AuthContext";
-
+import { Navigate } from "react-router-dom";
 export function Relatorio({aula}){
     let total = Number(aula.presencas) + Number(aula.visitantes)
     let percentual = Number((100*aula.presencas)/aula.matriculados).toFixed(2)
@@ -41,6 +41,7 @@ export default function ListaTurmas(){
     const [listaTurmas, setListaTurmas] = useState([])
     const [cadastramento,setCadastramento] = useState(false)
     const [geral, setGeral] = useState({})
+    const navigate = useNavigate()
     useEffect(()=>{
         const computarDados = (doc)=>{
             let Bib = 0
@@ -76,15 +77,34 @@ export default function ListaTurmas(){
             }
             setListaTurmas(doc)
         }
+
+        const localizarProf = (doc)=>{
+            console.log(doc)
+            doc.forEach(e =>{
+                if(e.idTurma == usuario.turma){
+                    console.log(e)
+                    navigate(`/aulachamada/${e.id}`,{replace:true})
+                    return
+                }
+            })
+        }
         const listasTurma = (doc)=>{
+            console.log(doc)
+            if(doc.turmas.length && doc.turmas.length > 0){
+                console.log(usuario)
+                if(usuario.perfil == 'adm')
+                    filtro("aulaTurma",documentId(),"in",doc.turmas,computarDados,usuario.idEscola)
+                if(usuario.perfil == 'prof'){
+                    filtro("aulaTurma",documentId(),"in",doc.turmas,localizarProf,usuario.idEscola)
+                    return
+                }
+            } 
             setListaTurmas([])
             setAulaInfo(doc)
-
-            if(doc.turmas.length && doc.turmas.length > 0){
-                filtro("aulaTurma",documentId(),"in",doc.turmas,computarDados,usuario.idEscola)
-            }       
+      
         } 
         getDocumentoUnico("aulas",id,listasTurma,usuario.idEscola)
+        return
     },[])
 
     const ativarCadastramento = ()=>{
@@ -130,13 +150,17 @@ export default function ListaTurmas(){
                     />
                 )
             }
-            <h3>Resumo Geral</h3>
-            {geral && <Relatorio aula={geral}/>}
-            <LinkButton text={"Ver Detalhado"} to={"/relatorio"} state={{
-                listaTurmas:listaTurmas,
-                geral:geral,
-                dadosAula:aulaInfo
-                }}/>
+            {usuario.perfil == 'adm' &&
+            <>
+                <h3>Resumo Geral</h3>
+                {geral && <Relatorio aula={geral}/>}
+                <LinkButton text={"Ver Detalhado"} to={"/relatorio"} state={{
+                    listaTurmas:listaTurmas,
+                    geral:geral,
+                    dadosAula:aulaInfo
+                    }}/>
+            </>
+            }
         </div>
     )
 }

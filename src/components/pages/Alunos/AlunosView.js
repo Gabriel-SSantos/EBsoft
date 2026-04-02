@@ -16,7 +16,7 @@ export default function AlunosView(){
     const {id} = useParams()
     const location = useLocation()
     const aluno = location.state
-
+    console.log(aluno)
     useEffect(()=>{
         // getDocumentoUnico("alunos",id,setAlunoInfo)
         let hist = {

@@ -34,11 +34,12 @@ export default function Professores(){
                     texto={"Novo Professor"}
                 />
             </div>
+            
             {cadastramento && <FormProfessor cadastramento={desativarCadastramento}/>}
             {
                 // console.log(Professors.length)
                 Professores.length == 0 
-                && <p>Carregando Professores...</p>
+                && (<p>Carregando Professores...</p>)
             }
             {Professores.length > 0 && 
                 Professores.map((item,id)=>

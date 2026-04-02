@@ -5,6 +5,7 @@ import { FichaAula, FichaRelatorio } from '../../layout/Fichas'
 import LinkButton from '../../layout/LinkButton'
 import { useAuth } from '../../../hooks/AuthContext'
 
+
 export default function RelatorioMensal(){
 
     const {usuario} = useAuth()
@@ -13,22 +14,23 @@ export default function RelatorioMensal(){
     const [relatorioCrescimento, setRelatorioCrescimento] = useState()
     useEffect(()=>{
         let mes = (new Date().getMonth() + 1)
-        console.log(mes)
-
         const ordenar = (ord)=>{
             
             let temp = 0
             for(let i = 0;i<ord.length - 1;i++){
-                if(ord[i].data.dia > ord[i + 1].data.dia){
-                    temp = ord[i]
-                    ord[i] = ord[i + 1]
-                    ord[i + 1] = temp
+                for(let j = 0; j < ord.length - i - 1;j++){
+                    if(ord[j].data.dia > ord[j + 1].data.dia){
+                    temp = ord[j]
+                    ord[j] = ord[j + 1]
+                    ord[j + 1] = temp
+                    }
                 }
+                
             }
         }
         const pegarRelatorio = (doc)=>{
             ordenar(doc)
-            // let = 
+            // let visitMes = {nome:'',tot:0}
             doc.forEach(element => {
                 let novo = {
                     nome:"Total",
@@ -38,105 +40,115 @@ export default function RelatorioMensal(){
                     qtdProf: element.progressao.reduce((acumulador,valorTurma)=>{return acumulador + valorTurma.qtdProf},0),
                     qtdVisit: element.progressao.reduce((acumulador,valorTurma)=>{return acumulador + valorTurma.qtdVisit},0),
                 }
+                
                 element.progressao.push(novo)
             });
+            let controle = Array(doc[0].progressao.length).fill(0)
+            let crescimento = []
+             doc.forEach(element => {
+                element.progressao.forEach((fichaGrupo,i)=>{
+                   
+                    controle[i] += fichaGrupo.qtdVisit
+                    
+                })
+            })
+            doc[0].progressao.forEach((e,i) =>{
+                e.qtdVisit = controle[i]
+                crescimento.push({...e,qtdAlunosFim:doc[doc.length-1].progressao[i].qtdAlunos})
+            })
+           
+            setRelatorioCrescimento(crescimento)
             console.log(doc)
             setRelatorios(doc)
 
         }
         filtro('relatorio','data.mes',"==",mes,pegarRelatorio,usuario.idEscola)
     },[])
-   
+    
     return(
         <section className={`${style.container}`}>
+
             <h3>Relatorios e estatísticas</h3>
                 <section>
-                    
                     <div style={{display:"flex",width:"100%",justifyContent:"center"}}>
                         
                     </div>
                     <div className={`${style.geralList}`}>
-                        
-                            
-                            
+                       {relatorios && <h3>Controle de Crescimento - Mês: {relatorios[0].data.mes < 9 ? '0'+relatorios[0].data.mes:relatorios[0].data.mes}</h3>}
+                        <table className={`${style.tabela}`}>
+                            <thead>
+                                <tr>
+                                    
+                                    <th>F. Etária</th>
+                                    <th>Nº Classes</th>
+                                    <th>Nº Professores</th>
+                                    <th>Nº Matriculados Inicio do Mês</th>
+                                    <th>Nº Matriculados Fim do Mês</th>
+                                    <th>Nº Visitantes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                        
+                                   {relatorioCrescimento && 
+                                   relatorioCrescimento.map((item,index)=>{  
+
+                                    return <>{item.qtd != 0 && <tr key={index}>
+
+                                        <td style={{ width:"100%",textAlign:"center"}}>{item.nome}</td>
+                                        <td data-label=' Nº Classes'>{item.qtd}</td>
+                                        <td data-label=' Nº Professores'>{item.qtdProf}</td>
+                                        <td data-label=' Nº Matriculados Início do Mês'>{item.qtdAlunos}</td>
+                                        <td data-label=' Nº Matriculados Fim do Mês'>{item.qtdAlunosFim}</td>
+                                        <td data-label=' Nº Visitantes Mês'>{item.qtdVisit}</td>
+                                        
+                                    </tr> }</>
+                                })}
+                               
+                                    
+                            </tbody>
+                        </table>
+                        <h3>Controle de Frequência de Aluno por Classe</h3>
+                        <table className={`${style.tabela}`}>
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>F. Etária</th>
+                                    <th>Nº Presentes</th>
+                                    <th>Nº Ausentes</th>
+                                    <th>Ofertas</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
                                 {relatorios && 
-                                    relatorios.map((item,indexRelatorio)=>{
-                                     return(<div key={indexRelatorio}>
-                                    <h2>Relatorio data {`${item.data.dia}/${item.data.mes}/${item.data.ano}`}</h2>
-                                    <table className={`${style.tabela}`}>
-                                        <thead>
-                                            <tr>
-                                                <th>Faixa Etária</th>
-                                                <th>Nº Classes</th>
-                                                <th>Nº Professores</th>
-                                                <th>Alunos matriculados</th>
-                                                <th>Alunos Presentes</th>
-                                                <th>Alunos Ausentes</th>
-                                                <th>Oferta: {item.ofertas}</th>
-                                            </tr>
-                                        </thead>
-                                    <tbody > {item.progressao.map((relatorioDia,index)=>{
-                                         return <tr key={`${indexRelatorio}-${index}` }>
-                                            <td>{relatorioDia.nome}</td>
-                                            <td>{relatorioDia.qtd > 0 ? relatorioDia.qtd:""}</td>
-                                            <td>{relatorioDia.qtdProf > 0 ? relatorioDia.qtdProf:""}</td>
-                                            <td>{relatorioDia.qtdAlunos > 0 ? relatorioDia.qtdAlunos:""}</td>
-                                            <td>{relatorioDia.qtdPresent > 0 ? relatorioDia.qtdPresent:""}</td>
-                                            <td>{(relatorioDia.qtdAlunos - relatorioDia.qtdPresent) > 0 ? (relatorioDia.qtdAlunos - relatorioDia.qtdPresent):""}</td>        
-                                        </tr>
-                                    
+                                    relatorios.map((dias,indexDias)=>{
+                                       return<>
+                                        <p>{`${dias.data.dia < 9 ? '0'+dias.data.dia:dias.data.dia}/${dias.data.mes < 9 ? '0'+dias.data.mes:dias.data.mes}/${dias.data.ano}`}</p>
+                                      { dias.progressao.map((item,index)=>{
+                                        return (
+                                            <>
+                                                {item.qtd != 0 &&
+                                                <tr key={index+'-'+indexDias}>
+                                                    
+                                                    <>
+                                                    <td></td>
+                                                    <td style={{ width:"100%",textAlign:"center"}}>{item.nome}</td>
+                                                    <td data-label='Presenças'>{item.qtdPresent}</td>
+                                                    <td data-label='Ausências'>{item.qtdAlunos - item.qtdPresent}</td>
+                                                    {item.nome == "Total" && <td data-label='Ofertas'>{Number(dias.ofertas).toFixed(2)}</td>}
+                                                    </>
+                                                    
+                                                </tr>
+                                                }
+                                            </>)
                                         })}
-                                        </tbody>
-                                        </table>
-                                    </div>
-                                        )
-                                    }
-                                   
-                                    
-                                    )
+
+                                       
+                                   </> })
                                     
                                 }
-                                {/* <th>{relatorios[0].progressao[11].qtdProf}</th>
-                                                <th>{relatorios[relatorios.length - 1].progressao[11].qtdProf}</th> */}
-                                {/* {relatorios && 
-                                <div>
-                                    <h2>Controle de Crescimento</h2>
-                                    <table className={`${style.tabela}`}>
-                                        <thead>
-                                            <tr>
-                                                <th>Faixa etária</th>
-                                                <th>Nº Professores</th>
-                                                <th>
-                                                    Alunos Matriculados
-                                                    <th>Início do Mês</th>
-                                                    <th>Fim do Mês</th>
-                                                </th>
-                                                <th>Nº visitantes no mês</th>
-                                            </tr>
-                                        </thead>
-                                    <tbody > {relatorios[0].progressao.map((relatorioDia,index)=>{
-                                         return <tr key={`${index}`}>
-                                            <td>{relatorioDia.nome}</td>
-                                            <td>{relatorioDia.qtdProf}</td>
-                                            
-                                            <td>{relatorioDia.qtdAlunos > 0 ? relatorioDia.qtdAlunos:""}</td>
-                                            <td>{relatorioDia.qtdAlunos > 0 ? relatorioDia.qtdAlunos:""}</td>
-                                        
-                                            
-                                            <td>{
-                                                }</td>        
-                                        </tr>
-                                    
-                                        })}
-                                        </tbody>
-                                        </table>
-                                    </div>
-                                        
-                                    
-                                      
-                                } */}
-                           
-                        
+                            </tbody>
+                        </table>
                     </div>
                 </section>
         </section>

@@ -8,7 +8,7 @@
     flex-direction: column;
 }
 .tabela{
-    border: 0.5px solid;
+    /* border: 0.5px solid; */
     margin-bottom: 20px;
     font-size: 20px;
 }
@@ -23,4 +23,47 @@
     border-bottom: 0.5px solid;
     border-right: 0.5px solid;
     text-align:center;
+}
+
+.bloco{
+    width: 100%;
+}
+.tabela tbody{
+    width: 100%;
+}
+@media (max-width: 768px) {
+    .tabela{
+        width: 100%;
+    }
+    .tabela thead{
+        display: none;
+    }
+    .tabela tr{
+        display: block;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        padding: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .tabela tbody td{
+        display: flex;
+        justify-content: space-between; 
+        border: none;
+        font-size: 16px;
+        padding: 8px 0;
+    }
+    .tabela td::before{
+        content: attr(data-label);
+        font-size: 16px;
+        /* font-weight: bold; */
+    /* color: #666; */
+    }
+    .tabela tbody p{
+    font-size: 20px;
+    font-weight: 450;
+    margin-top: 1.5em;
+    color: rgb(1, 1, 122);
+    text-align:center;
+}
 }

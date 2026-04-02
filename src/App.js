@@ -21,7 +21,7 @@ import { useEffect, useState } from 'react';
 import RelatorioMensal from './components/pages/Geral/RelatorioMensal';
 import Login from './components/pages/Login/Login';
 import CadastroUser from './components/pages/Login/CadastroUser';
-
+import RotaPrivada from './routes/RotaPrivada';
 import { AuthProvider, useAuth } from './hooks/AuthContext';
 
 function App() {
@@ -71,19 +71,22 @@ function App() {
             <Container customClass='min-height'>
               <Routes>
                 <Route exact path='/' Component={Home}></Route>
-                <Route path='/turmas' Component={Turmas}></Route>
+                <Route path='/turmas' element={
+                  <RotaPrivada children={<Turmas/>} perfisPermitidos={['adm']}/>
+                }></Route>
                 <Route path='/turmas/:id' Component={TurmasView}></Route>
                 <Route path='/aula/:id' Component={ListaTurmas}></Route>
                 <Route path='/aulachamada/:id' Component={AulaChamada}></Route>
                 <Route path='/alunos' Component={Alunos}></Route>
-                <Route path='/alunos/:id' Component={AlunosView}></Route><Route path='/professores' Component={Professores}></Route>
+                <Route path='/alunos/:id' Component={AlunosView}></Route><Route path='/professores' element={
+                  <RotaPrivada children={<Professores/>} perfisPermitidos={['adm']}/>
+                }></Route>
                 <Route path='/professores/:id' Component={ProfessoresView}></Route>
-                {/* <Route path='/cadastros' Component={Cadastrar}></Route> */}
-                <Route path='/padrao' Component={Padrao}></Route>
                 <Route exact path='/relatorio' Component={RelatorioDetalhado}></Route>
-
                 <Route exact path='/geral' Component={Geral}></Route>
-                <Route exact path='/relatoriomensal' Component={RelatorioMensal}></Route>
+                <Route exact path='/relatoriomensal' element={
+                  <RotaPrivada children={<RelatorioMensal/>} perfisPermitidos={['adm']}/>
+                }></Route>
                 <Route exact path='/login' Component={Login}></Route>
                 <Route exact path='/cadastro' Component={CadastroUser}></Route>
 

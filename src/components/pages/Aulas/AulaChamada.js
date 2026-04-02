@@ -3,7 +3,7 @@ import { BiBook } from 'react-icons/bi'
 import { FaCoins } from 'react-icons/fa'
 import { BsPersonFill } from 'react-icons/bs'
 import style from "./aulaLista.module.css"
-import { useNavigate, useParams } from "react-router-dom"
+import { replace, useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { filtro,getDocumentoUnico,updateItem, atualizarListaDeAlunos } from "../../../firebase/CRUD"
 import { salvar } from '../../Forms/Cadastro'
@@ -30,7 +30,6 @@ export default function AulaChamada(){
             }else {
                 setAlunosTurma(doc.listaAlunos)
             }
-            console.log(doc)
             setAula(doc)
         }
         getDocumentoUnico("aulaTurma",id,listaAlunos,usuario.idEscola)
@@ -43,7 +42,14 @@ export default function AulaChamada(){
             objeto,
             idEscola
         ).then((final)=>{
-            navigate(-1)
+            if(usuario.perfil == 'adm'){
+                navigate(-1)
+            }
+            if(usuario.perfil == 'prof'){
+                console.log("AAAAAOOOOBAAAAA")
+                navigate('/',{replace:true})
+            }
+
         })
 
     }

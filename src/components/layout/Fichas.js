@@ -4,6 +4,9 @@ import { BiBible } from 'react-icons/bi'
 import { BiBook } from 'react-icons/bi'
 import { FaCoins } from 'react-icons/fa'
 import { BsStarFill } from 'react-icons/bs'
+import { useAuth } from '../../hooks/AuthContext'
+import { filtro } from '../../firebase/CRUD'
+import { useState } from 'react'
 
 
 export const FichaAluno = ({aluno,nome, turma,id})=>{
@@ -136,10 +139,11 @@ export const FichaAulaTurma = ({nomeTurma, situacao, aproveitamento,id})=>{
     )
 }
 
-export const FichaAula = ({licao, data, situacao, presentes, revista,biblia,aproveitamento,id})=>{
+export const FichaAula =  ({licao, data, situacao, presentes, revista,biblia,aproveitamento,id})=>{
     const navigate = useNavigate()
-    let dataModificada = data.split("-").reverse().join("/")
     
+    let dataModificada = data.split("-").reverse().join("/")
+   
     return(
         <div 
         style={{backgroundColor: situacao == "fechada"? "#deffc1":"#feffc1"}}

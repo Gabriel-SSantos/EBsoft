@@ -81,6 +81,7 @@ export default function TurmasView(){
                                 id={item.id}   
                                 nome={item.nome}
                                 turma={`Pontos: ${item.pontos}`}
+                                aluno={item}
                             />
                         )
                     }

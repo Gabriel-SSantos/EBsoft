@@ -40,7 +40,7 @@ export async function addItem(collectionName, data, idEscola){
 //Busca pela colecao e atualiza sempre que ela mudar, ideal para dados que são atualizados por outros usuários
 
 export function getItens(collectionName, callback,idEscola){
-    const q = query(collection(db,"escolas",idEscola,collectionName),orderBy("createdAt","desc"))
+    const q = query(collection(db,"escolas",idEscola,collectionName),orderBy("createdAt","asc"))
 
     const unsubscribe = onSnapshot(q,(snapshot)=>{
         const items = snapshot.docs.map(doc=>({
@@ -103,7 +103,6 @@ export async function updateItem(collectionName, docId, data,idEscola){
         ...data,
         updatedAt: serverTimestamp() // Boa prática: marcar quando foi editado
       });
-      alert("Documento atualizado com sucesso");
     } catch (error) {
       console.error("Erro ao atualizar:", error);
       throw error;
@@ -129,13 +128,14 @@ export async function deleteItem(collectionName, docId,idEscola){
 export async function filtro(collectionName,campo,operador,parametros,callback,idEscola){
   try{
     const q = query(collection(db,"escolas",idEscola,collectionName), where(campo,operador,parametros))
-    const querySnapshot = await getDocs(q)
-    const dados = querySnapshot.docs.map(doc=>({
-      id:doc.id,
-      ...doc.data()
-    }))
-    callback(dados)
-    return;
+    const unsubscribe = onSnapshot(q,(snapshot)=>{
+        const dados = snapshot.docs.map(doc=>({
+        id:doc.id,
+        ...doc.data()
+      }))
+      callback(dados)
+    })
+    return unsubscribe;
   }catch(error){
     console.error("Erro ao buscar: ", error);
       throw error;
@@ -202,7 +202,7 @@ export async function registarDiretorEscola(Diretor, email, senha, nomeIgreja){
     const usuarioRef = doc(db, "usuarios", uidDiretor);
     console.log("Opa 5")
     batch.set(usuarioRef, {
-      Diretor,
+      ...Diretor,
       idEscola: idIgrejaGerado, // O diretor sabe a que escola pertence!
       dataCriacao: new Date()
     });
@@ -218,6 +218,44 @@ export async function registarDiretorEscola(Diretor, email, senha, nomeIgreja){
     throw erro;
   }
 };
+
+
+export async function registarProfessor(Professor, email, senha, idIgreja){
+  const auth = getAuth();
+  // 1. Abrimos a nossa "caixa" de lote
+  const batch = writeBatch(db);
+  try {
+    // 2. Criamos o Login no Auth primeiro (precisamos do UID dele)
+    const credenciais = await createUserWithEmailAndPassword(auth, email, senha);
+    const uidProfessor = credenciais.user.uid;
+
+   
+    // 5. Preparamos a gravação dos dados do Professor
+    const usuarioRef = doc(db, "usuarios", uidProfessor);
+    console.log("Opa 5")
+    batch.set(usuarioRef, {
+      ...Professor,
+      idEscola: idIgreja,
+      dataCriacao: new Date()
+    });
+
+    // 6. Enviamos tudo de uma vez para a internet!
+    await batch.commit();
+
+    console.log("Sucesso! Professor criado com o ID:", uidProfessor);
+    return { uid: uidProfessor };
+
+  } catch (erro) {
+    console.log(erro.message)
+    if(erro.message == "Firebase: Error (auth/email-already-in-use)"){
+      alert("O email informado já está em uso")
+      return 
+    }
+    console.error("Erro ao criar professor:", erro.message);
+    // throw erro;
+  }
+};
+
 
 export async function verificarLogin(email,senha,callback){
   const auth = getAuth();
@@ -237,7 +275,7 @@ export async function verificarLogin(email,senha,callback){
     }
 
   }catch (error){
-    alert("Ocorreu um erro: ", error)
+    alert("Verifique email ou senha")
     return error
   }
 

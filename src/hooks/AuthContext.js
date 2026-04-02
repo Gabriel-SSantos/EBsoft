@@ -2,12 +2,13 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { createContext, useEffect, useState, useContext } from "react";
-
+import { useNavigate } from "react-router-dom";
 //Guardar dados
 const AuthContext = createContext()
 
 //Função que vai envelopar a aplicação
 export function AuthProvider({children}){
+    const navigate = useNavigate()
     const [usuario,setUsuario] = useState(null)
 
     //Ganha tempo enquanto o firebase carrega
@@ -32,14 +33,17 @@ export function AuthProvider({children}){
                     } else {
                         console.error("Autenticado, mas sem documento na coleção 'usuarios'.");
                         setUsuario(null);
+                        navigate('/login')
                     }
                 } catch(error){
                     console.log("Erro ao buscar dados")
                     setUsuario(null)
+                    navigate('/login')
                 }
             } else {
                 // quando o user faz logout
                 setUsuario(null)
+                navigate('/login')
             }
             setCarregando(false)
         })
