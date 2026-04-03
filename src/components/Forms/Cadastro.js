@@ -224,6 +224,7 @@ export function FormAluno({cadastramento,edit}){
                         "alunos",
                         edit.id,
                         attAluno,
+                        usuario.idEscola
                     )
                 }}
             ><p>Atualizar</p></div>

@@ -80,22 +80,25 @@ export default function ListaTurmas(){
 
         const localizarProf = (doc)=>{
             console.log(doc)
+            console.log(usuario)
             doc.forEach(e =>{
                 if(e.idTurma == usuario.turma){
-                    navigate(`/aulachamada/${e.id}`,{replace:true})
-                    return
+                    return navigate(`/aulachamada/${e.id}`,{replace:true})
+                    
                 }
             })
         }
         const listasTurma = (doc)=>{
             console.log(doc)
             if(doc.turmas.length && doc.turmas.length > 0){
-                if(usuario.perfil == 'adm')
-                    filtro("aulaTurma",documentId(),"in",doc.turmas,computarDados,usuario.idEscola)
                 
+                console.log(usuario.perfil)
+                if(usuario.perfil == 'adm'){
+                    filtro("aulaTurma",documentId(),"in",doc.turmas,computarDados,usuario.idEscola)
+                }
                 if(usuario.perfil == 'prof'){
                     filtro("aulaTurma",documentId(),"in",doc.turmas,localizarProf,usuario.idEscola)
-                    return
+                    // return
                 }
             } 
             setListaTurmas([])

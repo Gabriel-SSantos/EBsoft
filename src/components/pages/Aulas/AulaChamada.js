@@ -27,9 +27,10 @@ export default function AulaChamada(){
     useEffect(()=>{
         const listaAlunos = (doc)=>{
             if(!doc.listaAlunos){
-                
-                if(!doc.nome == "Professores")
+                console.log(doc.nome)
+                if(doc.nome != "Professores"){
                     filtro("alunos","turma","==",doc.idTurma,setAlunosTurma,usuario.idEscola)
+                }
                 else {
                     getItens('professores',setAlunosTurma,usuario.idEscola)
                 }
@@ -44,25 +45,18 @@ export default function AulaChamada(){
             }
             setAula(doc)
         }
-        getDocumentoUnico("aulaTurma",id,listaAlunos,usuario.idEscola)
-    },[])
+        if(usuario)
+            getDocumentoUnico("aulaTurma",id,listaAlunos,usuario.idEscola)
+    },[usuario])
 
-    const atualizar = (colecao,documento,objeto,idEscola)=>{
-        updateItem(
+    const atualizar = async (colecao,documento,objeto,idEscola)=>{
+       await updateItem(
             colecao,
             documento,
             objeto,
             idEscola
-        ).then((final)=>{
-            if(usuario.perfil == 'adm'){
-                navigate(-1)
-            }
-            if(usuario.perfil == 'prof'){
-                navigate('/',{replace:true})
-            }
-
-        })
-
+        )
+        alert('Chamada enviada')
     }
     const atualizarAlunos = ()=>{
         // console.log(AlunosTurma)
@@ -227,6 +221,21 @@ export default function AulaChamada(){
             >
                 Enviar Relatório
             </button>
+            {aula && 
+            aula.situacao == "fechada" &&
+                <button
+                    onClick={()=>{
+                        if(usuario.perfil == 'adm'){
+                                navigate(-1)
+                        }
+                        if(usuario.perfil == 'prof'){
+                            navigate('/',{replace:true})
+                        }
+                    }}
+                >
+                    Voltar
+                </button>
+            }
         </div>
     )
 }
