@@ -6,7 +6,7 @@ import { Relatorio } from "./ListaTurmas"
 import { GrDocumentDownload } from "react-icons/gr"
 import { useEffect, useState } from "react"
 import { filtro, getDocCollection, updateItem } from "../../../firebase/CRUD"
-import { documentId } from "firebase/firestore"
+import { collection, documentId } from "firebase/firestore"
 import { salvar } from "../../Forms/Cadastro"
 import { useAuth } from "../../../hooks/AuthContext"
 export default function RelatorioDetalhado(){
@@ -16,23 +16,55 @@ export default function RelatorioDetalhado(){
     const geral = location.state?.geral
     const dadosAula = location.state?.dadosAula
     const [dadosTurmas,setDadosTurmas] = useState()
-
     const progressao = [
-        {nome:'Berçário',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
-        {nome:'Maternal',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
-        {nome:'Primário',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
-        {nome:'Juniores',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
-        {nome:'Pré-adolescentes',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
-        {nome:'Adolescentes',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
-        {nome:'Juvenis',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
-        {nome:'Jovens',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
-        {nome:'Adultos',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
-        {nome:'Discipulado',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0},
-        {nome:'Classe Mista',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0}
+        {nome:'Berçário',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0,prof:0},
+        {nome:'Maternal',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0,prof:0},
+        {nome:'Primário',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0,prof:0},
+        {nome:'Juniores',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0,prof:0},
+        {nome:'Pré-adolescentes',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0,prof:0},
+        {nome:'Adolescentes',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0,prof:0},
+        {nome:'Juvenis',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0,prof:0},
+        {nome:'Jovens',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0,prof:0},
+        {nome:'Adultos',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0,prof:0},
+        {nome:'Discipulado',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0,prof:0},
+        {nome:'Classe Mista',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0,prof:0},
+        // {nome:'professores',qtd:0,qtdProf:0,qtdAlunos:0,qtdVisit:0,qtdPresent:0}
     ]
 
     useEffect(()=>{
         const pegarTurmas = (doc)=>{
+            let turmaProfessores 
+            let profsTurma = []
+            turmas.forEach(element => {
+                if (element.nome == 'Professores')
+                    turmaProfessores = element
+                else{
+                    console.log(element)
+                    let prov = 0
+                    if(element.presencas[0])
+                        element.presencas = [element.presencas[0],0]
+                    else {
+                        prov = element.presencas 
+                        element.presencas = []
+                        element.presencas = [prov,0]
+                    }
+                }
+            });
+            console.log(turmas)
+            // console.log(turmaProfessores)
+            
+
+            turmaProfessores.listaAlunos.forEach(element =>{
+                turmas.map((item)=>{
+                    if(element.turmaNome == item.nome && item.nome != "Professores"){
+                        if(element.presencas){
+                            console.log(item)
+                            item.presencas[1] += 1
+                        }
+                    }
+                })
+            })
+            console.log(profsTurma)
             doc.map((element) => {
                 for(let i=0;i<progressao.length;i++){
                 if(element.grupo == progressao[i].nome){
@@ -42,10 +74,11 @@ export default function RelatorioDetalhado(){
                     
                     turmas.map((item)=> {
                        if(element.id == item.idTurma){
-                            console.log(item)
+                            // console.log(item)
                             progressao[i].qtdAlunos += item.matriculados
                             progressao[i].qtdVisit += item.visitantes
-                            progressao[i].qtdPresent += item.presencas
+                            progressao[i].qtdPresent += item.presencas[0]
+                            progressao[i].prof += item.presencas[1]
                        } 
                             
                     })
@@ -57,6 +90,7 @@ export default function RelatorioDetalhado(){
                 progressao,
                 data:turmas[0].data,
                 ofertas: geral.totalOfertas,
+                ofertaProf: turmaProfessores.totalOfertas,
                 licao: dadosAula.licao
             }
             salvar({
@@ -65,7 +99,8 @@ export default function RelatorioDetalhado(){
                 idEscola:usuario.idEscola
             })
         }
-        if(dadosAula.situacao === "aberta"){
+        if(dadosAula.situacao === "aberta" && usuario){
+           
             getDocCollection("turmas",pegarTurmas,usuario.idEscola)
             let percentual = Number((100*geral.presencas)/geral.matriculados).toFixed(2)
             dadosAula.biblia = geral.biblias
@@ -84,7 +119,7 @@ export default function RelatorioDetalhado(){
             )
         }
        
-    },[])
+    },[usuario])
 
     return (
         <div className={`${style.relatorioConteiner}`}>

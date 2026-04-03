@@ -1,5 +1,5 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { createContext, useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
@@ -20,10 +20,11 @@ export function AuthProvider({children}){
         //verifica a mudança de estado do login
         const unsubscribe = onAuthStateChanged(auth, async (userFirebase)=>{
             if(userFirebase){
+                setCarregando(true)
                 try{
                     const docRef = doc(db, "usuarios",userFirebase.uid)
-                    const docSnap = await getDoc(docRef)
-                    if(docSnap.exists()){
+                    const docSnap = onSnapshot(docRef,(docSnap)=>{
+                        if(docSnap.exists()){
                         const dadosFirestore = docSnap.data()
                         setUsuario({
                             uid: userFirebase.uid,
@@ -35,6 +36,9 @@ export function AuthProvider({children}){
                         setUsuario(null);
                         navigate('/login')
                     }
+                    setCarregando(false)
+                    })
+                    
                 } catch(error){
                     console.log("Erro ao buscar dados")
                     setUsuario(null)

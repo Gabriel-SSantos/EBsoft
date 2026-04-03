@@ -5,7 +5,7 @@ import { BsPersonFill } from 'react-icons/bs'
 import style from "./aulaLista.module.css"
 import { replace, useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { filtro,getDocumentoUnico,updateItem, atualizarListaDeAlunos } from "../../../firebase/CRUD"
+import { filtro,getDocumentoUnico,updateItem, atualizarListaDeAlunos, getItens } from "../../../firebase/CRUD"
 import { salvar } from '../../Forms/Cadastro'
 import {  FichaAlunoChamada } from "../../layout/Fichas"
 import { useAuth } from '../../../hooks/AuthContext'
@@ -20,14 +20,26 @@ export default function AulaChamada(){
     const [visitantes,setVisitantes] = useState(0)
     const [click,setClick] = useState(false)
     const [aula,setAula] = useState()
+    
     const navigate = useNavigate()
     const {id} = useParams()
     const {usuario} = useAuth()
     useEffect(()=>{
         const listaAlunos = (doc)=>{
             if(!doc.listaAlunos){
-                filtro("alunos","turma","==",doc.idTurma,setAlunosTurma,usuario.idEscola)
+                
+                if(!doc.nome == "Professores")
+                    filtro("alunos","turma","==",doc.idTurma,setAlunosTurma,usuario.idEscola)
+                else {
+                    getItens('professores',setAlunosTurma,usuario.idEscola)
+                }
             }else {
+                // console.log(doc)
+                setTotOferta(doc.totalOfertas)
+                setTotBiblia(doc.biblias)
+                setTotRevista(doc.revistas)
+                setTotPresenca(doc.presencas)
+                setVisitantes(doc.visitantes)
                 setAlunosTurma(doc.listaAlunos)
             }
             setAula(doc)
@@ -46,7 +58,6 @@ export default function AulaChamada(){
                 navigate(-1)
             }
             if(usuario.perfil == 'prof'){
-                console.log("AAAAAOOOOBAAAAA")
                 navigate('/',{replace:true})
             }
 
@@ -54,9 +65,9 @@ export default function AulaChamada(){
 
     }
     const atualizarAlunos = ()=>{
-        console.log(AlunosTurma)
-        let trimestre = aula.data.trimestre 
-        console.log(trimestre)
+        // console.log(AlunosTurma)
+        let trimestre = aula.data.trimestre - 1
+        // console.log(trimestre)
         AlunosTurma.forEach((item)=>{
             if(item.biblia){
                 item.biblia = false
@@ -77,7 +88,8 @@ export default function AulaChamada(){
                 item.oferta = false
             }
         })
-        atualizarListaDeAlunos(AlunosTurma,usuario.idEscola)
+        let collectionName = (aula.nome == "Professores" ? "professores":"alunos")
+        atualizarListaDeAlunos(collectionName,AlunosTurma,usuario.idEscola)
     }
    const contar = ()=>{
         let totBib = 0

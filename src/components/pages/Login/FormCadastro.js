@@ -28,7 +28,7 @@ export default function FormCadastro(){
     const cadastrar = async (diretor,email,senha,nomeIgreja)=>{
         
         await registarDiretorEscola(diretor,email,senha,nomeIgreja)
-        navigate(-1)
+        navigate('/login',{replace:true})
     }
     return(
         <div className={`${style.form}`}>
@@ -84,11 +84,30 @@ export default function FormCadastro(){
                         alert("Preencha todos os dados")
                         return
                     }
-                    let diretor = {
-                        nome: nome,
+                    
+                    const diretor = {
+                        nome:nome,
                         telefone: telefone,
+                        genero:'',
+                        nascimento: '',
+                        turma: '',
+                        turmaNome:'Professores',
+                        email:email,
+                        senha:senha,
+                        oferta: false,
+                        biblia: false,
+                        revista: false,
+                        presencas: 0,
+                        pontos: 0,
+                        historico:{
+                            biblias:[0,0,0,0],
+                            revista:[0,0,0,0],
+                            presenca:[0,0,0,0],
+                            pontos:[0,0,0,0]
+                        }
                     }
                     cadastrar(diretor,email,senha,igreja)
+                    return
                 }
             }>
                 <p>Cadastrar</p>

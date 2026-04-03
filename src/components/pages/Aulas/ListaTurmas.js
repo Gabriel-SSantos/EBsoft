@@ -82,7 +82,6 @@ export default function ListaTurmas(){
             console.log(doc)
             doc.forEach(e =>{
                 if(e.idTurma == usuario.turma){
-                    console.log(e)
                     navigate(`/aulachamada/${e.id}`,{replace:true})
                     return
                 }
@@ -91,9 +90,9 @@ export default function ListaTurmas(){
         const listasTurma = (doc)=>{
             console.log(doc)
             if(doc.turmas.length && doc.turmas.length > 0){
-                console.log(usuario)
                 if(usuario.perfil == 'adm')
                     filtro("aulaTurma",documentId(),"in",doc.turmas,computarDados,usuario.idEscola)
+                
                 if(usuario.perfil == 'prof'){
                     filtro("aulaTurma",documentId(),"in",doc.turmas,localizarProf,usuario.idEscola)
                     return

@@ -4,6 +4,7 @@ import { filtro, getDocCollection, getDocumentoUnico } from '../../../firebase/C
 import { FichaAula, FichaRelatorio } from '../../layout/Fichas'
 import LinkButton from '../../layout/LinkButton'
 import { useAuth } from '../../../hooks/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 
 export default function RelatorioMensal(){
@@ -12,6 +13,7 @@ export default function RelatorioMensal(){
     const [relatorios,setRelatorios]= useState()
     const [alunos,setAlunos] = useState()
     const [relatorioCrescimento, setRelatorioCrescimento] = useState()
+    const navigate = useNavigate()
     useEffect(()=>{
         let mes = (new Date().getMonth() + 1)
         const ordenar = (ord)=>{
@@ -29,8 +31,14 @@ export default function RelatorioMensal(){
             }
         }
         const pegarRelatorio = (doc)=>{
+            console.log(doc)
+            if(!doc || doc.length < 1){
+                alert("Não foi gerado nenhum relatório nesse mês")
+                return navigate(-1,{replace:true})
+                
+            }
             ordenar(doc)
-            // let visitMes = {nome:'',tot:0}
+            console.log(doc)
             doc.forEach(element => {
                 let novo = {
                     nome:"Total",
@@ -39,6 +47,7 @@ export default function RelatorioMensal(){
                     qtdPresent: element.progressao.reduce((acumulador,valorTurma)=>{return acumulador + valorTurma.qtdPresent},0),
                     qtdProf: element.progressao.reduce((acumulador,valorTurma)=>{return acumulador + valorTurma.qtdProf},0),
                     qtdVisit: element.progressao.reduce((acumulador,valorTurma)=>{return acumulador + valorTurma.qtdVisit},0),
+                    prof: element.progressao.reduce((acumulador,valorTurma)=>{return acumulador + valorTurma.prof},0),
                 }
                 
                 element.progressao.push(novo)
@@ -118,6 +127,8 @@ export default function RelatorioMensal(){
                                         <tr>
                                             <th>Data</th>
                                             <th>F. Etária</th>
+                                            <th>Professores Presentes</th>
+                                            <th>Professores Ausentes</th>
                                             <th>Nº Presentes</th>
                                             <th>Nº Ausentes</th>
                                             <th>Ofertas</th>
@@ -138,9 +149,13 @@ export default function RelatorioMensal(){
                                                             <>
                                                             <td></td>
                                                             <td style={{ width:"100%",textAlign:"center"}}>{item.nome}</td>
+                                                            <td data-label='Professores Presentes'>{item.prof}</td>
+                                                            <td data-label='Professores Ausentes'>{item.qtdProf - item.prof}</td>
                                                             <td data-label='Presenças'>{item.qtdPresent}</td>
                                                             <td data-label='Ausências'>{item.qtdAlunos - item.qtdPresent}</td>
-                                                            {item.nome == "Total" && <td data-label='Ofertas'>{Number(dias.ofertas).toFixed(2)}</td>}
+                                                            {item.nome == "Total" && <> <td data-label='Ofertas'>{Number(dias.ofertas).toFixed(2)}</td> 
+                                                             <td data-label='Oferta Professores'>{Number(dias.ofertaProf).toFixed(2)}</td>   </>
+                                                            }
                                                             </>
                                                             
                                                         </tr>

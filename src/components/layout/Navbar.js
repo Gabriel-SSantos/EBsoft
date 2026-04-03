@@ -7,7 +7,7 @@ import { TbPresentationAnalytics } from 'react-icons/tb';
 import { useAuth } from '../../hooks/AuthContext';
 function Navbar(){
     const {usuario} = useAuth()
-    console.log(usuario)
+    // console.log(usuario)
     return(
         <nav className={`navbar`}>
                 <ul className='list'>

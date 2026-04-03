@@ -14,15 +14,13 @@ export default function FormLogin(){
     const onChageSenha = (e)=>{
         setSenha(e.target.value)
     }
-    const checarDadosDeCadastro =(dados)=>{
+    const checarDadosDeCadastro = async (dados)=>{
         const verificar=(doc)=>{
-            console.log(doc)
             if(doc.id){
                 navigate('/')
             }
         }
         verificarLogin(dados.email,dados.senha,verificar)
-
     }
     
     return(

@@ -40,6 +40,8 @@ export async function addItem(collectionName, data, idEscola){
 //Busca pela colecao e atualiza sempre que ela mudar, ideal para dados que são atualizados por outros usuários
 
 export function getItens(collectionName, callback,idEscola){
+    if(!collectionName)
+      return
     const q = query(collection(db,"escolas",idEscola,collectionName),orderBy("createdAt","asc"))
 
     const unsubscribe = onSnapshot(q,(snapshot)=>{
@@ -142,20 +144,22 @@ export async function filtro(collectionName,campo,operador,parametros,callback,i
   }
 }
 
-export async function atualizarListaDeAlunos  (listaAlunos,idEscola){
+export async function atualizarListaDeAlunos  (collectionName,listaAlunos,idEscola){
   try {
     // 1. Cria a "caixa" do lote
     const batch = writeBatch(db);
 
     // 2. Percorre a sua lista de alunos (que já tem os IDs)
+    console.log(collectionName)
     listaAlunos.forEach((aluno) => {
       // Cria a referência para o documento específico deste aluno
+      
       const {id, ...dados} = aluno
-      console.log("Id escola: ", idEscola)
-      const alunoRef = doc(db,"escolas",idEscola, "alunos", id);
+      const alunoRef = doc(db,"escolas",idEscola, collectionName, id);
       
       // Adiciona a instrução de atualização na "caixa"
       // Nota: Não usamos 'await' aqui dentro! Estamos apenas preparando o pacote.
+
       batch.update(alunoRef, {
         ...dados,
         dataAtualizacao: new Date() // Exemplo de outro campo
@@ -179,17 +183,20 @@ export async function registarDiretorEscola(Diretor, email, senha, nomeIgreja){
   const auth = getAuth();
   // 1. Abrimos a nossa "caixa" de lote
   const batch = writeBatch(db);
-  console.log("Opa 1")
+   const turma = {
+      nome:'Professores',
+      descricao:'Turma dos professores e secretários da EBD',
+      grupo: 'professores',
+      professor: []
+  }
   try {
     // 2. Criamos o Login no Auth primeiro (precisamos do UID dele)
     const credenciais = await createUserWithEmailAndPassword(auth, email, senha);
     const uidDiretor = credenciais.user.uid;
 
     // 3. A MAGIA: Geramos o ID da nova Escola ANTES de a enviar para o banco
-    console.log("Opa 2")
     const novaEscolaRef = doc(collection(db, "escolas"));
     const idIgrejaGerado = novaEscolaRef.id;
-    console.log("Opa 3")
     // 4. Preparamos a gravação dos dados da Escola
     batch.set(novaEscolaRef, {
       nome: nomeIgreja,
@@ -197,16 +204,32 @@ export async function registarDiretorEscola(Diretor, email, senha, nomeIgreja){
       dataFundacao: new Date(),
       status: "ativa"
     });
-    console.log("Opa 4")
     // 5. Preparamos a gravação dos dados do Diretor
     const usuarioRef = doc(db, "usuarios", uidDiretor);
-    console.log("Opa 5")
+
+    const idTurmaRef = doc(collection(db,'escolas',idIgrejaGerado, 'turmas'))
+    
+    const idAlunoProf = await addItem("professores",Diretor,idIgrejaGerado)
+
+    turma.professor.push(idAlunoProf)
+
+    batch.set(idTurmaRef,{
+      id: idTurmaRef.id,
+      ...turma,
+      dataCriacao: new Date()
+    })
+
+
     batch.set(usuarioRef, {
-      ...Diretor,
+      nome: Diretor.nome,
+      telefone: Diretor.telefone,
       idEscola: idIgrejaGerado, // O diretor sabe a que escola pertence!
+      turma: idTurmaRef.id,
+      idProfAluno: idAlunoProf,
+      perfil: 'adm',
       dataCriacao: new Date()
     });
-
+    
     // 6. Enviamos tudo de uma vez para a internet!
     await batch.commit();
 

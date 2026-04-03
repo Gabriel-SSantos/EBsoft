@@ -13,13 +13,17 @@ function Home(){
     const {usuario} = useAuth()
     const [Aulas,setAulas] = useState([])
     const [cadastramento,setCadastramento] = useState(false)
-
     useEffect(()=>{
         const pegarAulas = (doc)=>{
+ 
             setAulas(doc)
         }
-        return getItens("aulas",pegarAulas,usuario.idEscola)
-    },[])
+        console.log(usuario)
+    
+    if(usuario)
+        getItens("aulas",pegarAulas,usuario?.idEscola)
+   
+    },[usuario])
 
     const ativarCadastramento = ()=>{
         setCadastramento(true)

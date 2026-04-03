@@ -12,10 +12,23 @@ export default function ProfessoresView(){
     const {usuario} = useAuth()
     const [AlunoInfo,setAlunoInfo] = useState({})
     const [cadastramento,setCadastramento] = useState(false)
+    const [historico,setHistorico] = useState()
     const {id} = useParams()
 
     useEffect(()=>{
-        getDocumentoUnico("professores",id,setAlunoInfo,usuario.idEscola)
+       
+        const pegarHistorico = (aluno)=>{
+            let hist = {
+                biblias: aluno.historico.biblias.reduce((acumulador, valorAtual)=>acumulador + valorAtual,0),
+                revistas: aluno.historico.revista.reduce((acumulador, valorAtual)=>acumulador + valorAtual,0),
+                pontos: aluno.historico.pontos.reduce((acumulador, valorAtual)=>acumulador + valorAtual,0),
+                presencas: aluno.historico.presenca.reduce((acumulador, valorAtual)=>acumulador + valorAtual,0),
+            }
+            setHistorico(hist)
+            setAlunoInfo(aluno)
+        }
+        if(usuario)
+            getDocumentoUnico("professores",id,pegarHistorico,usuario.idEscola)
     },[cadastramento])
 
     console.log(AlunoInfo)
@@ -59,10 +72,13 @@ export default function ProfessoresView(){
                         <h3>Dados da EBD</h3>
 
                         <p>Turma: {AlunoInfo.turmaNome}</p>
-                        <p>Dias presentes: {AlunoInfo.presencas}</p>
-                        <p>Pontos acumulados: {AlunoInfo.pontos}</p>
-                        <p>Frequência: {AlunoInfo.presencas}</p>
-                        <p>Status: {AlunoInfo.presencas}</p>
+                        {/* <p>Dias presentes: {historico.presencas}</p> */}
+                        <p>Frequência: {historico.presencas}</p>
+                         <p>Bíblias: {historico.biblias}</p>
+                        <p>Revistas: {historico.revistas}</p>
+                        <p>Pontos: {historico.pontos}</p>
+                        
+                        {/* <p>Status: {historico.presencas}</p> */}
                         
                     </div>
                 }
